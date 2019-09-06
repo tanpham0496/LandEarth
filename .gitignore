@@ -1,0 +1,42 @@
+# log
+logs
+*.log
+
+**/land_logs
+**/game_logs
+
+#Bat file
+*.bat
+.bat
+
+#note file
+readme.txt
+server.txt
+
+
+build/
+.idea/
+
+#node module file
+node_modules
+
+# dotenv environment variables file
+.env
+.env.test
+html
+
+dump
+db_bak/
+_sv/
+
+!api_game/containers/logs
+
+yarn.lock
+
+#Editor file
+client/.vscode
+
+/api/package-lock.json
+/api_game/package-lock.json
+/api_cron/package-lock.json
+/startBlood.bat

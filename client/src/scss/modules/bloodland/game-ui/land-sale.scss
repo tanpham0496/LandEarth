@@ -1,0 +1,126 @@
+.land-sale-ui-screen{
+  padding: 15px 0px 15px 0px;
+  position: relative;
+  height: 632px;
+  overflow-x: hidden;
+  @include custom-scrollbar();
+}
+
+
+.land-sale-warning-screen {
+  height: 589px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #383838;
+  font-size: 25px;
+  text-align: center;
+  opacity: 0.7;
+  .screen-loading{
+    height: 68px;
+    background: #ffffff;
+    z-index: 1000;
+  }
+}
+
+
+.land-list-length {
+  padding: 5px 0px 5px 0px;
+  text-align: center;
+  border-bottom: #383838 1px solid;
+  color:#363636;
+}
+
+.land-sale-list-container{
+  $_land_col_width: 9.375rem;
+  $_blood_col_width: auto;
+
+  font-size: 10px;
+  color: #6c6d6d;
+  .header-grid{
+    display: grid;
+    grid-template-columns: $_land_col_width $_blood_col_width;
+    width: 100%;
+    font-size: 12px;
+    .land-col{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: #383838 1px solid;
+    }
+    .blood-col{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: #383838 1px solid;
+    }
+    .select-all{
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      cursor: pointer;
+      text-align: left;
+      padding: 5px;
+    }
+  }
+  .body-grid{
+    display: grid;
+    grid-template-columns: $_land_col_width $_blood_col_width;
+    grid-auto-rows: 24px;
+    width: 100%;
+    height: 529px;
+    @include custom-scrollbar();
+    .land-col{
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      cursor: pointer;
+      text-align: left;
+      align-items: center;
+      padding: 3px 3px 3px 5px;
+
+      span {
+        font-weight: bold;
+        font-size: 10px;
+        letter-spacing: 1px;
+        margin-left: 2px;
+      }
+    }
+    .blood-col{
+      padding: 2px 5px 0px 5px;
+      text-align: right;
+      color: $background-color-1;
+    }
+    
+    .item-row{
+      display: contents;
+      &:hover{
+        .land-col,.blood-col{
+          background: #AC0000;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.land-sale-button-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .button {
+    &-back {
+      @include button-item-for-land-sale(45%, 80%, $background-color-14, 2px, 2px, 1.2rem, 4rem, 1rem, $background-color-1)
+    }
+
+    &-edit-sale-land {
+      @include button-item-for-land-sale(45%, 80%, $background-color-14, 2px, 2px, 1.2rem, 4rem, 1rem, $background-color-1)
+    }
+    &-remove-sale-land {
+      @include button-item-for-land-sale(45%, 80%, $background-color-14, 2px, 2px, 1.2rem, 4rem, 1rem, $background-color-1);
+    }
+  }
+}
