@@ -9,6 +9,9 @@ $(document).ready(function () {
 			getAddress(latitude, longitude, GOOGLE_MAP_KEY);
         });
     }
+    // else {
+    //     /* geolocation IS NOT available */
+    // }
 
     // "http://extreme-ip-lookup.com/json/"
     function getAddress(latitude, longitude, GOOGLE_MAP_KEY) {

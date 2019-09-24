@@ -1,52 +1,63 @@
 import { apiLand } from '../../../helpers/config';
 import {authHeader} from '../../../helpers/authHeader';
-import alertActions from "../../actions/commonActions/alertActions";
-import {store} from "../../../helpers/store";
+import {handleResponses,handleErrorResponses} from '../../../helpers/handleResponse';
+
+const _ = require('../../../helpers/testTemplate');
+
 
 export const notifyService = {
     getById,
-    updateStatus,
-    send,
+    // updateStatus,
+    // send,
     createByAdmin,
-    get,
+    // get,
     update,
-    _delete
+    _delete,
+    haveReadNotify
 };
 
 export function createByAdmin(param) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify( param)
+        body: _.body(param)
     };
 
-    return fetch(`${apiLand}/notifies/createByAdmin`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
+    return fetch(`${apiLand}/notifies/createByAdmin`, requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
 }
 
-export function get() {
-    const requestOptions = {
-        method: 'POST',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        // body: JSON.stringify()
-    };
-    return fetch(`${apiLand}/notifies/get`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
-}
+// export function get() {
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { ...authHeader(), 'Content-Type': 'application/json' },
+//         // body: JSON.stringify()
+//     };
+//     return fetch(`${apiLand}/notifies/get`, requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
+// }
 
 export function update(param) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(param)
+        body: _.body(param)
     };
-    return fetch(`${apiLand}/notifies/update`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
+    return fetch(`${apiLand}/notifies/update`,requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
 }
-export function _delete(id) {
+export function _delete(param) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({id : id})
+        body: _.body(param)
     };
-    return fetch(`${apiLand}/notifies/delete`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
+    return fetch(`${apiLand}/notifies/delete`, requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
+}
+export function haveReadNotify(param) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: _.body(param)
+    };
+    return fetch(`${apiLand}/notifies/read`,requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
 }
 
 
@@ -55,50 +66,28 @@ export function getById(id) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({id: id})
+        // body: JSON.stringify({id})
+        body: _.body(id)
     };
-    return fetch(`${apiLand}/notifies/getById`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
+    return fetch(`${apiLand}/notifies/getById`,requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
 }
-
-export function updateStatus(id) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({id: id})
-    };
-
-    return fetch(`${apiLand}/notifies/updateStatus`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
-}
-
-export function send(param)
-{
-    const requestOptions = {
-        method: 'POST',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(param)
-    };
-    return fetch(`${apiLand}/notifies/send`, requestOptions).then(handleResponse).catch(err => handleResponseError(err));
-}
-
-export function handleResponse(response)
-{
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok)
-        {
-            if (response.status === 401)
-                window.location.reload(true);
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-        return data;
-    });
-}
-
-
-export function handleResponseError(err){
-    if(err.toString() === 'TypeError: Failed to fetch'){
-        store.dispatch(alertActions.tokenExpiredPopup(err))
-    }
-}
+//
+// export function updateStatus(id) {
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { ...authHeader(), 'Content-Type': 'application/json' },
+//         body: JSON.stringify({id: id})
+//     };
+//
+//     return fetch(`${apiLand}/notifies/updateStatus`, requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
+// }
+//
+// export function send(param)
+// {
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { ...authHeader(), 'Content-Type': 'application/json' },
+//         body: JSON.stringify(param)
+//     };
+//     return fetch(`${apiLand}/notifies/send`, requestOptions).then(handleResponses).catch(err => handleErrorResponses(err));
+// }

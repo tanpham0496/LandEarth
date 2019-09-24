@@ -5,12 +5,11 @@ import LandList from "./component/landList";
 import _ from 'lodash';
 import {connect} from 'react-redux'
 // popup component
-import NoSelectedAlert from "../../Popups/commomPopups/NoSelectedAlert";
 import SellLandPriceAlert from "../../Popups/SellLandPopups/SellLandPriceAlert"
 import SellLandConfirmAlert from "../../Popups/SellLandPopups/SellLandConfirmAlert"
 import LoadingPopup from "../../Popups/commomPopups/LoadingPopup"
-import SellLandSuccess from "../../Popups/SellLandPopups/SellLandSuccessAlert"
-import SellLandFailure from "../../Popups/SellLandPopups/SellLandFailureAlert"
+import SellLandSuccessAlert from "../../Popups/SellLandPopups/SellLandSuccessAlert"
+import SellLandFailureAlert from "../../Popups/SellLandPopups/SellLandFailureAlert"
 
 class SellLand extends PureComponent {
     state = {
@@ -18,16 +17,15 @@ class SellLand extends PureComponent {
     };
 
     componentDidMount() {
-        const { isSellLandInTab, objects: { selectedLandMyLand, selectedCategoryMyLand }, user: { _id } } = this.props
+        const { isSellLandInTab, objects: { selectedLandMyLand, selectedCategoryMyLand }, user: { _id } } = this.props;
+
         if(isSellLandInTab){
-            if(!_.isEmpty(selectedLandMyLand) || !_.isEmpty(selectedCategoryMyLand)){
-                const quadKeys = selectedLandMyLand.map(land => land.quadKey);
-                const cateIds = selectedCategoryMyLand.map(cate => cate._id);
-                this.props.getSellLandInfos({ userId: _id, quadKeys, cateIds });
-            }
+            const quadKeys = selectedLandMyLand.map(land => land.quadKey);
+            const cateIds = selectedCategoryMyLand.map(cate => cate._id);
+            this.props.getSellLandInfos({ userId: _id, quadKeys, cateIds });
         } else {
             const { lands: { sellLandInfos=[] } } = this.props;
-            if (sellLandInfos) {
+            if (!_.isEmpty(sellLandInfos)) {
                 const selectedLands = _.cloneDeep(sellLandInfos).map(l => {
                     l.checked = false;
                     return l;
@@ -38,18 +36,17 @@ class SellLand extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {lands: {sellSuccess, mode, isOwnSell}, objectList, addPopup, gotoSellLand , categoryId, isSellLandInTab, lands: { sellLands=[] }} = this.props;
+        const {lands: {sellSuccess, mode, isOwnSell, sellLands=[], getListSellLandSuccess }, objectList, addPopup, gotoSellLand, currentCategoryId, isSellLandInTab} = this.props;
         if (isOwnSell && mode === 'sell') {
             setTimeout(() => {
                 addPopup({
                     name: sellSuccess ? 'SellLandSuccessAlert' : sellSuccess !== prevProps.lands.sellSuccess && sellSuccess === false && 'SellLandFailureAlert',
                     close: 'LoadingPopup',
-                    data:  {gotoSellLand , categoryId}
+                    data:  {gotoSellLand , currentCategoryId}
                 });
             }, 500)
             this.props.clearPurchaseStatusSocket();
             this.props.clearSelected();
-            
         }
 
         if (!_.isEqual(objectList, prevProps.objectList)) {
@@ -57,20 +54,26 @@ class SellLand extends PureComponent {
             const landsSelectedFilter = _.differenceBy(this.state.selectedLands, objectListFilter, "quadKey");
 
             if (landsSelectedFilter.length === 0) {
-                this.props.handleHidePopup()
+                this.props.removePopup({name : "SellLand"});
             }
             this.setState({ selectedLands: landsSelectedFilter });
         }
 
-        console.log('sellLands', sellLands);
-        if(isSellLandInTab && !_.isEmpty(sellLands)){
-            console.log('sellLands', sellLands)
-            const selectedLands = _.cloneDeep(sellLands).map(l => {
-                l.checked = false;
-                return l;
-            });
-            this.setState({ selectedLands });
-            this.props.dispatch({ type: 'REMOVE_SELL_LAND_INFOS' });
+        if(isSellLandInTab){
+            if(!_.isEmpty(sellLands)){
+                const selectedLands = _.cloneDeep(sellLands).map(l => {
+                    l.checked = false;
+                    return l;
+                });
+                this.setState({ selectedLands });
+                this.props.dispatch({ type: 'REMOVE_SELL_LAND_INFOS' });
+            }
+            else {
+                if(getListSellLandSuccess){
+                    addPopup({ name: 'NoLandCanSaleAlert' });
+                    this.props.dispatch({ type: 'REMOVE_SELL_LAND_INFOS' });
+                }
+            }
         }
     }
 
@@ -131,8 +134,8 @@ class SellLand extends PureComponent {
             if (landCheckPrice.length !== 0) {
                 addPopup({name: "SellLandPriceAlert"});
             } else {
-                let ForSellLandSelected = landSell.filter(l => l.checked && l.sellPrice !== 0);
-                addPopup({name: "SellLandConfirmAlert", data: {ForSellLandSelected, modeSell: true}})
+                const forSellLandSelected = landSell.filter(l => l.checked && l.sellPrice !== 0);
+                addPopup({name: "SellLandConfirmAlert", data: {forSellLandSelected, modeSell: true}})
             }
         }
     };
@@ -154,6 +157,7 @@ class SellLand extends PureComponent {
     sellLandRender = () => {
         const {selectedLands, checkAll} = this.state;
         const {removePopup} = this.props;
+        if(!selectedLands) return null;
         return (
             <Modal isOpen={true} backdrop="static" className={`custom-modal modal--land-sell`}>
                 <div className='custom-modal-header'>
@@ -190,21 +194,15 @@ class SellLand extends PureComponent {
     };
 
     render() {
-        const { screens, objects: { selectedLandMyLand, selectedCategoryMyLand } } = this.props;
-        if(_.isEmpty(selectedLandMyLand) && _.isEmpty(selectedCategoryMyLand)){
-            this.props.addPopup({ name: 'NoSelectedAlert' });
-        }
-        
+        const { screens } = this.props;
         return (
             <Fragment>
                 {this.sellLandRender()}
-                {screens['NoSelectedAlert'] && <NoSelectedAlert/>}
                 {screens['SellLandPriceAlert'] && <SellLandPriceAlert/>}
-                {screens['SellLandConfirmAlert'] && <SellLandConfirmAlert/>}
-                {screens['SellLandSuccessAlert'] && <SellLandSuccess/>}
-                {screens['SellLandFailureAlert'] && <SellLandFailure/>}
+                {screens['SellLandConfirmAlert'] && <SellLandConfirmAlert {...screens['SellLandConfirmAlert']} />}
+                {screens['SellLandSuccessAlert'] && <SellLandSuccessAlert {...screens['SellLandSuccessAlert']} />}
+                {screens['SellLandFailureAlert'] && <SellLandFailureAlert/>}
                 {screens['LoadingPopup'] && <LoadingPopup/>}
- 
             </Fragment>
         );
     }
@@ -212,9 +210,9 @@ class SellLand extends PureComponent {
 
 
 const mapStateToProps = (state) => {
-    const {authentication: {user}, lands, objectsReducer: {objectList}, screens, objects} = state;
+    const {authentication: {user}, lands, objectsReducer: {objectList, currentCategoryId}, screens, objects} = state;
     return {
-        user, lands, objectList, screens, objects
+        user, lands, objectList, screens, objects, currentCategoryId
     }
 };
 

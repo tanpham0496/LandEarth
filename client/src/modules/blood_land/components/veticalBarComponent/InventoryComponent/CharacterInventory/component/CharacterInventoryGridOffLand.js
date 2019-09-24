@@ -10,8 +10,6 @@ import Tooltip from "../../../../general/Tooltip";
 import {alertPopup} from "./Alert&Popup";
 import ItemTranslate from '../../../../general/ItemTranslate';
 import TranslateLanguage from './../../../../general/TranslateComponent';
-import config from "../../../../../../../helpers/config";
-import {covertDragPositionToQuadkeyLeafMap} from "../../../../leaftMap/components/GameMapFunction";
 
 class CharacterInventoryGridOffLand extends Component {
     state = {
@@ -47,7 +45,7 @@ class CharacterInventoryGridOffLand extends Component {
         const gameTabOffset = document.getElementById("game-tab-content").getBoundingClientRect();
         const {left} = gameTabOffset;
         if (position.x < left) {
-            const quadKey = config.leafmapMode ? covertDragPositionToQuadkeyLeafMap(position) : covertDragPositionToQuadkey(position);
+            const quadKey =  covertDragPositionToQuadkey(position);
             const characterData = {
                 quadKey, item
             };
@@ -63,15 +61,14 @@ class CharacterInventoryGridOffLand extends Component {
             x: e.clientX,
             y: e.clientY
         };
-        const {myLands , allLands , user} = this.props;
-        const myLandLeafMap =  allLands && allLands.filter(l => l.user._id === user._id);
+        const {  allLands } = this.props;
         const gameTabOffset = document.getElementById("game-tab-content").getBoundingClientRect();
         const {left} = gameTabOffset;
         if (position.x < left) {
-            const quadKey = config.leafmapMode ? covertDragPositionToQuadkeyLeafMap(position) : covertDragPositionToQuadkey(position);
+
+            const quadKey = covertDragPositionToQuadkey(position);
             if (localStorage.quadKeyBitamin !== quadKey) {
-                localStorage.setItem('quadKeyBitamin', quadKey);
-                const checkMyLands = ( config.leafmapMode ? myLandLeafMap : myLands).filter(land => land.quadKey === quadKey);
+                const checkMyLands = allLands.filter(land => land.quadKey === quadKey);
                 checkMyLands.length !== 0 && this.props.onHandleGetQuadKeyBitamin(quadKey);
             }
         }
@@ -160,9 +157,9 @@ class CharacterInventoryGridOffLand extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const {mapGameReducer: {quadKeyCheckTileEffect}, lands: {myLands , allLands} , authentication: {user}} = state;
+    const {mapGameReducer: {quadKeyCheckTileEffect} ,lands: {allLands} , authentication: {user}} = state;
     return {
-        quadKeyCheckTileEffect, myLands , allLands , user
+        quadKeyCheckTileEffect , allLands , user
     }
 };
 const mapDispatchToProps = (dispatch) => ({

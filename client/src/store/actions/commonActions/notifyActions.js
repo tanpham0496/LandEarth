@@ -20,6 +20,9 @@ export const UPDATE_NOTICE_FAILURE = 'UPDATE_NOTICE_FAILURE';
 export const DELETE_NOTICE_SUCCESS = 'DELETE_NOTICE_SUCCESS';
 export const DELETE_NOTICE_FAILURE = 'DELETE_NOTICE_FAILURE';
 
+export const HAVE_READ_NOTICE_SUCCESS = 'HAVE_READ_NOTICE_SUCCESS';
+export const  HAVE_READ_NOTICE_FAILURE = ' HAVE_READ_NOTICE_FAILURE';
+
 export const OPEN_NOTIFY = 'OPEN_NOTIFY';
 export const notificationAction = {
     getById,
@@ -30,7 +33,8 @@ export const notificationAction = {
     createByAdmin,
     get,
     update,
-    _delete
+    _delete,
+    haveReadNotify
 };
 function createByAdmin(param) {
    return dispatch => {
@@ -74,15 +78,29 @@ function update(param) {
 
     }
 }
-function _delete(id) {
+function _delete(param) {
     return dispatch => {
-        notifyService._delete(id)
+        notifyService._delete(param)
             .then(
                 notices => {
                     dispatch( {type: DELETE_NOTICE_SUCCESS, notices } );
                 },
                 error => {
                     dispatch( {type: DELETE_NOTICE_FAILURE, error } );
+                }
+            )
+
+    }
+}
+function haveReadNotify(param) {
+    return dispatch => {
+        notifyService.haveReadNotify(param)
+            .then(
+                notices => {
+                    dispatch( {type: HAVE_READ_NOTICE_SUCCESS, notices } );
+                },
+                error => {
+                    dispatch( {type: HAVE_READ_NOTICE_FAILURE, error } );
                 }
             )
 

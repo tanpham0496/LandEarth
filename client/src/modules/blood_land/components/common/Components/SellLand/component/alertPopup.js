@@ -51,6 +51,7 @@ export const getLimitSellPriceAlertPopup = (modalAlertPopup, handleHideAlertPopu
 };
 
 export const getSellLandConfirmAlertPopup = (modalAlertPopup, onHandleSellLand, handleHideAlertPopup) => {
+    console.log('sell LANd===============================')
     const modal = modalAlertPopup;
     const mode = "question"; //question //info //customize
     const header = <TranslateLanguage direct={'alert.getSellLandConfirmAlertPopup.header'}/>;

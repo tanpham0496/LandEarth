@@ -11,13 +11,10 @@ function DetailSelectedLand(props) {
         map: { selected=[] },
         lands: { buyLandInfos=[], sellLandInfos=[], cancelLandInfos=[]},
         user: { goldBlood },
-        //wallet
     } = props;
     const root = useRef();
 
-
     useEffect(() => {
-
         //use single click show tooltip
         if (props.isClick) {
             window.addEventListener('click', _handleHoverSelected, false);

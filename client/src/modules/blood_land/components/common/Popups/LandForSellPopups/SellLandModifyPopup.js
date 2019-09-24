@@ -85,7 +85,7 @@ class SellLandModify extends Component {
     onHandleSelectedLand = (e) => {
         const {forSellLandSelected} = this.state;
         const forSellLandSelectedUpdate = _.cloneDeep(forSellLandSelected).map(l => {
-            if (l._id === e.value._id) {
+            if (l.quadKey === e.value.quadKey) {
                 l.itemChecked = !l.itemChecked
             }
             return l;
@@ -208,7 +208,7 @@ class SellLandModify extends Component {
         const {screens} = this.props;
         return (
             <Fragment>
-                {screens['SellLandConfirmAlert'] && <SellLandConfirmAlert/>}
+                {screens['SellLandConfirmAlert'] && <SellLandConfirmAlert {...screens['SellLandConfirmAlert']}/>}
                 {screens['ModifyLandResultAlert'] && <ModifyLandResultAlert/>}
                 {screens['NoSelectedToModified'] && <NoSelectedToModified/>}
                 {screens['SellLandPriceAlert'] && <SellLandPriceAlert/>}
@@ -241,8 +241,8 @@ class SellLandModify extends Component {
             if (checkPriceItemSelected.length !== 0) {
                 addPopup({name: "SellLandPriceAlert"})
             } else {
-                const ForSellLandSelected = itemSelected.filter(l => l.sellPrice > 0 && l.itemChecked);
-                addPopup({name: "SellLandConfirmAlert", data: {ForSellLandSelected}})
+                const forSellLandSelected = itemSelected.filter(l => l.sellPrice > 0 && l.itemChecked);
+                addPopup({name: "SellLandConfirmAlert", data: {forSellLandSelected}})
             }
         }
     }

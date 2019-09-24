@@ -186,7 +186,7 @@ class UserInfo extends Component {
                 {/* {this.props.notice === 'open' || this.props.notice === 'pending' ? <LandmarkNotifyComponent status={statusNotice}/> : */}
                     <Fragment>
                         <IdentityCard/>
-                        <li onClick={() => this.handleChangeScreen(this.screen.info)}>
+                        {/*<li onClick={() => this.handleChangeScreen(this.screen.info)}>
                             <LazyImage src={loadingImage('/images/game-ui/tab1/nav1.svg')}
                                 placeholder={({ imageProps, ref }) => (
                                     this.loadingImg(ref)
@@ -196,8 +196,7 @@ class UserInfo extends Component {
                                 <TranslateLanguage direct={'menuTab.user.notify'}/>
                             </div>
                             <Tooltip nameLang={'menuTab.user.notify.tooltip.name'} descLang={'menuTab.user.notify.tooltip.desc'} />
-                            {/* {notifies && notifiesCheck.length !== 0 ? <div className="alert-dot"/> : null} */}
-                        </li>
+                        </li>*/}
                         <li className={this.getActiveDropdownClass(this.dropdownValue.myMail)}
                             onClick={() => {
                                 this.props.haveNewMails(_id);

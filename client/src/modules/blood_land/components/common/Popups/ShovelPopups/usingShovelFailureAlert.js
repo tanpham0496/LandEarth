@@ -8,20 +8,20 @@ import {
 
 
 function UsingShovelFailureAlert(props) {
-    const {removePopup , user: {_id} , currentCategoryId , screens: {UsingShovelSuccessAlert: {selectedLandAfterRemove}}} = props;
-    const reloadTreeInCategoryDetail = () => {
-        const param = {
-            cateId: currentCategoryId,
-            userId: _id
-        };
-        props.getObjectByQuadKey(param)
-    };
+    const {removePopup } = props;
+    // const reloadTreeInCategoryDetail = () => {
+    //     const param = {
+    //         cateId: currentCategoryId,
+    //         userId: _id
+    //     };
+    //     props.getObjectByQuadKey(param)
+    // };
     const mode = "info"; //question //info //customize
     const sign = "error"; //blood //success //error //delete //loading
     const confirmBtn = () => {
         removePopup({name: 'UsingShovelFailureAlert'});
-        reloadTreeInCategoryDetail() ;
-        selectedLandAfterRemove.length === 0 && removePopup({name: 'shovel'});
+        // reloadTreeInCategoryDetail() ;
+        // selectedLandAfterRemove.length === 0 && removePopup({name: 'RemoveTree'});
     };
     const header = <TranslateLanguage direct={'alert.removal.getUsingItemUnsuccessAlert.header'}/>;
     const body = <TranslateLanguage direct={'menuTab.shop.alert.getPurchaseUnSuccessAlertPopup.body'}/>;

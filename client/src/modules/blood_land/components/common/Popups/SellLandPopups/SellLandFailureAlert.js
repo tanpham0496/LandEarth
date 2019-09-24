@@ -5,10 +5,8 @@ import {
     MessageBox, TranslateLanguage
 } from "../../../../../../helpers/importModule";
 
-
-
-function SellLandFailure(props) {
-    const { removePopup} = props;
+function SellLandFailureAlert(props) {
+    const { removePopup } = props;
     const mode = "info"; //question //info //customize
     const sign = "error"; //blood //success //error //delete //loading
     const confirmBtn = () => {
@@ -26,7 +24,6 @@ export default connect (
         return { user, screens, map };
     },
     dispatch => ({
-        //addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
     })
-)(SellLandFailure);
+)(SellLandFailureAlert);

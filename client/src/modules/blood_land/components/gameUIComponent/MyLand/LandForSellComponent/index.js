@@ -1,6 +1,6 @@
 import React, {memo, Fragment, useState, useEffect} from 'react'
 import {screenActions} from "../../../../../../store/actions/commonActions/screenActions";
-import {connect} from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import {
     TranslateLanguage,
     loadingImage,
@@ -41,26 +41,32 @@ const LandSaleButton = [
 ];
 
 const LandSale = memo((props) => {
+    const dispatch = useDispatch();
     const [landForSaleList, setLandForSaleList] = useState();
     const [checkAll, setCheckAll] = useState(false);
+    const { lands } = props;
 
     useEffect(() => {
-        const {lands: {myLands}} = props;
-        const myLandsForSaleList = _.cloneDeep(myLands).filter(l => l.forSaleStatus);
-        const myLandsForSaleListUpdate = myLandsForSaleList.map(l => {
-            l.checked = false;
-            return l
-        });
-        setLandForSaleList(myLandsForSaleListUpdate)
-    }, [props.lands.myLands]);
+        const wToken = props.user.wToken;
+        dispatch(landActions.getListForSaleLands({ wToken }));
+    }, []);
+
+    useEffect(() => {
+        if(lands && lands.forSaleLands){
+            const myLandsForSaleListUpdate = [...lands.forSaleLands].map(forSaleLand => ({ ...forSaleLand, checked: false }));
+            setLandForSaleList(myLandsForSaleListUpdate);
+            setCheckAll(false);
+        }
+    }, [lands.forSaleLands]);
 
 
     const onHandleSelectedLand = (e) => {
+        // /console.log('e', e.value.quadKey)
         const myLandsForSaleListUpdate = _.cloneDeep(landForSaleList).map(l => {
-            if(l._id === e.value._id){
+            if(l.quadKey === e.value.quadKey){
                 l.checked = !l.checked
             }
-            return l
+            return l;
         });
         const isCheckAll = _.cloneDeep(myLandsForSaleListUpdate).filter(l => !l.checked).length === 0;
         setCheckAll(isCheckAll)
@@ -88,14 +94,12 @@ const LandSale = memo((props) => {
                     props.addPopup({name: 'NoSelectedToModified'})
                 }else{
                     props.addPopup({name: 'SaleLandModifiedPopup' , data: {landForSaleSelected}})
-                    // console.log('landForSaleSelected', landForSaleSelected)
                 }
                 break;
             case 'remove':
                 if(landForSaleSelected.length === 0){
                     props.addPopup({name: 'NoSelectedToRemove'})
                 }else{
-                    //console.log('landForSaleSelected',landForSaleSelected);
                     props.addPopup({name: 'SaleLandRemovePopup' , data: {landForSaleSelected}})
                 }
                 break;
@@ -141,13 +145,13 @@ const LandSale = memo((props) => {
                     <div className='body-grid'>
                         {landForSaleList.map((land, index) => {
                             // console.log('land', land)
-                            const {quadKey , name , sellPrice , checked} = land;
+                            const {quadKey, name, sellPrice, checked} = land;
                             return (
                                 <div key={index} className='item-row'>
                                     <div className='land-col'>
                                         <StyledCheckbox value={land} checked={checked} onChange={(e) => onHandleSelectedLand(e)}/>
                                         <span onClick={() => onHandleClickLand(land)}>
-                                            {name !== '' ? name : quadKey}
+                                            {name || quadKey}
                                         </span>
                                     </div>
                                     <div className='blood-col' style={{paddingTop: '5px'}}>{sellPrice}</div>

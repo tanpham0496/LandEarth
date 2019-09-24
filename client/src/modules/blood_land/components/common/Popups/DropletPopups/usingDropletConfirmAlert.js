@@ -15,8 +15,8 @@ function UsingDropletConfirmAlert(props) {
         removePopup({name: 'UsingDropletConfirmAlert'})
     };
     const noBtn = () => removePopup({name: 'UsingDropletConfirmAlert'});
-    const header = <TranslateLanguage direct={'alert.nutrients.getUsingItemConfirmAlertPopup.header'}/>
-    const body = <TranslateLanguage direct={'alert.nutrients.getUsingItemConfirmAlertPopup.body'}/>
+    const header = <TranslateLanguage direct={'alert.droplet.getUsingItemConfirmAlertPopup.header'}/>
+    const body = <TranslateLanguage direct={'alert.droplet.getUsingItemConfirmAlertPopup.body'}/>
     return <MessageBox modal={true} mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body} />;
 }
 

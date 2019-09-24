@@ -19,15 +19,6 @@ export const alertPopupScreen = {
     folderNameEmptyAlertPopup: 'folderNameEmptyAlertPopup'
 };
 
-
-// export const getInitLoadingAlertPopup = (modalPopupOpen) => {
-//     const modal = modalPopupOpen;
-//     const sign = "loading"; //blood //success //error //delete //loading
-//     const header = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getInitLoadingAlertPopup.header'}/>;
-//     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getInitLoadingAlertPopup.body'}/>;
-//     return <MessageBox modal={modal} sign={sign} header={header} body={body}/>
-// };
-
 export const getValidateAlertPopup = (modalAlertPopup,hidePopupAnClearError,error) => {
     const modal = modalAlertPopup;
     const mode = "info"; //question //info //customize
@@ -36,27 +27,6 @@ export const getValidateAlertPopup = (modalAlertPopup,hidePopupAnClearError,erro
     const header = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getValidateAlertPopup.header'}/>;
     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={error}/>;
 };
-
-// export const getNoLandAlertPopup = (modalPopup,handleHideAllPopup) => {
-//     const modal = modalPopup;
-//     const mode = "info"; //question //info //customize
-//     const sign = "error"; //blood //success //error //delete //loading
-//     const confirmBtn = () => handleHideAllPopup();
-//     const header = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getNoLandAlertPopup.header'}/>;
-//     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getNoLandAlertPopup.body'}/>;
-//     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body}/>;
-// };
-
-// export const getTooManyLandAlertPopup = (modalPopup,handleHideAllPopup) => {
-//     const modal = modalPopup;
-//     const mode = "info"; //question //info //customize
-//     const sign = "error"; //blood //success //error //delete //loading
-//     const confirmBtn = () => handleHideAllPopup();
-//     const header = <TranslateLanguage
-//         direct={'menuTab.transaction.buyLand.alert.getTooManyLandAlertPopup.header'}/>;
-//     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getTooManyLandAlertPopup.body'}/>;
-//     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body}/>;
-// }
 
 export const getPurchaseLandConfirmAlertPopup = (modalAlertPopup,confirmLandPurchase,handleHideAlertPopup) => {
     const modal = modalAlertPopup;
@@ -99,24 +69,6 @@ export const getWaitingAlertPopup = (modalAlertPopup) => {
     return <MessageBox modal={modal} sign={sign} header={header} body={body}/>
 };
 
-// export const getSuccessAlertPopup = (modalAlertPopup,hideAndRefreshPage,buySuccess,prePurchaseLands , getAllLandById , user) => {
-//     const $_total_land = `<span class='text-selected'>${prePurchaseLands}</span>`;
-//     const $_purchased_land = `<span class='text-total'>${buySuccess}</span>`;
-
-//     const modal = modalAlertPopup;
-//     const mode = "info"; //question //info //customize
-//     const sign = "success"; //blood //success //error //delete //loading
-//     const confirmBtn = () => {
-//         //getAllLandById(user._id);
-//         hideAndRefreshPage();
-//     };
-//     const header = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getSuccessAlertPopup.header'}/>;
-//     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getSuccessAlertPopup.body'}
-//                                     $_total_land={$_total_land} $_purchased_land={$_purchased_land}/>;
-//     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body}/>;
-
-// };
-
 export const getDeletedLandAlertPopup = (modalAlertPopup,confirmDeleteSelectedLand,handleHideAlertPopup) => {
     const modal = modalAlertPopup;
     const mode = "question"; //question //info //customize
@@ -140,16 +92,6 @@ export const getWaitingNoBlockAlertPopup = (modalAlertPopup,hideAndRefreshPage) 
     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getWaitingNoBlockAlertPopup.body'}/>;
     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body}/>;
 };
-
-// export const getErrorAlertPopup = (modalAlertPopup,handleHideAllPopup) => {
-//     const modal = modalAlertPopup;
-//     const mode = "info"; //question //info //customize
-//     const sign = "error"; //blood //success //error //delete //loading
-//     const confirmBtn = () => handleHideAllPopup();
-//     const header = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getErrorAlertPopup.header'}/>;
-//     const body = <TranslateLanguage direct={'menuTab.transaction.buyLand.alert.getErrorAlertPopup.body'}/>;
-//     return <MessageBox modal={modal} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body}/>;
-// };
 
 export const getFolderNameEmptyAlertPopup = (modalAlertPopup,handleHideAlertPopup) => {
     const modal = modalAlertPopup;

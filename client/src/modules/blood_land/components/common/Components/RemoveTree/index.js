@@ -16,13 +16,13 @@ import {inventoryActions} from "../../../../../../helpers/importModule";
 import {userActions} from "../../../../../../helpers/importModule";
 import _ from 'lodash'
 import {objectsActions} from "../../../../../../helpers/importModule";
+import * as s from "../CommonScreen";
 
 
-const RemoveTree = memo(props => {
+const RemoveTree = memo(() => {
     const dispatch = useDispatch();
-    const {authentication: {user: {_id, wToken}}, screens, inventoryReducer: {itemInventory , usingResult}, objectsReducer: {resultGetLandTrees, selectedLandToRemove}, shopsReducer: {shops}} = useSelector(state => state);
+    const {authentication: {user: {_id, wToken}}, screens, inventoryReducer: {itemInventory, usingResult}, objectsReducer: {resultGetLandTrees, selectedLandToRemove}, shopsReducer: {shops}} = useSelector(state => state);
     const [selectedLand, setSelectedLand] = useState();
-
     useEffect(() => {
         dispatch(inventoryActions.getItemInventoryByUserId({userId: _id}));
         dispatch(userActions.getWalletInfo({wToken}));
@@ -30,38 +30,43 @@ const RemoveTree = memo(props => {
 
     useEffect(() => {
         if (resultGetLandTrees) {
-            const selectedLandsUpdate = cloneDeep(resultGetLandTrees.landTrees);
 
-            selectedLandsUpdate.map(l =>
-                shops.map(s => {
-                    if (s.itemId === l.itemId) {
-                        l.treeInfo = {...s}
-                    }
-                    return s
-                })
-            );
-            setSelectedLand(selectedLandsUpdate)
+            if (resultGetLandTrees.status) {
+                const selectedLandsUpdate = cloneDeep(resultGetLandTrees.landTrees).slice(0,300);
+
+                selectedLandsUpdate.map(l =>
+                    shops.map(s => {
+                        if (s.itemId === l.itemId) {
+                            l.treeInfo = {...s}
+                        }
+                        return s
+                    })
+                );
+                setSelectedLand(selectedLandsUpdate)
+            }
+        }
+        if (resultGetLandTrees && resultGetLandTrees.err === "noTreeForWaterOrShovel") {
+            return dispatch(screenActions.addPopup({name: "PlantTreeBeforeShovelAlert", close: "RemoveTree"}))
+        }
+        if (resultGetLandTrees && resultGetLandTrees.err === 'landIsForSale') {
+            return dispatch(screenActions.addPopup({name: "CheckForSaleStatusAlertForItemPopup", close: 'RemoveTree'}))
         }
     }, [resultGetLandTrees]);
 
+
     useEffect(() => {
         if (usingResult) {
-            const selectedLandClone = _.cloneDeep(selectedLand);
-            const selectedLandAfterRemove = _.differenceBy(selectedLandClone, selectedLandToRemove, '_id');
             setTimeout(() => {
                 dispatch(screenActions.addPopup({
                     name: usingResult.status ? 'UsingShovelSuccessAlert' : 'UsingShovelFailureAlert',
-                    close: 'LoadingPopup',
-                    data: {selectedLandAfterRemove}
+                    close: 'LoadingPopup'
                 }));
                 dispatch(inventoryActions.clearSuccessError());
-                setSelectedLand(selectedLandAfterRemove)
             }, 500)
         }
     });
     const confirmUsingShovel = () => {
         dispatch(screenActions.addPopup({name: 'LoadingPopup'}));
-
         // create param for api
         const itemId = "I02";
         let trees = [];
@@ -72,6 +77,7 @@ const RemoveTree = memo(props => {
 
         const param = {itemId, trees, userId: _id};
         dispatch(inventoryActions.onHandleUsingItemForTree(param))
+
     };
 
     const onHandleUsingItem = () => {
@@ -91,14 +97,15 @@ const RemoveTree = memo(props => {
         }
 
     };
-
     return (
+
         <Fragment>
+            {!resultGetLandTrees ?  s.loadingComponent() : resultGetLandTrees.status &&
             <Modal isOpen={true} backdrop="static" className={`custom-modal modal--tree-nutrients`}>
                 <div className='custom-modal-header'>
                     <m.TranslateLanguage direct={'menuTab.myLand.landOwned.nutrient.detail'}/>
                     <span className="lnr lnr-cross lnr-custom-close"
-                          onClick={() => dispatch(screenActions.removePopup({name: 'shovel'}))}/>
+                          onClick={() => dispatch(screenActions.removePopup({name: 'RemoveTree'}))}/>
                 </div>
                 <div className='custom-modal-body'>
                     <TreeList lands={selectedLand}/>
@@ -110,14 +117,14 @@ const RemoveTree = memo(props => {
                             <m.TranslateLanguage direct={'menuTab.myLand.landOwned.nutrient.use'}/>
                         </div>
                     </button>
-                    <button onClick={() => dispatch(screenActions.removePopup({name: 'shovel'}))}>
+                    <button onClick={() => dispatch(screenActions.removePopup({name: 'RemoveTree'}))}>
                         <img src={m.loadingImage(`/images/game-ui/sm-close.svg`)} alt=''/>
                         <div>
                             <m.TranslateLanguage direct={'menuTab.myLand.landOwned.nutrient.cancel'}/>
                         </div>
                     </button>
                 </div>
-            </Modal>
+            </Modal>}
             {screens['NoSelectedAlert'] && <NoSelectedAlert/>}
             {screens['NotEnoughMoneyAlert'] && <NotEnoughMoneyAlert/>}
             {screens['UsingBloodToUseShovelAlert'] && <UsingBloodToUseShovelAlert/>}

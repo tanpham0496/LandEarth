@@ -102,7 +102,6 @@
     "react-icons": "^3.2.2",
     "react-is": "^16.6.3",
     "react-lazy-images": "^1.1.0",
-    "react-lazyload": "^2.5.0",
     "react-leaflet": "^2.4.0",
     "react-leaflet-div-icon": "^1.1.0",
     "react-mui-mapbox-geocoder": "^0.4.12",

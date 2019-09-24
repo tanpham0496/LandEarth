@@ -1,5 +1,5 @@
 import React, {memo, useState, useEffect, Fragment} from 'react'
-import {useStore, useSelector, useDispatch} from 'react-redux'
+import { useSelector, useDispatch} from 'react-redux'
 import {Modal} from 'reactstrap';
 import {
     loadingImage,
@@ -17,15 +17,16 @@ import NoTreeInLandAlert from '../../Popups/PlantTreePopups/NoTreeInLandAlert'
 import PlantTreeConfirmAlert from '../../Popups/PlantTreePopups/PlantTreeConfirmAlert'
 import PlantTreeSuccessAlert from '../../Popups/PlantTreePopups/PlantingTreeSuccessAlert'
 import PlantTreeFailureAlert from '../../Popups/PlantTreePopups/PlantingTreeFailureAlert'
+import * as s from "../CommonScreen";
 
 let normalCount, whiteCount, greenCount, blueCount, bronzeCount, silverCount, goldCount, platinumCount,
     diamondCount = 0;
 
-const PlantTree = memo(props => {
+const PlantTree = memo(() => {
     const dispatch = useDispatch();
-    const {inventoryReducer: {allTrees, plantingResult}, authentication: {user}, objectsReducer: {resultGetLandTrees, selectedLandToPlantTree}, screens} = useSelector(state => state);
+    const {inventoryReducer: {allTrees, plantingResult}, authentication: {user}, objectsReducer: {currentCategoryId,resultGetLandTrees, selectedLandToPlantTree}, screens} = useSelector(state => state);
     const [allTreeState, setAllTreeState] = useState();
-    const [selectedLands, setSelectedLands] = useState();
+    const [selectedLands, setSelectedLands] = useState([]);
     const [firstLoad, setFirstLoad] = useState(true);
 
     const getAllTree = () => {
@@ -37,18 +38,30 @@ const PlantTree = memo(props => {
 
 
     useEffect(() => {
-        if (allTrees && resultGetLandTrees ) {
-            if(firstLoad) {
-                setSelectedLands(resultGetLandTrees.landTrees.map(land => {
-                    land.treePlanted = false;
-                    return land
-                }));
+        if (allTrees && resultGetLandTrees) {
+            if (firstLoad) {
+                if (resultGetLandTrees) {
+                    setSelectedLands(resultGetLandTrees.landTrees && resultGetLandTrees.landTrees.slice(0, 300).map(land => {
+                        land.treePlanted = false;
+                        return land
+                    }));
+                }
             }
             setAllTreeState(allTrees.map(object => {
                 object.remainAmount = object.maxAmount - object.usingAmount;
                 return object.itemId !== 'T10' && object
             }))
+            if(resultGetLandTrees.err === "noTreeForPlant") {
+                return dispatch(screenActions.addPopup({name: "ExistTreeAlert" , close: 'PlantTree'}))
+            }
+            if(resultGetLandTrees.err === 'landIsForSale'){
+                // checkForSaleStatusAlertForItemPopup
+                return dispatch(screenActions.addPopup({name: "CheckForSaleStatusAlertForItemPopup" , close: 'PlantTree'}))
+            }
         }
+
+
+
     }, [allTrees, resultGetLandTrees]);
 
     useEffect(() => {
@@ -60,10 +73,11 @@ const PlantTree = memo(props => {
                 setSelectedLands(selectedLandAfterPlant)
                 dispatch(screenActions.addPopup({
                     name: status ? 'PlantTreeSuccessAlert' : 'PlantTreeFailureAlert',
-                    data: {reloadTreeInCategoryDetail , selectedLandAfterPlant },
+                    data: {reloadTreeInCategoryDetail, selectedLandAfterPlant},
                     close: 'LoadingPopup'
                 }));
                 setFirstLoad(false);
+                dispatch(inventoryActions.clearPlantedTreesResult())
 
             }, 500);
 
@@ -72,7 +86,7 @@ const PlantTree = memo(props => {
 
     const reloadTreeInCategoryDetail = () => {
         const param = {
-            cateId: selectedLands[0].categoryId,
+            cateId: currentCategoryId,
             userId: user._id
         };
         dispatch(objectsActions.getObjectByQuadKey(param));
@@ -175,7 +189,7 @@ const PlantTree = memo(props => {
             silverCount, goldCount, platinumCount, diamondCount
         };
         const allTreesUpdate = f.CheckAmountForAllTreeUpdateSimulateFunction(paramUpdateTreeAmount);
-        setSelectedLands(landSelectedUpdate)
+        setSelectedLands(landSelectedUpdate);
         setAllTreeState(allTreesUpdate)
     };
 
@@ -199,13 +213,14 @@ const PlantTree = memo(props => {
 
     return (
         <Fragment>
+            {!resultGetLandTrees ? s.loadingComponent() : resultGetLandTrees.status  &&
             <Modal isOpen={true} backdrop="static" className={`custom-modal modal--tree-cultivation`}>
                 <div className='custom-modal-header'>
                     <TranslateLanguage direct={'menuTab.myLand.landOwned.tree.detail'}/>
                     <span className="lnr lnr-cross lnr-custom-close"
                           onClick={() => {
                               dispatch(objectsActions.getLandToPlantTree());
-                              dispatch(screenActions.removePopup({name: 'plant'}))
+                              dispatch(screenActions.removePopup({name: 'PlantTree'}))
                           }}/>
 
                 </div>
@@ -224,7 +239,7 @@ const PlantTree = memo(props => {
                     </button>
                     <button onClick={() => {
                         dispatch(objectsActions.getLandToPlantTree());
-                        dispatch(screenActions.removePopup({name: 'plant'}))
+                        dispatch(screenActions.removePopup({name: 'PlantTree'}))
                     }}>
                         <img src={loadingImage(`/images/game-ui/sm-close.svg`)} alt=''/>
                         <div>
@@ -233,6 +248,7 @@ const PlantTree = memo(props => {
                     </button>
                 </div>
             </Modal>
+            }
             {screens['NotEnoughAmountAlert'] && <NotEnoughAmountAlert/>}
             {screens['NoSelectedAlert'] && <NoSelectedAlert/>}
             {screens['NoTreeInLandAlert'] && <NoTreeInLandAlert/>}

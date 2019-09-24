@@ -8,10 +8,10 @@ import {
 
 
 function UsingNutrientConfirmAlert(props) {
-    const {removePopup , screens: {UsingNutrientConfirmAlert: {useItem}}} = props;
+    const {removePopup , screens: {UsingNutrientConfirmAlert: {confirmUsingNutrient}}} = props;
     const mode = "question"; //question //info //customize
     const yesBtn = () => {
-        useItem();
+        confirmUsingNutrient();
         removePopup({name: 'UsingNutrientConfirmAlert'})
     };
     const noBtn = () => removePopup({name: 'UsingNutrientConfirmAlert'});

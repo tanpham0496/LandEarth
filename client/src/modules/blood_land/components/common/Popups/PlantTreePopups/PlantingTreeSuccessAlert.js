@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-     screenActions,
+    screenActions,
     TranslateLanguage,
-    MessageBox
+    MessageBox, objectsActions
 } from "../../../../../../helpers/importModule";
 
 
@@ -14,8 +14,11 @@ function PlantTreeSuccessAlert(props) {
     const sign = "success"; //blood //success //error //delete //loading
     const confirmBtn = () => {
         reloadTreeInCategoryDetail();
+        // props.resetLandSelectedMyLand();
         removePopup({name: 'PlantTreeSuccessAlert'});
-        selectedLandAfterPlant.length === 0 && removePopup({name: 'plant'})
+        selectedLandAfterPlant.length === 0 && removePopup({name: 'PlantTree'})
+        props.resetLandSelectedToPlantTree()
+
     };
     const header = <TranslateLanguage direct={'alert.cultivation.getUsingItemSuccessAlert.header'}/>;
     const body = <TranslateLanguage direct={'alert.cultivation.getUsingItemSuccessAlert.body'}/>;
@@ -30,5 +33,7 @@ export default connect (
     dispatch => ({
         //addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
+        resetLandSelectedToPlantTree: () => dispatch(objectsActions.resetLandSelectedToPlantTree())
+        // resetLandSelectedMyLand: () =>  dispatch(objectsActions.resetLandSelectedMyLand()),
     })
 )(PlantTreeSuccessAlert);

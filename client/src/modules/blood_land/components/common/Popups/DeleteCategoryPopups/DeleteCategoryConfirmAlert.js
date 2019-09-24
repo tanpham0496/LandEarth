@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {
     screenActions,
     TranslateLanguage,
-    MessageBox,
+    MessageBox, objectsActions,
 } from "../../../../../../helpers/importModule";
 
 
@@ -14,6 +14,7 @@ function DeleteCategoryConfirmAlert(props) {
     const yesBtn = () => {
         onHandleDeleteCate();
         removePopup({name: 'DeleteCategoryConfirmAlert'})
+        props.resetLandSelectedMyLand()
     }
     const noBtn = () => removePopup({name: 'DeleteCategoryConfirmAlert'});
     const header = <TranslateLanguage direct={'menuTab.myLand.landOwned.recycle.delete'}/>
@@ -29,6 +30,7 @@ export default connect(
     dispatch => ({
         // addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
+        resetLandSelectedMyLand: () =>  dispatch(objectsActions.resetLandSelectedMyLand()),
     })
 )(DeleteCategoryConfirmAlert);
 

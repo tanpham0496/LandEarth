@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect} from 'react';
-import connect from "react-redux/es/connect/connect";
+import { useDispatch, useSelector } from "react-redux";
 import NoIdentityCardComponent from "./NoIdentityCardComponent";
 import IdentityCardComponent from "./IdentityCardComponent";
 import {
@@ -7,33 +7,10 @@ import {
 } from "../../../../../helpers/importModule"
 
 function IdentityCard(props){
-    const { screens } = props;
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         currentScreen: this.screen.default,
-    //         imageStatus: "loading"
-    //     };
-    // }
-
-    // handleImageLoaded() {
-    //     this.setState({ imageStatus: "loaded" });
-    // }
-    
-    // handleImageErrored() {
-    //     this.setState({ imageStatus: "failed" });
-    // }
-    // 
-    
-    // handleChangeScreen = (screen) => {
-    //     this.setState({
-    //         lastScreen: this.state.currentScreen,
-    //         currentScreen: screen,
-    //     });
-    // };
-
+    const dispatch = useDispatch();
+    const {screens} = useSelector(state => state);
     useEffect(() => {
-        props.addPopup({ name: "NoIdentityCardComponent", close: "IdentityCardComponent" });
+        dispatch(screenActions.addPopup({ name: "NoIdentityCardComponent", close: "IdentityCardComponent" }))
     }, [])
 
     return (
@@ -44,16 +21,4 @@ function IdentityCard(props){
     );
 };
 
-export default connect(
-    state => {
-        const {lands: {myLands}, authentication: {user}, wallet, screens} = state;
-        return {
-            user, myLands, wallet, screens
-        };
-    },
-    dispatch => ({
-        addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
-        removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
-    })
-)(IdentityCard);
-
+export default IdentityCard;

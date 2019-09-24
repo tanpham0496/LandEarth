@@ -25,7 +25,8 @@ class SingleSelect extends Component {
         this.setState({
             img: nextProps.selected ? this.SELECTED_IMG : this.IMG
         });
-        if(!newVersionUI) this.setState({ active: !nextProps.gameMode });
+        this.setState({ active: !nextProps.gameMode });
+        // if(!newVersionUI)
     }
 
     handleOnClickOption = () => {

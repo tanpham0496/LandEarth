@@ -21,9 +21,12 @@ export const UPDATE_DEVELOP_FAILURE = 'UPDATE_DEVELOP_FAILURE';
 export const DELETE_DEVELOP_SUCCESS = 'DELETE_DEVELOP_SUCCESS';
 export const DELETE_DEVELOP_FAILURE = 'DELETE_DEVELOP_FAILURE';
 
+export const HAVE_READ_DEVELOP_SUCCESS = 'HAVE_READ_DEVELOP_SUCCESS';
+export const HAVE_READ_DEVELOP_FAILURE = 'HAVE_READ_DEVELOP_FAILURE';
+
 export const OPEN_DEVELOP = 'OPEN_DEVELOP';
 export const developmentalAction = {
-    // getById,
+    getById,
     // updateStatus,
     // send,
     // onOpenNotify,
@@ -31,9 +34,11 @@ export const developmentalAction = {
     createByAdmin,
     get,
     update,
-    _delete
+    _delete,
+    haveReadDevelop
 };
 function createByAdmin(param) {
+
     return dispatch => {
         developService.createByAdmin(param)
             .then(
@@ -75,9 +80,9 @@ function update(param) {
 
     }
 }
-function _delete(id) {
+function _delete(param) {
     return dispatch => {
-        developService._delete(id)
+        developService._delete(param)
             .then(
                 develops => {
                     dispatch( {type: DELETE_DEVELOP_SUCCESS, develops } );
@@ -111,47 +116,62 @@ function getById(id) {
         return {type: GET_BY_ID_DEVELOP_FAILURE, error}
     }
 }
+//
+// function updateStatus(id) {
+//     return dispatch => {
+//         developService.updateStatus(id)
+//             .then(
+//                 error => {
+//                     dispatch(failure(error.toString()));
+//                 }
+//             );
+//     };
+//
+//     function failure(error) {
+//         return {type: UPDATE_STATUS_DEVELOP_FAILURE, error}
+//     }
+// }
+//
+// function send(develop) {
+//     return dispatch => {
+//         developService.send(develop)
+//             .then(
+//                 develops => {
+//                     dispatch(success(develops));
+//                 },
+//                 error => {
+//                     dispatch(failure(error.toString()));
+//                 }
+//             );
+//     };
+//
+//     function success(develops) {
+//         return {type: SEND_DEVELOP_SUCCESS, develops}
+//     }
+//
+//     function failure(error) {
+//         return {type: SEND_DEVELOP_FAILURE, error}
+//     }
+// }
+//
+// function onOpenDevelop(develop) {
+//     return {
+//         type: OPEN_DEVELOP, develop
+//     }
+// }
 
-function updateStatus(id) {
+function haveReadDevelop(param) {
     return dispatch => {
-        developService.updateStatus(id)
-            .then(
-                error => {
-                    dispatch(failure(error.toString()));
-                }
-            );
-    };
-
-    function failure(error) {
-        return {type: UPDATE_STATUS_DEVELOP_FAILURE, error}
-    }
-}
-
-function send(develop) {
-    return dispatch => {
-        developService.send(develop)
+        developService.haveReadDevelop(param)
             .then(
                 develops => {
-                    dispatch(success(develops));
+                    dispatch( {type: HAVE_READ_DEVELOP_SUCCESS, develops } );
                 },
                 error => {
-                    dispatch(failure(error.toString()));
+                    dispatch( {type: HAVE_READ_DEVELOP_FAILURE, error } );
                 }
-            );
-    };
+            )
 
-    function success(develops) {
-        return {type: SEND_DEVELOP_SUCCESS, develops}
-    }
-
-    function failure(error) {
-        return {type: SEND_DEVELOP_FAILURE, error}
-    }
-}
-
-function onOpenDevelop(develop) {
-    return {
-        type: OPEN_DEVELOP, develop
     }
 }
 

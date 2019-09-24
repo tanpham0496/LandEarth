@@ -14,7 +14,10 @@ import {
     UPDATE_DEVELOP_FAILURE,
 
     DELETE_DEVELOP_SUCCESS,
-    DELETE_DEVELOP_FAILURE
+    DELETE_DEVELOP_FAILURE,
+
+    HAVE_READ_DEVELOP_SUCCESS,
+    HAVE_READ_DEVELOP_FAILURE
 } from "../../actions/commonActions/developActions";
 
 const developmentalReducer = (state = {}, action) => {
@@ -89,6 +92,18 @@ const developmentalReducer = (state = {}, action) => {
                 ...state,
                 error: action.error
             };
+
+        case HAVE_READ_DEVELOP_SUCCESS:
+            return {
+                ...state,
+                develops: action.develops
+            };
+        case HAVE_READ_DEVELOP_FAILURE:
+            return {
+                ...state,
+                error: action.error
+            };
+            
         case OPEN_DEVELOP:
             // console.log('develop', action.develop)
             return{

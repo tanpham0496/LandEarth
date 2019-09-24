@@ -102,9 +102,9 @@ class TileComponent extends PureComponent {
 
     // tren tang 18
     createInfoLandLowerLv23(props) {
-        const {tile: {totalCount, canBuy, canNotBuy, landmarkCount = 0}, settingReducer} = props;
+        const {tile: {totalCount, canBuy, canNotBuy, landmarkCount = 0}, settings} = props;
         let infoHtml = '';
-        const {land} = settingReducer;
+        const {land} = settings;
         if (land && land.showInfo) {
             infoHtml = has(props.tile, 'canBuy') ? (
                 <div className='cell'>
@@ -345,9 +345,9 @@ class TileComponent extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-    const {lands, authentication: {user}, map, alert, users, settingReducer, lands: {myLands, areaLand,landInfo}} = state;
+    const {lands, authentication: {user}, map, alert, users, settings, lands: {areaLand,landInfo}} = state;
     return {
-        user, alert, lands, map, users, settingReducer, myLands , areaLand, landInfo
+        user, alert, lands, map, users, settings , areaLand, landInfo
     };
 };
 

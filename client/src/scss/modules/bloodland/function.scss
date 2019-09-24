@@ -326,3 +326,14 @@
     }
   }
 }
+
+.game-tools .game-functions .game-func-btn .has-new {
+  top: -4px;
+  right: -2px;
+  color: yellow;
+  font-family: monospace;
+  font-weight: normal;
+  position: absolute;
+  font-size: 11px;
+  text-shadow: 1px 1px 2px #AC0000, 1px -1px 2px #AC0000, -1px 1px 2px #AC0000, -1px -1px 2px #AC0000;
+}

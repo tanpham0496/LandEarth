@@ -13,7 +13,7 @@ const TreeList = memo((props) => {
     const [checkedAll, setCheckedAll] = useState();
     const {settingReducer: {language}, inventoryReducer: {itemInventory}, screens} = useSelector(state => state);
     const {lands} = props;
-    const usingAmount = lands && lands.filter(l => l.checked).length;
+    const usingAmount = landToRemoveTree.length;
     const shovel = itemInventory && itemInventory.find(i => i.itemId === itemForTree);
     const spacing = <div className='item-row'>
         <div className='tree-col'/>
@@ -36,8 +36,8 @@ const TreeList = memo((props) => {
         if (landToRemoveTreeCLone.some(l => l._id === value._id) && !status) {
             landToRemoveTreeCLone.splice(landToRemoveTree.findIndex(l => l._id === value._id), 1)
         }
-        setCheckedAll(landToRemoveTreeCLone.length === lands.length)
-        SetLandToRemoveTree(landToRemoveTreeCLone)
+        setCheckedAll(landToRemoveTreeCLone.length === lands.length);
+        SetLandToRemoveTree(landToRemoveTreeCLone);
         dispatch(objectsActions.getLandToRemoveTree(landToRemoveTreeCLone))
     };
 
@@ -51,7 +51,7 @@ const TreeList = memo((props) => {
 
     const treeListRender = () => {
         return (
-            lands.map((item, index) => {
+            lands && lands.map((item, index) => {
                 const {_id, itemId, name, quadKey, profitTotal, waterEndTime, treeInfo} = item;
                 return (
                     <div className='item-row' key={index}>
@@ -60,9 +60,9 @@ const TreeList = memo((props) => {
                                             onChange={(e) => onSaveLandToRemoveTree(e.value, e.target.checked)}
                                             checked={landToRemoveTree.some(l => l._id === _id)}/>
                             <img src={m.getMapImgByItemId(itemId)} alt=''/>
-                            <span><m.ItemTranslate
+                            {treeInfo && <span><m.ItemTranslate
                                 itemSelected={treeInfo} name={true} decoClass='translation'
-                                language={language}/></span>
+                                language={language}/></span>}
                         </div>
                         <div className='land-col'>
                             {name ? name : quadKey}

@@ -18,7 +18,13 @@ export const objectsActions = {
     getCategorySelectedMyLand,
     getLandToPlantTree,
     getLandToRemoveTree,
-    getCurrentCategory
+    getCurrentCategory,
+    getLandToUseNutrient,
+    getLandToUseWater,
+    clearResultGetLandByCateIdsAndQuadKeys,
+    resetLandSelectedMyLand,
+    resetLandSelectedToPlantTree
+
 };
 
 function moveTreeToMap({status, plantedTrees, error}) {
@@ -151,17 +157,24 @@ function setTreeDies(trees) {
 }
 
 function getObjectByQuadKey(param) {
+
     return dispatch => {
+        dispatch(loadingObject( true));
         objectsService.getObjectByQuadKey(param)
             .then(
                 objectList => {
                     dispatch(success(objectList));
+                    dispatch(loadingObject( false));
+
                 },
                 error => {
                     dispatch(failure(error.toString()));
-                }
+                    dispatch(loadingObject( false));
+                },
+
             );
     };
+
 
     function success(objectList) {
         return {type: t.GET_OBJECT_BY_QUADKEY_SUCCESS, objectList}
@@ -173,21 +186,20 @@ function getObjectByQuadKey(param) {
 }
 
 function getLandByCateIdAndQuadKeys(param) {
-    console.log('param', param)
+    const {reload} = param
     return dispatch => {
         objectsService.getObjectByCategories(param)
             .then(
                 result => {
-                    console.log('result', result)
-                    dispatch(success(result));
+                    dispatch(success(result , reload));
                 },
                 error => {
                     dispatch(failure(error.toString()));
                 }
             );
     };
-    function success(result) {
-        return {type: t.GET_LAND_TREES_SUCCESS, result}
+    function success(result, reload) {
+        return {type: t.GET_LAND_TREES_SUCCESS, result , reload}
     }
 
     function failure(error) {
@@ -224,4 +236,42 @@ function getLandToRemoveTree(param) {
     return{
         type: t.GET_LAND_REMOVE_TREE, param
     }
+}
+
+//GET LAND TO USE NUTRIENT
+function getLandToUseNutrient(param) {
+    return{
+        type: t.GET_LAND_TO_USE_NUTRIENT, param
+    }
+}
+
+//GET LAND TO USE WATER
+function getLandToUseWater(param) {
+    // console.log('param')
+    return{
+        type: t.GET_LAND_TO_USE_WATER, param
+    }
+}
+
+function clearResultGetLandByCateIdsAndQuadKeys() {
+    return{
+        type: t.CLEAR_GET_LAND_BY_CATEID_AND_QUADKEYS
+    }
+}
+
+function resetLandSelectedMyLand() {
+    return{
+        type: t.RESET_LAND_SELECTED_MY_LAND
+    }
+}
+
+
+function resetLandSelectedToPlantTree() {
+
+    return {
+        type: t.RESET_LAND_SELECTED_PLANT_TREE
+    }
+}
+function loadingObject(status) {
+    return {type: t.LOADING_STATUS , status}
 }

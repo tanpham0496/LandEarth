@@ -17,7 +17,7 @@ function PlantTreeFailureAlert(props) {
         reloadTreeInCategoryDetail();
         removePopup({name: 'PlantTreeFailureAlert'});
         removePopup({name: 'cultivation'});
-        selectedLandAfterPlant.length === 0 && removePopup({name: 'plant'})
+        selectedLandAfterPlant.length === 0 && removePopup({name: 'PlantTree'})
     };
     const header = <TranslateLanguage direct={'alert.cultivation.getUsingItemUnsuccessAlert.header'}/>;
     const body = <TranslateLanguage direct={'alert.cultivation.getUsingItemUnsuccessAlert.body'}/>;

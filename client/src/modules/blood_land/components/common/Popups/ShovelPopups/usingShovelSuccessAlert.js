@@ -8,14 +8,27 @@ import {
 
 
 function UsingShovelSuccessAlert(props) {
-    const {removePopup , user: {_id}, currentCategoryId , screens: {UsingShovelSuccessAlert: {selectedLandAfterRemove}}} = props;
+    const {removePopup , user: {_id}, currentCategoryId , resultGetLandTrees, selectedCategoryMyLand ,selectedLandToRemove,selectedLandMyLand} = props;
     const reloadTreeInCategoryDetail = () => {
-        const param = {
+        const getObjectByQuadKeyParam = {
             cateId: currentCategoryId,
             userId: _id
         };
-
-        props.getObjectByQuadKey(param)
+        const getLandByCateIdAndQuadKeysParam = {
+            userId: _id,
+            cateIds: selectedCategoryMyLand.map(c => c._id),
+            quadKeys: selectedLandMyLand.map(l => l.quadKey),
+            action: 'shovel',
+            reload: true
+        };
+        props.getObjectByQuadKey(getObjectByQuadKeyParam)
+        if(resultGetLandTrees.landTrees.length !== selectedLandToRemove.length || resultGetLandTrees.landTrees.length - 1 >= 0 ){
+            props.getLandByCateIdAndQuadKeys(getLandByCateIdAndQuadKeysParam)
+        }
+        if(resultGetLandTrees.landTrees.length === selectedLandToRemove.length ){
+            removePopup({name: 'RemoveTree'})
+        }
+        props.getLandToRemoveTree([])
     };
 
 
@@ -24,7 +37,7 @@ function UsingShovelSuccessAlert(props) {
     const confirmBtn = () => {
         removePopup({name: 'UsingShovelSuccessAlert'});
         reloadTreeInCategoryDetail();
-        selectedLandAfterRemove.length === 0 && removePopup({name: 'shovel'});
+
     } ;
     const header = <TranslateLanguage direct={'alert.removal.getUsingItemSuccessAlert.header'}/>;
     const body = <TranslateLanguage direct={'alert.removal.getUsingItemSuccessAlert.body'}/>;
@@ -33,12 +46,15 @@ function UsingShovelSuccessAlert(props) {
 
 export default connect(
     state => {
-        const {authentication: {user}, screens, objectsReducer: {currentCategoryId}} = state;
-        return {user, screens , currentCategoryId};
+        const {authentication: {user}, screens, objectsReducer: {currentCategoryId, resultGetLandTrees, selectedCategoryMyLand ,selectedLandMyLand  , selectedLandToRemove}} = state;
+        return {user, screens , resultGetLandTrees,  selectedCategoryMyLand ,selectedLandMyLand, currentCategoryId , selectedLandToRemove};
     },
     dispatch => ({
         // addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
         getObjectByQuadKey: (param) => dispatch(objectsActions.getObjectByQuadKey(param)),
+        //ham nay de lay land theo quadKeys va cateId
+        getLandByCateIdAndQuadKeys: (param) => dispatch(objectsActions.getLandByCateIdAndQuadKeys(param)),
+        getLandToRemoveTree: () => dispatch(objectsActions.getLandToRemoveTree())
     })
 )(UsingShovelSuccessAlert);

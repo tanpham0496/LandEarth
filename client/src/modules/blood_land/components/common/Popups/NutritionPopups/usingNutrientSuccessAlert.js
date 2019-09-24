@@ -8,21 +8,29 @@ import {
 
 
 function UsingNutrientSuccessAlert(props) {
-    const {removePopup , user: {_id}, screens: {UsingNutrientSuccessAlert: {selectedLands}}} = props;
+    const {removePopup , user: {_id} , resultGetLandTrees , selectedLandMyLand , addPopup ,  selectedCategoryMyLand} = props;
     const reloadTreeInCategoryDetail = () => {
         const param = {
-            cateId: selectedLands[0].categoryId,
-            userId: _id
+            userId: _id,
+            cateIds: selectedCategoryMyLand.map(c => c._id),
+            quadKeys: selectedLandMyLand.map(l => l.quadKey),
+            action: 'nutrient',
+            reload: true
         };
-        props.getObjectByQuadKey(param)
+        // console.log('param', param)
+        props.getLandByCateIdAndQuadKeys(param)
     };
 
 
     const mode = "info"; //question //info //customize
     const sign = "success"; //blood //success //error //delete //loading
+
+    const resultTreeFilter = resultGetLandTrees.landTrees && resultGetLandTrees.landTrees.filter(l => l.limitUseNutritional === 2)
     const confirmBtn = () => {
         removePopup({name: 'UsingNutrientSuccessAlert'});
-        reloadTreeInCategoryDetail()
+        reloadTreeInCategoryDetail();
+        resultTreeFilter.length === 0 && removePopup({name: 'NutrientTree'})
+        // resultGetLandTrees.landTrees.length - 1 === 0 && removePopup({name: 'NutrientTree'})
     } ;
     const header = <TranslateLanguage direct={'alert.nutrients.getUsingItemSuccessAlert.header'}/>
     const body = <TranslateLanguage direct={'alert.nutrients.getUsingItemSuccessAlert.body'}/>
@@ -31,12 +39,14 @@ function UsingNutrientSuccessAlert(props) {
 
 export default connect(
     state => {
-        const {authentication: {user}, screens} = state;
-        return {user, screens};
+        const {authentication: {user}, screens , objectsReducer: {resultGetLandTrees , selectedLandMyLand, selectedCategoryMyLand}} = state;
+        return {user, screens, selectedLandMyLand ,  selectedCategoryMyLand , resultGetLandTrees};
     },
     dispatch => ({
-        // addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
+        addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
         getObjectByQuadKey: (param) => dispatch(objectsActions.getObjectByQuadKey(param)),
+        //ham nay de lay land theo quadKeys va cateId
+        getLandByCateIdAndQuadKeys: (param) => dispatch(objectsActions.getLandByCateIdAndQuadKeys(param))
     })
 )(UsingNutrientSuccessAlert);

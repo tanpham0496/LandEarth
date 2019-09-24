@@ -17,16 +17,15 @@ function SellLandRemovePopup(props) {
             quadKeys: landForSaleSelected.map(land => land.quadKey),
             zoom: props.map.zoom
         });
-        props.getAllLandById(user._id);
+        props.getListForSaleLands(user.wToken);
         props.removePopup({name: 'SaleLandRemovePopup'});
     };
-
 
     const mode = "question"; //question //info //customize
     const yesBtn = () => onHandleRemoveSaleLand();
     const noBtn = () => props.removePopup({name: 'SaleLandRemovePopup'});
-    const header =  <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.header'}/>;
-    const body =  <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.body'}/>;
+    const header = <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.header'}/>;
+    const body = <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.body'}/>;
     return <MessageBox modal={true} mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body} />;
 }
 
@@ -36,7 +35,7 @@ export default connect(
         return {user, screens, map};
     },
     dispatch => ({
-        getAllLandById: (userId) => dispatch(landActions.getAllLandById(userId)),
+        getListForSaleLands: (wToken) => dispatch(landActions.getListForSaleLands({ wToken })),
         sellLandSocket: (objSellLand) => dispatch(socketActions.sellLandSocket(objSellLand)),
         addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),

@@ -17,8 +17,8 @@ class DefaultScreenGameUi extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {gameMode, screens, removePopup} = this.props;
-        const getElementGameTab = document.getElementsByClassName("game-tab-content");
-        if(getElementGameTab && getElementGameTab[0]) getElementGameTab[0].style.width = "235px";
+        // const getElementGameTab = document.getElementsByClassName("game-tab-content");
+        // if(getElementGameTab && getElementGameTab[0]) getElementGameTab[0].style.width = "235px";
         if(!_.isEqual(gameMode , prevProps.gameMode)){
             const screenCheck = ['itemsInventory', 'characterInventory', 'giftInventory', 'landTrade' ];
             const checkScreen = (screen) => {
@@ -42,7 +42,6 @@ class DefaultScreenGameUi extends Component {
                         <GameTabScreenValueGameUi currentScreenValue ={screens["open"] ? screens["open"].screen : ''}/>
                     </div>
                     <GameNavigation/>
-                    {/*<GameNavigationOld/>*/}
                 </div>
             </Fragment>
         );

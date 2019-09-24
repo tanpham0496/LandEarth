@@ -11,10 +11,10 @@ import {
 
 
 function SellLandSuccess(props) {
-    const {user: {_id},  screens: {SellLandSuccessAlert: {gotoSellLand , categoryId}}} = props;
+    const { user: {_id}, gotoSellLand, currentCategoryId } = props;
     const onHandleCloseSellLandSuccessAlert  = () => {
         const param = {
-            cateId: categoryId,
+            cateId: currentCategoryId,
             userId: _id
         };
         props.getAllLandById(_id);

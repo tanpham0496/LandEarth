@@ -4,21 +4,38 @@ import {Modal} from 'reactstrap';
 import {screenActions} from "../../../../../../store/actions/commonActions/screenActions";
 import {loadingImage} from "../../../general/System";
 import TranslateLanguage from "../../../general/TranslateComponent";
-import TabDevelop from "./component/TabDevelop"
-import TabNotification from "./component/TabNotification"
+
+import TabNotificationDevelopment from './component/TabNotificationDevelopment'
 import {developmentalAction} from "../../../../../../store/actions/commonActions/developActions";
 import {notificationAction} from "../../../../../../store/actions/commonActions/notifyActions";
 
 function NotificationBlood (props){
     const [tab, setTab] = useState(1);
-    const onHandleChangeTab = (Tab) => {
+    const [changeType, setChangeType] = useState('Notify');
+    const onHandleChangeTab = (Tab, type) => {
         setTimeout(()=> {
             props.removePopup({name: 'filterGlobar'});
-            props.getDevelopment();
-            props.getNotification();
+            type === 'Develop' && props.getDevelopment(props.user._id);
+            type === 'Notify' && props.getNotification(props.user._id);
         }, 0.001);
+        setChangeType(type);
         setTab(Tab);
+
     };
+    const tabList = [
+        {
+            name : 'Notification',
+            tabCode: 1,
+            type: 'Notify'
+        },
+        {
+            name : 'Development',
+            tabCode: 2,
+            type: 'Develop'
+        }
+    ];
+    const haveNotify = props.notifies && props.notifies.length > 0 && props.notifies.filter(nt => nt.read === false);
+    const haveDevelop = props.develops && props.develops.length > 0 && props.develops.filter(dv => dv.read === false);
     return (
         <Fragment>
             <Modal isOpen={true} backdrop="static" className={`custom-modal modal--notice`}>
@@ -31,41 +48,44 @@ function NotificationBlood (props){
                 </div>
                 <div className='custom-modal-body'>
                     <div className="tab-inventory-container">
-                        <div className={`tab-inventory ${tab === 1 && 'active'}`}
-                             onClick={() => onHandleChangeTab(1)}>
-                            Notification
-                        </div>
-                        <div className={`tab-inventory ${tab === 2 && 'active'}`}
-                             onClick={() => onHandleChangeTab(2)}
-                        >
-                            Development
-                        </div>
+                        {tabList.map((value,index) => {
+                            const {name, tabCode,type} = value;
+                            return(
+                                <div className={`tab-inventory ${tab === tabCode && 'active'}`}  key={index}
+                                     onClick={() => onHandleChangeTab(tabCode,type)}>
+                                    {haveNotify && haveNotify.length > 0 && type === "Notify" && <div className={'has-new'}> New </div>}
+                                    {haveDevelop && haveDevelop.length > 0 && type === "Develop" && <div className={'has-new'}> New </div>}
+                                    {name}
+                                </div>
+                            )
+
+                        })}
                     </div>
-                    {tab === 1 &&
-                        <div className='notice-tabs'>
-                            <TabNotification />
-                        </div>
-                    }
-                    {tab === 2 &&
-                        <div className='notice-tabs'>
-                             <TabDevelop />
-                        </div>
-                    }
+                    {tabList.map((value,index) => {
+                        const {type} = value;
+                        return(
+                            type === changeType && <div className='notice-tabs' key={index}>
+                                <TabNotificationDevelopment type={type}/>
+                            </div>
+                        )
+                    })}
                 </div>
-                {/*<div className='custom-modal-footer-action-group'>*/}
-                {/*    <button onClick={() =>{props.removePopup({name : "NotificationBlood"}); props.removePopup({name : "filterGlobar"})} }>*/}
-                {/*        <TranslateLanguage direct={'adsNotice.closeBtn'}/>*/}
-                {/*    </button>*/}
-                {/*</div>*/}
             </Modal>
         </Fragment>
     )
 }
 
 export default connect(
-    null
+    state => {
+        const { authentication: {user},notify : {notifies},develop : {develops}} = state;
+        return {
+            user,
+            notifies,
+            develops
+        };
+    }
     ,dispatch => ({
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
-        getDevelopment: () => dispatch(developmentalAction.get()),
-        getNotification: () => dispatch(notificationAction.get()),
+        getDevelopment: (id) => dispatch(developmentalAction.getById(id)),
+        getNotification: (id) => dispatch(notificationAction.getById(id)),
     }))(NotificationBlood)

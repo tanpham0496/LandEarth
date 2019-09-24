@@ -39,6 +39,14 @@
   }
   .form{
     margin-top: 10px;
+    .checkCreateTitle {
+      padding: 3px 10px;
+      color: #AC0000;
+    }
+    .checkCreateContent {
+      padding: 3px 3px;
+      color: #AC0000;
+    }
   }
   .RadioButton-notice {
     display: flex;
@@ -75,11 +83,12 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     font-size: 11pt;
     margin-left: 10px;
-
+    pointer-events: auto;
     &:focus{
       outline: none !important;
       border: solid 1px rgba(255,255,255,0.8);
       background: rgba(255,255,255,0.8);
+      pointer-events: auto;
       //box-shadow: 0 0 10px #719ECE;
     }
   }
@@ -161,6 +170,22 @@
     overflow-y: auto !important;
     position: relative;
     height: 115px;
+  }
+  table{
+    tr {
+       th {
+         width: 100%;
+       }
+    }
+    .read-NewNotice {
+      opacity: 0.5;
+    }
+    .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+       background: #f4f4f4 !important;
+    }
+    tr.p-datatable-row {
+      background: #f4f4f4 !important;
+    }
   }
 }
 .header-notice {
@@ -328,7 +353,8 @@ body .p-dialog .p-dialog-content{
       padding: 10px;
       border-bottom: 1px solid;
       min-height: 470px !important;
-
+      max-height: 487px !important;
+      overflow: auto;
     }
     .createDate {
       text-align: right;
@@ -459,7 +485,7 @@ body .p-datatable .p-datatable-thead > tr > th {
 body .p-datatable .p-datatable-tbody > tr > td {
   border: 0px solid #c8c8c8 !important;
 }
-.p-dropdown label.p-dropdown-label {
+.notice-tabs .p-dropdown label.p-dropdown-label {
   cursor: pointer;
   background: #AC0000;
   color: white;
@@ -467,7 +493,7 @@ body .p-datatable .p-datatable-tbody > tr > td {
   border: 0px solid !important;
   padding-left: 12px;
 }
-body .p-dropdown .p-dropdown-trigger {
+.notice-tabs .p-dropdown .p-dropdown-trigger {
   background-color: #AC0000 !important;
 }
 .p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon {
@@ -502,4 +528,12 @@ body .p-dropdown:not(.p-disabled):focus{
 }
 .p-dropdown.p-component {
   width: 160px !important;
+}
+body .p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: #AC0000 !important;
+  background-color: #AC0000 !important;
+}
+body .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+  border-color: #AC0000 !important;
+  background-color: #AC0000 !important;
 }

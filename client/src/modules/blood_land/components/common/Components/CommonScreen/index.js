@@ -5,7 +5,7 @@ import {
 } from '../../../../../../helpers/importModule';
 import Tooltip from "../../../general/Tooltip";
 
-export const getNoInfoView = (PREVIOUS_SCREEN , handleChangeScreen) => {
+export const getNoInfoView = (PREVIOUS_SCREEN, handleChangeScreen) => {
     return (
         <Fragment>
             <div className='screen-content-error'>
@@ -29,7 +29,7 @@ export const getNoInfoView = (PREVIOUS_SCREEN , handleChangeScreen) => {
 
 export const loading = (type) => {
     return (
-        <div className='load-land' >
+        <div className='load-land'>
             <div className='load__icon-wrap'>
                 <div className="lds-roller">
                     <div/>
@@ -48,7 +48,7 @@ export const loading = (type) => {
 
 export const loadingComponent = () => {
     return (
-        <div className='load-land' style={{height: '33rem' , top: '25%' }}>
+        <div className='load-land' style={{height: '33rem', top: '25%'}}>
             <div className='load__icon-wrap'>
                 <div className="lds-roller">
                     <div/>
@@ -77,5 +77,25 @@ export const loadingImg = (ref) => {
             <div/>
             <div/>
         </div>
+    )
+};
+
+export const loadingLandList = () => {
+    return (
+        <div style={{display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'}}>
+            <div className="lds-ellipsis" style={{height: '26px'}}>
+                <div style={{top: '7px'}}/>
+                <div style={{top: '7px'}}/>
+                <div style={{top: '7px'}}/>
+                <div style={{top: '7px'}}/>
+            </div>
+            {/*<div>*/}
+            {/*    <TranslateLanguage direct={'alert.loadingPopup.body'}/>*/}
+            {/*</div>*/}
+        </div>
+
     )
 };

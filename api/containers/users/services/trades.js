@@ -613,13 +613,15 @@ function checkInCountry({ lat, lng, openCountries }) {
  * @return     {Promise}  { Boolean }
  */
 async function over500LandsIncategory({ userId, categoryId, itemQuadKeys }){
-    const MAX_LAND_IN_CATEGORY = 500;
-    //console.log('{ userId, categoryId, itemQuadKeys }',{ userId, categoryId, itemQuadKeys });
-    const landInCategory = await db.Land23.find({ 'user._id': ObjectId(userId), categoryId: ObjectId(categoryId) });
-    //console.log('landInCategory', landInCategory.length);
-    //console.log(itemQuadKeys.length + landInCategory.length);
-    if(itemQuadKeys.length + landInCategory.length > 500) return true;
-    return false;
+    try {
+        const MAX_LAND_IN_CATEGORY = 500;
+        const landInCategory = await db.Land23.find({ 'user._id': ObjectId(userId), categoryId: ObjectId(categoryId) });
+        if(itemQuadKeys.length + landInCategory.length > MAX_LAND_IN_CATEGORY) return true;
+        return false;
+    } catch (e){
+        console.log('Err', e);
+        return true;
+    }
 }
 
 /**
@@ -1182,13 +1184,6 @@ async function getPay({ wToken, nid, items }) {
 }
 //====================================================END EDIT BY HIEN====================================================
 
-
-
-
-
-
-
-
 /**
  * 2019.3.29 Xuân Giao
  * hàm này nhận lợi tức  // 이자 받음
@@ -1223,8 +1218,6 @@ async function getRewardInterest(param) {
             console.error('Api Wallet Reward Interest Error: ' + error.message);
         });
 }
-
-
 
 /**
  * 2019.3.29 Xuân Giao

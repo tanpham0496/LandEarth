@@ -13,13 +13,6 @@ router.post('/useItem', useItem);
 router.post('/checkAnyDeadTrees', checkAnyDeadTrees);
 router.post('/moveCharacterToMap', moveCharacterToMap);
 router.post('/getAllTreesByUserId', getAllTreesByUserId);
-router.post('/getSellLandInfos', getSellLandInfos);
-
-function getSellLandInfos(req, res, next){
-    services.getSellLandInfos(crypto.parsedObj(req.body))
-        .then(result => response.handleResponseWithLogs(req,res,true,result))
-        .catch(err => response.handleErrorResponse(res, err));
-}
 
 function combineTrees(req, res, next) {
     services.combineTrees(crypto.parsedObj(req.body))

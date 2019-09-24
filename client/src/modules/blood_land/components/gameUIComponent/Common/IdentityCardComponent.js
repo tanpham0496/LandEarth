@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from 'react'
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {landActions, screenActions, loadingImage,} from "../../../../../helpers/importModule";
+import _ from 'lodash';
 
 const identityCard = [
     {type: 'minimap-earth', currency: 'Cells'},
@@ -10,19 +11,17 @@ const identityCard = [
 ];
 
 function IdentityCardComponent(props){
-    const {user , lands: { myLands } } = props;
-    // onClick={() => this.handleChangeScreen(this.screen.default)}
-    // 
+    const {user, wallet, lands: { myLandAmount } } = props;
+    
     useEffect(() => {
         if(props.user && props.user._id) props.getAllLandById(props.user._id);
     }, []);
 
-    const renderValueIdentityCard = (type, user , lands) => {
-        const {wallet} = props;
+    const renderValueIdentityCard = (type) => {
         const goldBlood = wallet && wallet.info && wallet.info.goldBlood ? parseFloat(wallet.info.goldBlood).toLocaleString() : 0;
         switch (type) {
             case 'minimap-earth':
-                return lands.length;
+                return myLandAmount;
             case 'blood':
                 return goldBlood; //common.convertLocaleStringToSpecialString(user.goldBlood, 6);
             case 'email':
@@ -62,7 +61,7 @@ function IdentityCardComponent(props){
                                         </div>
                                         <div className='information'>
                                             <div className='info-detail'>
-                                                {renderValueIdentityCard(type, user , myLands)} {currency}
+                                                {renderValueIdentityCard(type)} {currency}
                                             </div>
 
                                         </div>
@@ -76,7 +75,7 @@ function IdentityCardComponent(props){
                                 </div>
 
                                 <div className='content'>
-                                    {myLands &&
+                                    {_.isNumber(myLandAmount) &&
                                     <span>
                                         {moment(user.createdDate).format('YYYY.MM.DD')}
                                     </span>}
@@ -95,8 +94,8 @@ function IdentityCardComponent(props){
 
 export default connect(
     state => {
-        const { authentication: { user }, screens, lands, wallet /*, map, alert, users, settings, lands, lands: { myLands }*/ } = state;
-        return { user, screens, lands, wallet /*, alert, lands, map, users, settings, myLands*/ };
+        const { authentication: { user }, screens, lands, wallet } = state;
+        return { user, screens, lands, wallet };
     },
     dispatch => ({
         addPopup: (screen) => dispatch(screenActions.addPopup(screen)),

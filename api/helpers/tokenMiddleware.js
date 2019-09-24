@@ -18,7 +18,8 @@ var noApplyTokenMiddlewareRoutes = [
     '/lands/getAllLandMarkCategoryInMap',
     '/users/settings/get',
 
-    '/lands/updateLandMarksState'
+    '/lands/updateLandMarksState',
+    //'/googlemap'
 ];
 
 async function tokenMiddleware(req, res, next) {

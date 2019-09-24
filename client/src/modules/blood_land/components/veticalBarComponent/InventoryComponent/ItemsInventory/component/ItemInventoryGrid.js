@@ -8,8 +8,7 @@ import {covertDragPositionToQuadkey} from "../../../../gameMapComponent/componen
 import {mapGameAction} from "../../../../../../../store/actions/gameActions/mapGameActions";
 import ItemTranslate from '../../../../general/ItemTranslate';
 import ItemDetailPopup from "../../component/itemDetailPopup";
-import config from "../../../../../../../helpers/config";
-import {covertDragPositionToQuadkeyLeafMap} from "../../../../leaftMap/components/GameMapFunction";
+
 
 class ItemInventoryGrid extends Component {
     state = {};
@@ -41,7 +40,7 @@ class ItemInventoryGrid extends Component {
         const gameTabOffset = document.getElementById("game-tab-content").getBoundingClientRect();
         const {left} = gameTabOffset;
         if (position.x < left) {
-            const quadKey = config.leafmapMode ? covertDragPositionToQuadkeyLeafMap(position) : covertDragPositionToQuadkey(position);
+            const quadKey = covertDragPositionToQuadkey(position);
             const itemData = {
                 quadKey, itemId: item.itemId
             };

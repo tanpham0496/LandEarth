@@ -93,7 +93,7 @@
             },
             "Operator": {
                 "en": {"title" : "Operator", "tip" : ""},
-                "kr": {"title" : "운영자", "tip" : ""},
+                "kr": {"title" : "작성자", "tip" : ""},
                 "vi": {"title" : "Quản lý", "tip" : ""}
             },
             "createdDate": {
@@ -192,15 +192,26 @@
 
             },
             "placeHolderTitle": {
-                "en": {"title" : "Please enter the title.(Within 35 words)", "tip" : ""},
-                "kr": {"title" : "제목을 입력하세요.(35자 이내)", "tip" : ""},
-                "vi": {"title" : "Vui lòng nhập tiêu đề.(Tối đa 35 kí tự)", "tip" : ""}
+                "en": {"title" : "Please enter the title.(Within 50 words)", "tip" : ""},
+                "kr": {"title" : "제목을 입력하세요.(50자 이내)", "tip" : ""},
+                "vi": {"title" : "Vui lòng nhập tiêu đề.(Tối đa 50 kí tự)", "tip" : ""}
 
             },
             "placeHolderContent": {
-                "en": {"title" : "Please enter the text.(Within 1000 words )", "tip" : ""},
-                "kr": {"title" : "내용을 입력하세요.(1000자 이내)", "tip" : ""},
-                "vi": {"title" : "Vui lòng nhập nội dung.(Tối đa 1000 kí tự)", "tip" : ""}
+                "en": {"title" : "Please enter the text.", "tip" : ""},
+                "kr": {"title" : "내용을 입력하세요.", "tip" : ""},
+                "vi": {"title" : "Vui lòng nhập nội dung.", "tip" : ""}
+            },
+            "checkTitle": {
+                "en": {"title" : "Please enter the title.", "tip" : ""},
+                "kr": {"title" : "제목을 입력하세요.", "tip" : ""},
+                "vi": {"title" : "Vui lòng nhập tiêu đề.", "tip" : ""}
+
+            },
+            "checkContent": {
+                "en": {"title" : "Please enter the text.", "tip" : ""},
+                "kr": {"title" : "내용을 입력하세요.", "tip" : ""},
+                "vi": {"title" : "Vui lòng nhập nội dung.", "tip" : ""}
             }
         }
     },
@@ -1943,6 +1954,22 @@
                         "in": {"title" : "Batal", "tip" : ""},                        
                         "th": {"title" : "ยกเลิก", "tip" : ""},                                                
                         "cn": {"title" : "取消", "tip" : ""}
+                    },
+                    "noLandInCategory": {
+                        "en": {"title" : "This folder has no lands.", "tip" : ""},
+                        "kr": {"title" : "랜드가 없는 폴더입니다.", "tip" : ""},
+                        "vi": {"title" : "Thư mục này không có đất.", "tip" : ""},
+                        "in": {"title" : "", "tip" : ""},                        
+                        "th": {"title" : "", "tip" : ""},                                                
+                        "cn": {"title" : "", "tip" : ""}
+                    },
+                    "noLandCanSale": {
+                        "en": {"title" : "The selected land is on sale.", "tip" : ""},
+                        "kr": {"title" : "선택하신 랜드는 판매중에 있습니다.", "tip" : ""},
+                        "vi": {"title" : "Đất chọn đang được bán.", "tip" : ""},
+                        "in": {"title" : "", "tip" : ""},                        
+                        "th": {"title" : "", "tip" : ""},                                                
+                        "cn": {"title" : "", "tip" : ""}
                     }
                 },
                 "nutrient": {
@@ -4615,6 +4642,32 @@
         }
     },
     "alert":{
+        "categoryNoLandAlert":{
+            "header": {
+                "en": { "title": "Notice", "tip" : "" },
+                "kr": { "title": "알림", "tip" : "" },
+                "vi": { "title": "Thông báo", "tip" : "" },
+                "in": { "title": "Peringatan", "tip" : "" },
+                "th": { "title": "แจ้งเตือน", "tip" : "" },
+                "cn": { "title" : "通知", "tip" : "" }
+            },
+            "body": {
+                "en": { "title": "This folder has no lands.", "tip" : "" },
+                "kr": { "title": "랜드가 없는 폴더입니다.", "tip" : "" },
+                "vi": { "title": "Thư mục đã chọn không có đất", "tip" : "" },
+                "in": { "title": "Item tidak tersedia.", "tip" : "" },
+                "th": { "title": "ไม่สามารถใช้ไอเทม", "tip" : "" },
+                "cn": { "title" : "无法使用道具。", "tip" : "" }
+            },
+            "confirmBtn": {
+                "en": { "title": "Confirm", "tip" : "" },
+                "kr": { "title": "확인", "tip" : "" },
+                "vi": { "title": "Xác nhận", "tip" : "" },
+                "in": { "title": "Konfirmasi", "tip" : "" },
+                "th": { "title": "ตกลง", "tip" : "" },
+                "cn": { "title" : "确认", "tip" : "" }
+            }
+        },
         "getPlantingUnsuccessAlert":{
             "header": {
                 "en": { "title": "Notice", "tip" : "" },
@@ -6835,7 +6888,7 @@
                     "cn": { "title": "通知", "tip" : "" }
                 },
                 "body": {
-                    "en": {"title" : "Eng", "tip" : ""},
+                    "en": {"title" : "Maximum of 500 lands in one folder", "tip" : ""},
                     "kr": {"title" : "한 풀더 안에 500셀 이하 가능합니다", "tip" : ""},
                     "vi": {"title" : "Mỗi folder chỉ được chứa tối đa 500 miếng đất  ", "tip" : ""},
                     "in": {"title" : "", "tip" : ""},
@@ -6892,7 +6945,7 @@
                     "cn": { "title": "通知", "tip" : "" }
                 },
                 "body": {
-                    "en": {"title" : "Eng", "tip" : ""},
+                    "en": {"title" : "Only empty folders can be deleted", "tip" : ""},
                     "kr": {"title" : "빈 풀더만 삭제할 수 있습니다.", "tip" : ""},
                     "vi": {"title" : "Chỉ xóa được folder không có đất.", "tip" : ""},
                     "in": {"title" : "", "tip" : ""},

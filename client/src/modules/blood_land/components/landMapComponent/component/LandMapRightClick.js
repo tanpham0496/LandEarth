@@ -1,5 +1,5 @@
 import React, {Fragment, memo, useState, useEffect} from 'react';
-import connect from "react-redux/es/connect/connect";
+import { connect, useDispatch } from "react-redux";
 import {landActions} from "../../../../../store/actions/landActions/landActions";
 import LandPurchasePopup from "../../gameUIComponent/LandTrading/LandPurchasePopup"
 import {screenActions} from "../../../../../store/actions/commonActions/screenActions";
@@ -7,14 +7,15 @@ import SellLand from "../../common/Components/SellLand";
 // import MoveLand from "../../commonComponent/MoveLand";
 import {mapActions, MessageBox, socketActions, TranslateLanguage} from "../../../../../helpers/importModule";
 import LandSale from "../../gameUIComponent/MyLand/LandForSellComponent";
-import MyLand from "../../gameUIComponent/MyLand";
+//import MyLand from "../../gameUIComponent/MyLand";
 import GameNavigation from "../../veticalBarComponent/GameNavigation";
 import GameTabScreenValueGameUi from "../../veticalBarComponent/gameTabScreenValueGameUi";
 import classNames from "classnames";
-import _ from 'lodash';
+// import _ from 'lodash';
 
 const LandMapRightClick = memo((props) => {
-    const { lands,screens } = props;
+    const dispatch = useDispatch();
+    const { /*lands,*/ screens } = props;
     useEffect(() => {
         if(props.user && props.user._id) props.getAllLandCategoryNew({userId: props.user._id});
     },[]);
@@ -25,10 +26,10 @@ const LandMapRightClick = memo((props) => {
             //props.clearSelected()
         },300)
     };
-    const {selected} = props.map;
-    const currentCategoryId = selected  && selected.length !== 0 && lands.myLands && lands.myLands[0] && lands.myLands[0].categoryId ;
-    const { myLands } = lands;
-    const filterSellMyLands = selected && myLands && myLands.filter(land => selected.some(sl => sl.quadKey === land.quadKey && (land.forSaleStatus === false)  ) );
+    //const {selected} = props.map;
+    //const currentCategoryId = selected  && selected.length !== 0 && lands.myLands && lands.myLands[0] && lands.myLands[0].categoryId ;
+    //const { myLands } = lands;
+    //const filterSellMyLands = selected && myLands && myLands.filter(land => selected.some(sl => sl.quadKey === land.quadKey && (land.forSaleStatus === false)  ) );
     //move land
     // const filterMoveMyLands = selected && selected.length !== 0 && myLands && myLands.filter(land => selected.some(sl => (sl.quadKey === land.quadKey) && (land.forSaleStatus ===false) ));
     //const filterCancelSellMyLands = selected && selected.length !== 0 && myLands && myLands.filter(land => selected.some(sl => (sl.quadKey === land.quadKey) && (land.forSaleStatus === true) ));
@@ -39,19 +40,11 @@ const LandMapRightClick = memo((props) => {
     const gotoSellLand = () => {
         props.getAllLandById(props.user._id);
         setTimeout(()=> {
-            props.removePopup({name : "SellLand"})
-            props.removePopup({name : "SellLandSuccessAlert"});
-            //remove tooltip detailSelected
-            props.removePopup({name : "showTotalBlood"})
-
+            props.removePopup({names: ["sellLand", "showTotalBlood"]})
         },0.0001);
 
-        setTimeout(() => {
-            props.addPopup({name : 'MyLand'});
-        },0.1)
-        setTimeout(()=> {
-            props.clearSelected();
-        },0.1)
+        setTimeout(() => props.addPopup({name : 'MyLand'}), 0.1)
+        setTimeout(()=> props.clearSelected(),0.1)
     };
 
     const confirmRemoveLand = () => {
@@ -63,22 +56,20 @@ const LandMapRightClick = memo((props) => {
         };
 
         props.sellLandSocket(objUnsellLand);
-        setTimeout(()=> {
-            props.clearSelected();
-        },0.001)
+        setTimeout(()=> props.clearSelected(), 0.001)
         
-        props.removePopup({name : "MyLand"});
-        props.removePopup({name : "removeSellLandButton"});
-        props.getAllLandById(props.user._id);
+        props.removePopup({names: ["MyLand", "removeSellLandButton"]});
+        dispatch(landActions.getListForSaleLands({ wToken: props.user.wToken }));
     };
 
     const getCancelLandSaleAlertPopup = () => {
+        //console.log('getCancelLandSaleAlertPopup');
         const mode = "question"; //question //info //customize
         const yesBtn = () => confirmRemoveLand();
         const noBtn = () => props.removePopup({name : "removeSellLandButton"});
         const header =  <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.header'}/>;
         const body =  <TranslateLanguage direct={'alert.getCancelLandSaleAlertPopup.body'}/>;
-        return <MessageBox modal={true} mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body} />;
+        return <MessageBox mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body} />;
     };
 
     const handleChangeScreen = () => {
@@ -92,10 +83,11 @@ const LandMapRightClick = memo((props) => {
         'game-ui--show-content': Boolean(screens["MyLand"])
     });
 
+    //console.log('sellLand start');
     return (
         <Fragment>
             {screens["LandPurchasePopup"] && <LandPurchasePopup handleShowPopup={null} handleHidePopup={handleHidePopup} modalPopup={true} selectedTiles={props.map.selected} />}
-            {screens["sellLand"] && <SellLand {...screens["sellLand"]} gotoSellLand={gotoSellLand} categoryId={currentCategoryId || ''} selectedLands={filterSellMyLands}  modalPopup={true} handleHidePopup={() => props.removePopup({name : "SellLand"}) }/>}}
+            {screens["sellLand"] && <SellLand gotoSellLand={gotoSellLand} {...screens["sellLand"]} />}}
 
             {/*{screens["MoveLand"] && filterMoveMyLands[0].categoryId && <MoveLand selectedLands={filterMoveMyLands} modalPopup={true} handleHidePopup={() => props.removePopup({name : "MoveLand"})}/>}*/}
             {screens["removeSellLandButton"] && cancelLandInfos && cancelLandInfos.length > 0 && getCancelLandSaleAlertPopup()}
@@ -108,7 +100,7 @@ const LandMapRightClick = memo((props) => {
                         {screens["LandSale"] && <LandSale handleChangeScreen={() => handleChangeScreen()} /> }
                         {screens["GameTabScreenValueGameUi"] && <GameTabScreenValueGameUi currentScreenValue ={screens["open"] ? screens["open"].screen : ''}/> }
                     </div>
-                    <GameNavigation />
+                    <GameNavigation activeInRightClick={true} />
                 </div>
             }
         </Fragment>

@@ -8,7 +8,7 @@ function NotEnoughAmountAlert(props) {
     const {addPopup, removePopup} = props;
     const mode = "question"; //question //info //customize
     const yesBtn = () => {
-        addPopup({name: 'shop'});
+        addPopup({name: 'ShopTab'});
         removePopup({name: 'NotEnoughAmountAlert'})
     };
     const noBtn = () => removePopup({name: 'NotEnoughAmountAlert'});

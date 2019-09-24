@@ -44,15 +44,13 @@ class TreeList extends PureComponent {
                 </div>
                 {
                     allTreeSort.map((item, index) => {
-                        const { maxAmount, usingAmount, remainAmount} = item;
+                        const { maxAmount, usingAmount, remainAmount , tree} = item;
                         return (
                             <div className='item no-content' key={index} style={{justifyContent: 'center'}}>
                                 <div className='i-30 text-center' onClick={() => this.onHandleSimulatePlantTree(item, selectedLands)}>
-                                    <button className='sp-item'
-                                            // onClick={() => this.plantTree(item)}
-                                    >
-                                        <div className='sp-img'><img src={getMapImgByItemId(item.tree.itemId)} alt={`itemId`} /></div>
-                                        <div className='sp-name'><ItemTranslate itemSelected={item.tree} name={true} decoClass='translation' language={language} /></div>
+                                    <button className='sp-item'>
+                                        <div className='sp-img'><img src={getMapImgByItemId(tree.itemId)} alt={`itemId`} /></div>
+                                        {tree &&<div className='sp-name'><ItemTranslate itemSelected={tree} name={true} decoClass='translation' language={language} /></div>}
                                     </button>
                                 </div>
                                 <div className='i-60 text-center'>

@@ -6,11 +6,7 @@ import TranslateLanguage from "../../../general/TranslateComponent";
 class LandSetting extends Component{
     onHandleClick = () => {
         const {settingReducer: {land:{showInfo}} , user: {_id}} = this.props;
-        const landSettingParam = {
-            userId: _id,
-            land: {showInfo: !showInfo}
-        };
-        this.props.setLandShowInfo(landSettingParam)
+        this.props.setLandShowInfo({ userId: _id, land: {showInfo: !showInfo} });
     };
     render() {
         const {settingReducer: {land}} = this.props;

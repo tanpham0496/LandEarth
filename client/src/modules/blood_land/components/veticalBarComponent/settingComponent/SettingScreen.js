@@ -13,9 +13,9 @@ class SettingScreen extends React.Component {
                 <div className='setting'>
                     <SoundSetting/>
                     <LandSetting/>
-                    <LanguageSetting/>
                     {settingLandInfo && <TodayLandInfoSetting/>}
                     {settingLandInfo && <LandsPerCellInfoSetting/>}
+                    <LanguageSetting/>
                 </div>
             </div>
         );

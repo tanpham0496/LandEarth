@@ -1,11 +1,13 @@
 // Store Game Objects - Tree - Character
 import * as t from '../../actionTypes/gameActionTypes/objectActionTypes'
 import _ from 'lodash'
+
 const initSate = {
     selectedLandMyLand: [],
     selectedCategoryMyLand: [],
-    selectedLandToPlantTree: []
-}
+    selectedLandToPlantTree: [],
+    loading: false
+};
 const objectsReducer = (state = initSate, action) => {
     switch (action.type) {
         case t.MOVE_TREE_TO_MAP_SUCCESS:
@@ -121,15 +123,19 @@ const objectsReducer = (state = initSate, action) => {
                 objectList: action.objectList.landWithTree
             };
         case t.GET_LAND_SELECTED_MY_LAND:
-            const {param: {landSelected }} = action;
-            let selectedLandMyLandClone = _.cloneDeep(state.selectedLandMyLand);
+            const {param: {objectList}} = action;
+            // let selectedLandMyLandClone = _.cloneDeep(state.selectedLandMyLand);
+            let selectedLandMyLandClone = [...state.selectedLandMyLand];
+            objectList && objectList.map(landSelected => {
+                if (!selectedLandMyLandClone.some(l => l.quadKey === landSelected.quadKey) && action.param.status) {
+                    selectedLandMyLandClone.push(landSelected)
+                }
+                if (selectedLandMyLandClone.some(l => l.quadKey === landSelected.quadKey) && !action.param.status) {
+                    selectedLandMyLandClone.splice(selectedLandMyLandClone.findIndex(l => l.quadKey === landSelected.quadKey), 1)
+                }
+                return landSelected
+            });
 
-            if (!selectedLandMyLandClone.some(l => l._id === landSelected._id) && action.param.status) {
-                selectedLandMyLandClone.push(landSelected)
-            }
-            if (selectedLandMyLandClone.some(l => l._id === landSelected._id) && !action.param.status) {
-                selectedLandMyLandClone.splice(selectedLandMyLandClone.findIndex(l => l._id === landSelected._id), 1)
-            }
             // console.log('selectedLandMyLandClone', selectedLandMyLandClone)
 
             return {
@@ -138,7 +144,7 @@ const objectsReducer = (state = initSate, action) => {
             };
 
         case t.GET_CATEGORY_SELECTED_MY_LAND:
-            const {param: {categorySelected }} = action;
+            const {param: {categorySelected}} = action;
             let selectedCategoryMyLandClone = _.cloneDeep(state.selectedCategoryMyLand);
             if (!selectedCategoryMyLandClone.some(c => c._id === categorySelected._id) && action.param.status) {
                 selectedCategoryMyLandClone.push(categorySelected)
@@ -154,36 +160,76 @@ const objectsReducer = (state = initSate, action) => {
         case t.GET_LAND_TREES_SUCCESS:
             return {
                 ...state,
-                resultGetLandTrees: action.result
+                resultGetLandTrees: action.result,
+                reload: !!action.reload
+
             };
         case t.GET_LAND_PLANT_TREE:
             let selectedLandToPlantTreeClone = _.cloneDeep(state.selectedLandToPlantTree);
-            if(!action.param){
+            if (!action.param || (action.param && !action.param.status && action.param.checkAll)) {
                 return {
                     ...state,
                     selectedLandToPlantTree: []
                 }
-            }else{
-                if(action.param.status){
+            } else {
+                if (action.param.status) {
                     selectedLandToPlantTreeClone.push(action.param.value)
-                }else{
-                    selectedLandToPlantTreeClone.splice(selectedLandToPlantTreeClone.findIndex(l => l._id === action.param.value._id) , 1)
+                } else {
+                    selectedLandToPlantTreeClone.splice(selectedLandToPlantTreeClone.findIndex(l => l._id === action.param.value._id), 1)
                 }
                 return {
                     ...state,
                     selectedLandToPlantTree: selectedLandToPlantTreeClone
                 }
             }
-        case t.GET_LAND_REMOVE_TREE:{
+        case t.GET_LAND_REMOVE_TREE: {
             return {
                 ...state,
                 selectedLandToRemove: action.param
+            }
+        }
+        case t.GET_LAND_TO_USE_NUTRIENT: {
+            return {
+                ...state,
+                selectedLandToUseNutrient: action.param
+            }
+        }
+        case t.GET_LAND_TO_USE_WATER: {
+            return {
+                ...state,
+                selectedLandToUseWater: action.param
             }
         }
         case t.GET_CURRENT_CATEGORY_ID: {
             return {
                 ...state,
                 currentCategoryId: action.id
+            }
+        }
+        case t.CLEAR_GET_LAND_BY_CATEID_AND_QUADKEYS: {
+            return {
+                ...state,
+                resultGetLandTrees: undefined
+            }
+        }
+        case t.RESET_LAND_SELECTED_MY_LAND: {
+            return {
+                ...state,
+                selectedCategoryMyLand: [],
+                selectedLandMyLand: []
+            }
+
+        }
+        case t.RESET_LAND_SELECTED_PLANT_TREE: {
+            return  {
+                ...state,
+                selectedLandToPlantTree: []
+            }
+        }
+        case t.LOADING_STATUS: {
+            return {
+                ...state,
+                loading: action.status
             }
         }
         default:

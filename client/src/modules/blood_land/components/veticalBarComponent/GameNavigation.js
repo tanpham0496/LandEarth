@@ -85,8 +85,11 @@ const GameNavigation = memo(props => {
 
 
     useEffect(() => {
-        const {user:{_id},haveNewMails} = props;
-        haveNewMails(_id);
+        //right click reload open tab after sellLand
+        if(!props.activeInRightClick){
+            const {user:{_id},haveNewMails} = props;
+            haveNewMails(_id);
+        }
     },[]);
 
 

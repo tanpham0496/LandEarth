@@ -1,5 +1,5 @@
-import React, {memo, useEffect, Fragment} from 'react';
-import connect from "react-redux/es/connect/connect";
+import React, {memo, useEffect, useState , Fragment} from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import {landActions} from "../../../../../../store/actions/landActions/landActions";
 import {loadingImage} from '../../../general/System';
 import TranslateLanguage from "../../../general/TranslateComponent";
@@ -7,32 +7,50 @@ import {loading, getNoInfoView} from "../../../common/Components/CommonScreen"
 import {screenActions} from "../../../../../../store/actions/commonActions/screenActions";
 import LandCertificatePopup from "../../../common/Components/LandCertificate"
 import LoadingPopup from "../../../common/Popups/commomPopups/LoadingPopup";
-import LandCertificateImage from "../../../common/Components/LandCertificate/landCertificateImage"
+import LandCertificateImage from "../../../common/Components/LandCertificate/landCertificateImage";
+import _ from 'lodash';
+import useInfiniteScroll from "../../../general/UseInfinityScroll";
+import {infiniteScroll} from "../../../../../../helpers/config";
+
 const LandCertifications = memo((props) => {
-    const {myLands, PREVIOUS_SCREEN, handleChangeScreen, addPopup , screens} = props;
+    const dispatch = useDispatch();
+    const {lands, authentication: {user} , screens} = useSelector(state => state);
+    const { PREVIOUS_SCREEN, handleChangeScreen } = props;
+    const [myLandQuadKeysState, setMyLandQuadKeysState ]  = useState();
+    const fetchMoreListItems = () =>  {
+        setTimeout(() => {
+            setMyLandQuadKeysState(prevState => ([...prevState, ...lands.myLandQuadKeys.slice(prevState.length , prevState.length  + 20) ]));
+            setIsFetching(false);
+        }, 500);
+    }
+    const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems , "land-certification-scroll");
     useEffect(() => {
-        const {user: {_id}, getAllLandById} = props;
-        getAllLandById(_id)
+        if(user && user._id) dispatch(landActions.getAllLandById(user && user._id));
     }, []);
 
+    useEffect(() => {
+        if(_.isArray(lands.myLandQuadKeys) && lands.myLandQuadKeys){
+            infiniteScroll ? setMyLandQuadKeysState(lands.myLandQuadKeys.slice(0,40)) : setMyLandQuadKeysState(lands.myLandQuadKeys)
+        }
+    }, [lands]);
 
-    const onHandleClickLand = (land) => {
-        props.getLandInfo(land.quadKey);
-        addPopup({name:'LandCertificatePopup'})
+    const onHandleClickLand = (quadKey) => {
+        dispatch(landActions.getLandInfo({quadKey}));
+        dispatch(screenActions.addPopup({name:'LandCertificatePopup'}));
     };
 
     const landListRender = () => {
-        return myLands.length === 0 ? getNoInfoView(PREVIOUS_SCREEN, handleChangeScreen) :
-            <div className='land-certification-ui-screen'>
-                {myLands.map((land, index) => {
-                    const {name, quadKey} = land;
-                    return (
-                        <div className='land-certificate-item' key={index} onClick={() => onHandleClickLand(land)}>
-                            {index + 1}. {name ? name : quadKey}
-                        </div>
-                    )
-                })}
-            </div>
+        return lands.myLandAmount
+            ? <div className='land-certification-ui-screen' id="land-certification-scroll">
+                  {myLandQuadKeysState && myLandQuadKeysState.map((quadKey, index) => {
+                        return (
+                          <div className='land-certificate-item' key={index} onClick={() => onHandleClickLand(quadKey)}>
+                              {index + 1}. { quadKey }
+                          </div>
+                      )
+                  })}
+              </div>
+            : getNoInfoView(PREVIOUS_SCREEN, handleChangeScreen);
 
 
     };
@@ -45,7 +63,7 @@ const LandCertifications = memo((props) => {
                     <TranslateLanguage direct={'menuTab.myLand.certified'}/>
                 </div>
             </div>
-            {!myLands ? loading() : landListRender()}
+            {!_.isNumber(lands.myLandAmount) ? loading() : landListRender()}
             {screens['LandCertificatePopup'] && <LandCertificatePopup/>}
             {screens['LoadingPopup'] && <LoadingPopup/>}
             {screens['LandCertificateImage'] && <LandCertificateImage/>}
@@ -53,23 +71,4 @@ const LandCertifications = memo((props) => {
     )
 });
 
-
-const mapStateToProps = (state) => {
-    const {lands: {myLands}, authentication: {user}, map , screens} = state;
-    return {
-        myLands,
-        user,
-        map, screens
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getAllLandById: (userId) => dispatch(landActions.getAllLandById(userId)),
-        getLandInfo: (quadKey) => dispatch(landActions.getLandInfo({quadKey})),
-        addPopup: (screen) => dispatch(screenActions.addPopup(screen))
-    };
-};
-
-const connectedPage = connect(mapStateToProps, mapDispatchToProps)(LandCertifications);
-export default connectedPage;
+export default LandCertifications

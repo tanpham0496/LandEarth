@@ -660,7 +660,7 @@ class LandManagement extends PureComponent {
     gotoSellLand = () => {
         this.props.handleChangeScreen(this.props.PREVIOUS_SCREEN.landSale);
     }
-
+    
     getModalPopup = () => {
         const {sellLand, nutrients, removal, cultivation, droplet} = this.popupScreen;
         const {categories, cateCheckedFilter, selectedLands, modalPopup, currentPopupScreen} = this.state;

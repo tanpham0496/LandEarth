@@ -5,17 +5,12 @@ import {
     loadingImage, screenActions, objectsActions
 } from '../../../../../../helpers/importModule';
 import * as s from "../../../common/Components/CommonScreen"
-import CategoryComponent from "./componentNew";
-
+import CategoryComponent from "./component";
 import Shop from '../../../veticalBarComponent/Shop';
-import ItemTree from './componentNew/itemTree'
-import cloneDeep from "lodash.clonedeep";
-import {onHandleCheckLandSelected} from "./component/landManagementFunction";
-
+import ItemTree from './component/itemTree'
 
 const LandManagement = (props) => {
-    const {selectedLandMyLand, selectedCategoryMyLand , myLands, PREVIOUS_SCREEN, handleChangeScreen, addPopup , user: {_id}} = props;
-
+    const {selectedLandMyLand, selectedCategoryMyLand, lands, PREVIOUS_SCREEN, handleChangeScreen, addPopup , user: {_id} , screens} = props;
 
     // =====================================================================
     /**
@@ -32,20 +27,32 @@ const LandManagement = (props) => {
      * @return {Boolean}    result.status
      * @return {Array}      result.landTrees
      */
-    const onHandleUsingItem = (type) => {
-        //console.log('type', type);
-        const param = {
-            userId: _id,
-            cateIds: selectedCategoryMyLand.map(c => c._id),
-            quadKeys: selectedLandMyLand.map(l => l.quadKey),
-            action: type
-        };
-        props.getLandByCateIdAndQuadKeys(param);
+    const onHandleUsingItem = (type , screen) => {
+        props.clearResultGetLandByCateIdsAndQuadKeys();
+
+        const totalLandCount = selectedCategoryMyLand.reduce((total , l) => total + l.landCount , 0);
+        if(selectedLandMyLand.length === 0 && selectedCategoryMyLand.length === 0){
+            addPopup({name: 'NoSelectedAlert'})
+        } else if(totalLandCount === 0 && selectedLandMyLand.length === 0){
+            addPopup({name: 'CategoryNoLandAlert'})
+        }else{
+            setTimeout(() => {
+                if(selectedCategoryMyLand.length === 0 && selectedLandMyLand.length === 0){
+                    return  addPopup({name: 'NoSelectedAlert'})
+                }else{
+                    const param = {
+                        userId: _id,
+                        cateIds: selectedCategoryMyLand.map(c => c._id),
+                        quadKeys: selectedLandMyLand.map(l => l.quadKey),
+                        action: type
+                    };
+                    props.getLandByCateIdAndQuadKeys(param);
+                    addPopup({name: screen})
+                }
+            })
+        }
     };
 
-
-
-    const totalLands = myLands && myLands.length;
     const categoryComponentProps = {
         handleChangeScreen, PREVIOUS_SCREEN
     };
@@ -65,32 +72,33 @@ const LandManagement = (props) => {
                     <TranslateLanguage direct={'menuTab.myLand.landOwned.myTotalLand'}/>
                 </div>
                 <div className='total-land-number'>
-                    {totalLands}
+                    {(lands && lands.myLandAmount) || 0}
                 </div>
             </div>
             <div className='item-for-tree-container'>
                 <ItemTree {...ItemTreeProps}/>
             </div>
-            {totalLands === 0 ? s.getNoInfoView(PREVIOUS_SCREEN, handleChangeScreen) :
-                <CategoryComponent {...categoryComponentProps}/>}
+            {lands && lands.myLandAmount ? <CategoryComponent {...categoryComponentProps}/> : s.getNoInfoView(PREVIOUS_SCREEN, handleChangeScreen)}
 
-            {/*{screens['shop'] && <Shop isPlanting={true} isOpen={this.state.shopModal}/>}*/}
+            {screens['ShopTab'] && <Shop isPlanting={true}/>}
+
         </Fragment>
     );
-}
+};
 
 
 const mapStateToProps = (state) => {
-    const {lands: {myLands}, authentication: {user}, objectsReducer: {selectedLandMyLand, selectedCategoryMyLand}, screens} = state;
+    const {lands, authentication: {user}, objectsReducer: {selectedLandMyLand, selectedCategoryMyLand}, screens} = state;
     return {
-        myLands, user, screens, selectedLandMyLand, selectedCategoryMyLand
+        lands, user, screens, selectedLandMyLand, selectedCategoryMyLand
     }
 };
 
 const mapDispatchToProps = (dispatch) => ({
     addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
     //ham nay de lay land theo quadKeys va cateId
-    getLandByCateIdAndQuadKeys: (param) => dispatch(objectsActions.getLandByCateIdAndQuadKeys(param))
+    getLandByCateIdAndQuadKeys: (param) => dispatch(objectsActions.getLandByCateIdAndQuadKeys(param)),
+    clearResultGetLandByCateIdsAndQuadKeys: () => dispatch(objectsActions.clearResultGetLandByCateIdsAndQuadKeys())
 });
 
 

@@ -46,7 +46,9 @@ class AdsToggle extends Component {
 
     render(){
         const {active} = this.state;
-        const {screens} = this.props;
+        const {screens,notifies,develops} = this.props;
+        const haveNotify = notifies && notifies.length > 0 && notifies.filter(nt => nt.read === false);
+        const haveDevelop = develops && develops.length > 0 && develops.filter(dv => dv.read === false);
         return(
             <Fragment>
 
@@ -54,6 +56,7 @@ class AdsToggle extends Component {
                              onMouseEnter={() => this.setImg(this.SELECTED_IMG)}
                              onMouseOut  ={() => this.checkSelected(this.state.selected)}
                     >
+                        {( (haveNotify && haveNotify.length > 0) || (haveDevelop && haveDevelop.length > 0) ) && <div className={'has-new'}> New </div>}
                         <img src={this.state.img} alt='' />
                     </button>   )
                     :
@@ -73,11 +76,12 @@ class AdsToggle extends Component {
 
 export default connect(
     state=> {
-        const { authentication: {user} ,screens} = state;
+        const { authentication: {user} ,screens, notify : {notifies},develop : {develops}} = state;
         return {
             user,
-            screens
-
+            screens,
+            notifies,
+            develops
         };
     },
     dispatch => ({

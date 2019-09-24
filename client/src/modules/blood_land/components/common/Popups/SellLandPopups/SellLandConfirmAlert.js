@@ -1,63 +1,38 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+    socketActions,
     screenActions,
+    landActions,
     TranslateLanguage,
     MessageBox,
-    socketActions
 } from "../../../../../../helpers/importModule";
-
+// import _ from 'lodash';
 
 function SellLandConfirmAlert(props) {
-    const {screens: {SellLandConfirmAlert: {ForSellLandSelected , modeSell}} , user, map: {zoom}} = props;
+    const dispatch = useDispatch();
+    const {authentication: {user}, map: { zoom }} = useSelector(state => state);
+    const { forSellLandSelected=[], modeSell } = props;
     const onHandleModifyPrice = () => {
-        const arrQuadkey = [...ForSellLandSelected].reduce((quadKeys, landItem) => {
-            quadKeys = quadKeys.concat({quadKey: landItem.quadKey, landPrice: landItem.sellPrice});
-            return quadKeys;
-        }, []);
-        //re-sell after change price
+        const quadKeys = [...forSellLandSelected].reduce((quadKeys, landItem) => quadKeys.concat({quadKey: landItem.quadKey, landPrice: landItem.sellPrice}), []);
         const param = {
             userId: user._id,
             forSaleStatus: true,
-            quadKeys: arrQuadkey,
+            quadKeys,
             mode: modeSell ? 'sell': 're_selling',
             zoom
         };
-        props.sellLandSocket(param);
-        props.addPopup({name: 'LoadingPopup', data: {totalLand: param.quadKeys.length} , close: 'SellLandConfirmAlert'})
+        dispatch(socketActions.sellLandSocket(param));
+        dispatch(screenActions.addPopup({name: 'LoadingPopup', data: {totalLand: param.quadKeys.length} , close: 'SellLandConfirmAlert'}));
+        dispatch(landActions.getListForSaleLands({ wToken: user.wToken }));
     };
-
 
     const mode = "question"; //question //info //customize
     const yesBtn = () => onHandleModifyPrice();
-    const noBtn = () => props.removePopup({name: 'SellLandConfirmAlert'});
+    const noBtn = () => dispatch(screenActions.removePopup({name: 'SellLandConfirmAlert'}))
     const header = <TranslateLanguage direct={'alert.getSellLandModifyConfirmAlertPopup.header'}/>;
     const body = <TranslateLanguage direct={'alert.getSellLandModifyConfirmAlertPopup.body'}/>;
-    return <MessageBox modal={true} mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body}/>;
+    return <MessageBox mode={mode} yesBtn={yesBtn} noBtn={noBtn} header={header} body={body}/>;
 }
 
-export default connect(
-    state => {
-        const {authentication: {user}, screens, map} = state;
-        return {user, screens, map};
-    },
-    dispatch => ({
-        sellLandSocket: (objSellLand) => dispatch(socketActions.sellLandSocket(objSellLand)),
-        addPopup: (screen) => dispatch(screenActions.addPopup(screen)),
-        removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
-    })
-)(SellLandConfirmAlert);
-
-
-//
-// confirmModifySellLand = () => {
-
-
-//
-//     this.setState({
-//         preReSellingLands: param.quadKeys,
-//         reselling:true
-//     });
-//     this.props.sellLandSocket(param);
-//     this.handleHideAlertPopup()
-// };
+export default SellLandConfirmAlert;

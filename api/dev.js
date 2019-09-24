@@ -514,67 +514,6 @@ async function createBitaminHistoryData(){
     }
 }
 
-async function scriptSplit500Land(){
-    const categorySizeGreater500 = await db.Land23.aggregate([
-        { $match: { "user.role": "user" } },
-        { $group: { _id: { categoryId: "$categoryId", userId: "$user._id" }, count: { $sum: 1 }  } },
-        { $match: { count: { $gt: 500 } } }
-    ])
-    //console.log('categorySizeGreater500', categorySizeGreater500);
-    if( categorySizeGreater500.length === 0) return;
-
-    for(let aCate of categorySizeGreater500){
-        let { _id: { categoryId, userId } } = aCate;
-        const fCate = categoryId ? await db.LandCategory.findOne({ _id: ObjectId(categoryId), userId: ObjectId(userId) }) : null;
-        categoryId = categoryId ? ObjectId(categoryId) : null;
-        let landFrom501 = await db.Land23.find({'user._id': ObjectId(userId), categoryId }).skip(categoryId ? 500 : 0).limit(500);
-        console.log('landFrom501', landFrom501.length);
-        let iDir = 1;
-        while(landFrom501.length > 0){
-            try{
-                const newCateName = fCate ? `${fCate.name} _(${iDir})` : `new category _(${iDir})`  ;
-                const quadKeys = landFrom501.map(land => land.quadKey);
-                const isUpdate = await createNewCategory({ userId, categoryId, quadKeys, newCateName });
-                if(isUpdate){
-                    console.log('Split Category Success', userId, categoryId, newCateName);
-                    landFrom501 = await db.Land23.find({'user._id': ObjectId(userId), categoryId }).skip(categoryId ? 500 : 0).limit(500);
-                    //console.log('while landFrom501', landFrom501.length);
-                    iDir++;
-                } else {
-                    console.log('End', categoryId);
-                    break;
-                }
-            } catch(e){
-                console.log('Err', e);
-                break;
-            }
-        }
-    }
-
-    async function createNewCategory({ userId, categoryId, quadKeys, newCateName }){
-        try{
-            const createNewCate = await db.LandCategory.create({ typeOfCate: 'normal', name: newCateName, userId });
-            //console.log('createNewCate', createNewCate);
-            if(createNewCate){
-                const updateLandCategory = await db.Land23.updateMany(
-                    { 'user._id': ObjectId(userId), categoryId, quadKey: { $in: quadKeys } },
-                    { $set: { categoryId: ObjectId(createNewCate._id) } }
-                );
-                console.log('updateLandCategory', updateLandCategory);
-                //console.log('updateLandCategory.nModified', updateLandCategory.nModified);
-                //console.log('quadKeys.length', quadKeys.length);
-                if(updateLandCategory.nModified === quadKeys.length){
-                    return true;
-                }
-            }
-            return false;
-        } catch(e){
-            console.log('Err', e);
-            return false;
-        }
-    }
-}
-
 async function updateNeLand({ neLand }){
     console.log('neLand quadKey', neLand.quadKey);
     const RANGE_LEVEL = 1;
@@ -618,75 +557,6 @@ async function updateArrayNeLands({ neLands }){
         }
     }
 }
-
-let { list } = require('./listup-landmarks-result');
-(async () => {
-    
-    //split 500 every category
-    //await scriptSplit500Land();
-    
-    // const neLands = await landCollections[1].find().sort({count: 1});
-    // await updateArrayNeLands({ neLands });
-    // console.log('Finish!!!');
-
-    console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
-    if(process.env.NODE_ENV === 'development'){
-        console.log('remove DB');
-        bloodDB.dropDatabase();
-        landLogDB.dropDatabase();
-
-        console.log('create User aa bb cc dd ee');
-        await createUser();
-
-        console.log('set open country');
-        await setOpenCountry();
-
-        console.log('set landPrice');
-        await db.LandConfig.create({ landPrice: 50000, landFee: 0 });
-
-        // //for test
-        console.log('create Bitamin for Test')
-        await createBitaminHistoryData();
-
-        // //land mark wrong at present
-        console.log('addUserManagerAndAddLandMark');
-        list.length = 20000;
-        await addUserManagerAndAddLandMark(list);
-
-        console.log('set open country and landPrice is completed!');
-        process.exit(0);
-    } else if(process.env.NODE_ENV === 'staging'){
-        console.log('remove DB');
-        bloodDB.dropDatabase();
-        landLogDB.dropDatabase();
-
-        console.log('create User aa bb cc dd ee');
-        await createUser();
-
-        console.log('set open country');
-        await setOpenCountry();
-
-        console.log('set landPrice');
-        await db.LandConfig.create({ landPrice: 60000, landFee: 0 });
-
-        list.length = 15000;
-        console.log('addUserManagerAndAddLandMark',  list.length);
-        await addUserManagerAndAddLandMark(list);
-        //re-sell land mark vitual for fix info land
-
-        console.log('set open country and landPrice is completed!');
-        process.exit(0);
-    }  else if(process.env.NODE_ENV === 'production'){
-        //do nothing
-    }
-
-
-
-    //re-sell land mark vitual for fix info land
-    //await sellLandMarkVirtual(list);
-    //set landmark count
-    //await addLandmarkCount(list);
-})();
 
 async function addUserManagerAndAddLandMark(list) {
     let userEE = await db.User.findOne({ userName: 'ee' });
@@ -740,7 +610,7 @@ async function createUser(){
         userAA = await db.User.create({
             "wSns" : [],
             "wBlood" : 0,
-            "goldBlood" : 777777777,
+            "goldBlood" : 999999999,
             "bitamin" : 700000,
             "role" : "user",
             "updatedDate" : new Date(),
@@ -768,7 +638,7 @@ async function createUser(){
         userBB = await db.User.create({
             "wSns" : [],
             "wBlood" : 0,
-            "goldBlood" : 888888888,
+            "goldBlood" : 999999998,
             "bitamin" : 800000,
             "role" : "user",
             "updatedDate" : new Date(),
@@ -798,7 +668,7 @@ async function createUser(){
         userCC = await db.User.create({
             "wSns" : [],
             "wBlood" : 0,
-            "goldBlood" : 999999999,
+            "goldBlood" : 999999997,
             "bitamin" : 900000,
             "role" : "user",
             "updatedDate" : new Date(),
@@ -827,9 +697,9 @@ async function createUser(){
         userDD = await db.User.create({
             "wSns" : [],
             "wBlood" : 0,
-            "goldBlood" : 666666666,
+            "goldBlood" : 999999996,
             "bitamin" : 600000,
-            "role" : "user",
+            "role" : "editor",
             "updatedDate" : new Date(),
             "createdDate" : new Date(),
             "userName" : "dd",
@@ -855,7 +725,7 @@ async function createUser(){
         userEE = await db.User.create({
             "wSns": [],
             "wBlood": 0,
-            "goldBlood": 555555555,
+            "goldBlood": 999999997,
             "bitamin" : 500000,
             "role": "manager",
             "updatedDate": new Date(),
@@ -888,6 +758,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //================================================================================================END ADD LAND MARK================================================================================================
+
 
 
 //========================================================================SELL LANDMARK=====================================================================================
@@ -1020,3 +891,170 @@ async function addLandmarkCount(list){
     console.log('addLandmarkCount Done!!!');
 }
 //========================================================================ADD LANDMARK COUNT=====================================================================================
+
+
+async function scriptSplit500Land(){
+    const categorySizeGreater500 = await db.Land23.aggregate([
+        { $match: { "user.role": "user" } },
+        { $group: { _id: { categoryId: "$categoryId", userId: "$user._id" }, count: { $sum: 1 }  } },
+        { $match: { count: { $gt: 500 } } }
+    ])
+    //console.log('categorySizeGreater500', categorySizeGreater500);
+    if( categorySizeGreater500.length === 0) return;
+
+    for(let aCate of categorySizeGreater500){
+        let { _id: { categoryId, userId } } = aCate;
+        const fCate = categoryId ? await db.LandCategory.findOne({ _id: ObjectId(categoryId), userId: ObjectId(userId) }) : null;
+        categoryId = categoryId ? ObjectId(categoryId) : null;
+        let landFrom501 = await db.Land23.find({'user._id': ObjectId(userId), categoryId }).skip(categoryId ? 500 : 0).limit(500);
+        console.log('landFrom501', landFrom501.length);
+        let iDir = 1;
+        while(landFrom501.length > 0){
+            try{
+                const newCateName = fCate ? `${fCate.name} _(${iDir})` : `new category _(${iDir})`  ;
+                const quadKeys = landFrom501.map(land => land.quadKey);
+                const isUpdate = await createNewCategory({ userId, categoryId, quadKeys, newCateName });
+                if(isUpdate){
+                    console.log('Split Category Success', userId, categoryId, newCateName);
+                    landFrom501 = await db.Land23.find({'user._id': ObjectId(userId), categoryId }).skip(categoryId ? 500 : 0).limit(500);
+                    //console.log('while landFrom501', landFrom501.length);
+                    iDir++;
+                } else {
+                    console.log('End', categoryId);
+                    break;
+                }
+            } catch(e){
+                console.log('Err', e);
+                break;
+            }
+        }
+    }
+
+    async function createNewCategory({ userId, categoryId, quadKeys, newCateName }){
+        try{
+            const createNewCate = await db.LandCategory.create({ typeOfCate: 'normal', name: newCateName, userId });
+            if(createNewCate){
+                const updateLandCategory = await db.Land23.updateMany(
+                    { 'user._id': ObjectId(userId), categoryId, quadKey: { $in: quadKeys } },
+                    { $set: { categoryId: ObjectId(createNewCate._id) } }
+                );
+                //console.log('updateLandCategory', updateLandCategory);
+                //console.log('updateLandCategory.nModified', updateLandCategory.nModified);
+                //console.log('quadKeys.length', quadKeys.length);
+                if(updateLandCategory.nModified === quadKeys.length){
+                    return true;
+                }
+            }
+            return false;
+        } catch(e){
+            console.log('Err', e);
+            return false;
+        }
+    }
+}
+
+async function buyLandsVituals({ vitualDatas, user, landConfig }){
+    const { _id: userId, nid, wToken } = user;
+    return Promise.all(vitualDatas.map(async data => {
+        const { categoryName, quadKeys } = data;
+        if(quadKeys && quadKeys.length){
+            const itemQuadKeys = quadKeys.map(quadKey => ({ sellPrice: landConfig.landPrice, quadKey, buyerId: userId, sellerId: null, sellerNid: 0, buyerNid: Number(nid) }));
+            const rs = await landService.purchaseLands({ categoryId: null, categoryName, wToken, itemQuadKeys, buyMode: 'normal', user, zoom: 22 });
+            if(!rs.success) return 'Faillllllllllllllll';
+            return categoryName;
+        } else {
+            //create category
+            const newCate = await db.LandCategory.create({ typeOfCate: 'normal', name: categoryName, userId });
+            if(newCate) return newCate.name;
+            return "Fail Create Cate";
+        }
+    })).catch(e => {
+        console.log('e', e)
+    })
+}
+
+const landService = require('./containers/users/services/trades');
+const { list } = require('./listup-landmarks-result');
+const { vitualDatas, vitualDatas2, splitCategory } = require('./testData');
+
+(async () => {
+    
+    //split 500 every category
+    //await scriptSplit500Land();
+    
+    console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
+    if(process.env.NODE_ENV === 'development'){
+        console.log('remove DB');
+        bloodDB.dropDatabase();
+        landLogDB.dropDatabase();
+
+        console.log('create User aa bb cc dd ee');
+        const { userAA, userBB, userCC, userDD, userEE } = await createUser();
+        //console.log('userAA', userAA);
+
+        console.log('set open country');
+        await setOpenCountry();
+
+        console.log('set landPrice');
+        const landConfig = await db.LandConfig.create({ landPrice: 10000, landFee: 0 });
+        //console.log('===> ', landConfig);
+
+        
+        console.log('create test data: 15000 lands and 235 categories for user aa... Please wait 30s!');
+        const rsCre = await buyLandsVituals({ vitualDatas, user: userAA, landConfig });
+        console.log('rsCre', rsCre)
+        console.log('splitCategory', splitCategory);
+        const LandInCate = splitCategory.map(quadKey => quadKey && ({ categoryName: quadKey.substring(8, quadKey.length), quadKeys: [quadKey] }));
+        // /console.log('LandInCate',LandInCate)
+        const rsCre2 = await buyLandsVituals({ vitualDatas: LandInCate, user: userAA, landConfig });
+        //console.log('rsCre2', rsCre2);
+        console.log('create test done!!!');
+
+
+        // //land mark wrong at present
+        console.log('addUserManagerAndAddLandMark');
+        list.length = 20000;
+        await addUserManagerAndAddLandMark(list);
+
+        console.log('set open country and landPrice is completed!');
+        process.exit(0);
+    } else if(process.env.NODE_ENV === 'staging'){
+        console.log('remove DB');
+        bloodDB.dropDatabase();
+        landLogDB.dropDatabase();
+
+        console.log('create User aa bb cc dd ee');
+        await createUser();
+
+        console.log('set open country');
+        await setOpenCountry();
+
+        console.log('set landPrice');
+        await db.LandConfig.create({ landPrice: 20000, landFee: 0 });
+
+        list.length = 15000;
+        console.log('addUserManagerAndAddLandMark',  list.length);
+        await addUserManagerAndAddLandMark(list);
+        //re-sell land mark vitual for fix info land
+
+        console.log('set open country and landPrice is completed!');
+        process.exit(0);
+    }  else if(process.env.NODE_ENV === 'production'){
+        //do nothing
+    }
+
+    // //for test
+    // console.log('create Bitamin for Test')
+    // await createBitaminHistoryData();
+    
+
+    // calculator number land lower zoom 22
+    // const neLands = await landCollections[1].find().sort({count: 1});
+    // await updateArrayNeLands({ neLands });
+    // console.log('Finish!!!');
+    
+    //re-sell land mark vitual for fix info land
+    //await sellLandMarkVirtual(list);
+    //set landmark count
+    //await addLandmarkCount(list);
+})();

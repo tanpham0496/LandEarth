@@ -62,11 +62,11 @@ class Functions extends Component {
                 <MultiSelect    selected={selectedFunc === func.multiSelect}    handleFuncSelect={this.handleFuncSelect}/>
                 {/*<MultiClear     selected={selectedFunc === func.multiClear}      handleFuncSelect={this.handleFuncSelect}/>*/}
                 <ClearSelection selected={selectedFunc === func.clearSelection} handleFuncSelect={this.handleFuncSelect}/>
-                <IconToggle     selected={selectedFunc === func.toggleIcon}     handleFuncSelect={this.handleFuncSelect}/>
-                <ShopToggle     selected={selectedFunc === func.toggleStores}   handleFuncSelect={this.handleFuncSelect}/>
+                {/*<IconToggle     selected={selectedFunc === func.toggleIcon}     handleFuncSelect={this.handleFuncSelect}/>*/}
+                {/*<ShopToggle     selected={selectedFunc === func.toggleStores}   handleFuncSelect={this.handleFuncSelect}/>*/}
                 <AdsToggle      selected={selectedFunc === func.toggleAds}      handleFuncSelect={this.handleFuncSelect}/>
                 <InfoToggle     selected={selectedFunc === func.toggleInfo}     handleFuncSelect={this.handleFuncSelect}/>
-                <Switch3D       selected={selectedFunc === func.switch3D}       handleFuncSelect={this.handleFuncSelect}/>
+                {/*<Switch3D       selected={selectedFunc === func.switch3D}       handleFuncSelect={this.handleFuncSelect}/>*/}
                 <GameModeToggle/>
             </div>
         )

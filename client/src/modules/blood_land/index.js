@@ -87,7 +87,7 @@ class BloodLand extends Component {
             <Fragment>
                 {chromeDetectedAlertStatus && getChromeDetectAlert(chromeDetectedAlertStatus)}
                 {wIdAlertStatus && !config.devMode && getWIdExistAlert(wIdAlertStatus)}
-                {tokenErrorAlertStatus && getTokenErrorAlert(tokenErrorAlertStatus)}
+                {tokenErrorAlertStatus && getTokenErrorAlert()}
             </Fragment>
         )
     };

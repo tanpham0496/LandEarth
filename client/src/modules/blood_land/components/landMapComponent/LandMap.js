@@ -17,7 +17,6 @@ import { landActions, screenActions } from '../../../../helpers/importModule'
 import {
     MAX_ZOOM,
     DEFAULT_LEVEL_OFFSET,
-    DEFAULT_LAND_LEVEL_OFFSET,
     MAX_ZOOM_SELECTED_TILE,
     MIN_ZOOM_SELECTED_TILE,
     PARENT_1_RANGE,
@@ -29,15 +28,18 @@ import LandTileComponent from './component/LandTileComponent';
 import MarkerLandMark from './component/MarkerLandMark';
 
 async function getFisrtLocation(){
-    const defaultCenter = [37.566535, 126.9779692];
-    const curentCenter = await getCurrentLocation();
+    
     const lat = localStorage.getItem('lat');
     const lng = localStorage.getItem('lng');
     const syncMapCenter = localStorage && lat && lng && [parseFloat(lat), parseFloat(lng)];
     //console.log('syncMapCenter', syncMapCenter);
     if(syncMapCenter && syncMapCenter[0] && syncMapCenter[1]) return syncMapCenter;
+
+    const curentCenter = await getCurrentLocation();
     if(curentCenter && curentCenter[0] && curentCenter[1]) return curentCenter;
-    if(defaultCenter) return defaultCenter;
+
+    const DEFAULT_CENTER = [37.566535, 126.9779692];
+    return DEFAULT_CENTER;
 
     async function getCurrentLocation(){
         return new Promise((resolve, reject) => {
@@ -47,7 +49,7 @@ async function getFisrtLocation(){
                     resolve(null);
                 },
                 error => {
-                    console.log("can't getCurrentPosition!!");
+                    //console.log("can't getCurrentPosition!!");
                     resolve(null);
                 }
             );
@@ -89,13 +91,16 @@ class LandMap extends Component {
         }
 
         if(zoom !== this.state.zoom){
-            const tiles = this.drawTiles({ zoom, bounds, selectedTiles: [], dBugPlace: "_onChange zoom change" });
-            //set state, thay đổi tiles hiện tại và sẽ render lại tiles
-            this.setState({ tiles, zoom, bounds, selectedTiles: [] });
-            //clear selected when zoom
-            this.props.clearSelected();
+            _.debounce(() => {
+                const tiles = this.drawTiles({ zoom, bounds, selectedTiles: [], dBugPlace: "_onChange zoom change" });
+                //set state, thay đổi tiles hiện tại và sẽ render lại tiles
+                this.setState({ tiles, zoom, bounds, selectedTiles: [] });
+                //clear selected when zoom
+                this.props.clearSelected();
+            }, 300)
+
         }
-        
+
         // //get area Land
         // this.getParticalLands({ bounds, zoom });
         //cập nhật lại vị trí hiện tại
@@ -133,6 +138,12 @@ class LandMap extends Component {
         if(this.state.loaded && !_.isEqual(prevProps.map.selected, selected)){
             //console.log('change prevProps.map.selected, selected');
             this.props.getLandByQuadKeys({ userId: this.props.user._id, quadKeys: selected.map(tile => tile.quadKey) });
+
+            //remove showTotalBlood popup when double click (multi select map)
+            if(selected && !selected.length){
+                this.props.removePopup( {name: "showTotalBlood"} );
+            }
+
 
             // if(dBug) console.log('state seleted change');
             // const {zoom, bounds} = this.state;
@@ -232,14 +243,19 @@ class LandMap extends Component {
                     //set tiles và sẽ render lại
                     this.setState({ tiles, zoom, bounds });
                 }
-                this.getParticalLands({ bounds, zoom });
+                
+                // _.debounce(() => {
+                //     console.log('bounds', bounds);
+                //     console.log('zoom',zoom)
+                this.getParticalLands({ bounds, zoom })
+                // }, 300);
             }
         })
 
         map.addListener('zoom_changed', (e) => {
             //tạo hiệu ứng xóa lưới khi vừa zoom xong
             this.setState({tiles: [], multiSelectStart: null/*, multiClearStart: null*/});
-             //remove tooltip hover selected
+            //remove tooltip hover selected
             this.props.removePopup({name: "showTotalBlood"});
 
         });
@@ -268,6 +284,25 @@ class LandMap extends Component {
                 this.setState({isDragging: false});
             }, 100)
         });
+
+
+
+        // let maxZoomService = new maps.MaxZoomService();
+        // map.addListener('click', showMaxZoom);
+
+        // function showMaxZoom(e) {
+        //     console.log('click ==> ')
+        //   maxZoomService.getMaxZoomAtLatLng(e.latLng, function(response) {
+        //     if (response.status !== 'OK') {
+        //         console.log('Error in MaxZoomService')
+        //     } else {
+        //       console.log('The maximum zoom at this location is: ' + response.zoom);
+        //     }
+        //   });
+        // }
+
+
+
     };
 
     createTile = (x, y, level, lands, selectedTiles) => {
@@ -280,7 +315,7 @@ class LandMap extends Component {
         let tileLatLng = TileXYToLatLong(x, y, level);
         //khao báo tile object
         let tile = {x, y, level, latlng: tileLatLng, quadKey: tileQuadKey};
-        //BOOLEAN trạng thái selected của 1 tile, nếu quadKey của tile này thuộc state selectedTiles của component thì TRUE, else FALSE 
+        //BOOLEAN trạng thái selected của 1 tile, nếu quadKey của tile này thuộc state selectedTiles của component thì TRUE, else FALSE
         tile.selected = _.isArray(selectedTiles) && selectedTiles.some(t => tile.quadKey === t.quadKey);
         //BOOLEAN trạng thái forbid của 1 tile từ function checkInCountry
         const forbid = !checkInCountry({ latlng: tileLatLng, openCountries });
@@ -356,7 +391,7 @@ class LandMap extends Component {
         //tile.forbid = !checkInCountry(tileLatLng);
         //BOOLEAN trạng thái 1 tile có phải là forbid hay ko
         tile.forbid = !checkInCountry({ latlng: tileLatLng, openCountries });
-        //BOOLEAN trạng thái 1 tile có đang được select hay ko ? ( kiểm tra từ state selectedTiles ) 
+        //BOOLEAN trạng thái 1 tile có đang được select hay ko ? ( kiểm tra từ state selectedTiles )
         tile.selected = _.isArray(selectedTiles) && selectedTiles.some(t => tile.quadKey === t.quadKey);
         //BOOLEAN trạng thái 1 tile có phải là landmark hay ko ?
         tile.landmark = this.props.lands.landmarks && this.props.lands.landmarks.length > 0 && this.props.lands.landmarks.some(lm => lm.centerQuadKey.indexOf(tileQuadKey) === 0);
@@ -403,7 +438,7 @@ class LandMap extends Component {
         }
     };
 
-    drawTiles({zoom, bounds, selectedTiles, dBugPlace}) {
+    drawTiles = ({zoom, bounds, selectedTiles, dBugPlace}) => {
         const lands = this.props.lands.allLands || [];
         selectedTiles = selectedTiles || [];
         if(dBug) {console.log('drawTiles ==>', dBugPlace, zoom);}
@@ -411,14 +446,14 @@ class LandMap extends Component {
         //tạo biến level
         const level = zoom + DEFAULT_LEVEL_OFFSET;
         //tạo tile với tọa độ x,y từ latlng góc trái trên
-        let beginTile = LatLongToTileXY(bounds.ne.lat, bounds.sw.lng, level);
+        let beginTile = bounds && LatLongToTileXY(bounds.ne.lat, bounds.sw.lng, level);
         //tạo tile với tọa độ x,y từ latlng góc phải dưới
-        let endTile = LatLongToTileXY(bounds.sw.lat, bounds.ne.lng, level);
+        let endTile = bounds && LatLongToTileXY(bounds.sw.lat, bounds.ne.lng, level);
 
         beginTile = {x: beginTile.x, y: beginTile.y};
         endTile = {x: endTile.x, y: endTile.y};
 
-        //ARRAY trường hợp đi hết 1 vòng trái đất, tách ra 2 loại lưới, 
+        //ARRAY trường hợp đi hết 1 vòng trái đất, tách ra 2 loại lưới,
         let arrStartEnd = this.startAndEndBounds({level, beginTile, endTile});
         //tạo tiles
         return arrStartEnd.reduce((total, {beginTile, endTile}) => total.concat(this.createArrayTile({ beginTile, endTile, level, lands, selectedTiles })), []);
@@ -426,6 +461,7 @@ class LandMap extends Component {
 
     //sự kiện tile click
     tileClick(tile) {
+        //console.log('this.state.zoom', this.state.zoom);
         //chỉ cho phép click chọn tile nếu tile có giá lớn hơn 0 đồng
         const {lands, user, screens} = this.props;
         //không cho click nếu không phải tầng cuối cùng
@@ -441,7 +477,7 @@ class LandMap extends Component {
         if (tile && tile.lands && tile.lands.length > 0 && tile.lands.some(land => tile.quadKey.indexOf(land.quadKey) === 0 && land.forbid)) return;    //limit don't click to Forbid Tile
         //không cho admin click land nếu đất đó thuộc người khác
         if (user && user.role && user.role === 'manager' && tile && tile.lands && tile.lands.length > 0 && tile.lands.some(land => land.user !== null)) return;   //limit admin don't click to Partical or Other land
- 
+
         if(this.state.selectMode === "zoomSelect") {
             //console.log('this.state.selectMode', this.state.selectMode);
 
@@ -458,7 +494,7 @@ class LandMap extends Component {
                 if (!this.state.isDragging) {
                     //show popup buy land
                     const newTiles = _.cloneDeep(this.state.tiles);
-                    newTiles[selectedIndex].selected = true; 
+                    newTiles[selectedIndex].selected = true;
                     let newSelectedTiles = update((selectedTiles || []), {$push: [newTiles[selectedIndex]]});
                     this.setState({tiles: newTiles, selectedTiles: newSelectedTiles});
                     this.props.addSelected(newSelectedTiles);
@@ -502,13 +538,13 @@ class LandMap extends Component {
         } else {
             if(this.state.zoom < MAX_ZOOM_SELECTED_TILE) return; //don't click when lower zoom 22
         }
-        
+
         const { selectedTiles=[], multiSelectStart, multiClearSave=[], tiles } = this.state;
         if(this.state.selectMode !== "multi" || !multiSelectStart) return;
         //nếu đang hover mà trạng thái chọn 1 vùng
         //set trạng thái selected true từ ô bắt đầu + ô đang hover ( vẽ hình vuông theo tọa độ x,y)
         //let rm = [];
-        const tileStart = multiSelectStart;                                      
+        const tileStart = multiSelectStart;
         const newTiles = _.cloneDeep(tiles).map(t => {
             if ((t.x <= tileStart.x && t.x >= tileEnd.x && t.y <= tileStart.y && t.y >= tileEnd.y)
                 || (t.x <= tileStart.x && t.x >= tileEnd.x && t.y <= tileEnd.y && t.y >= tileStart.y)
@@ -547,15 +583,21 @@ class LandMap extends Component {
     }
 
     render() {
-        const { lands: { landmarks }, landInfo } = this.props;
+        const { lands: { landmarks }, landInfo , loadingLandAction} = this.props;
         const { tiles, center, zoom} = this.state;
         return (
-            <GoogleMap
+           <GoogleMap
                 center={center}
                 zoom={zoom}
-                bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-                heatmapLibrary={true}          
-                //heatmap={heatMapData} 
+                bootstrapURLKeys={{
+                    key: process.env.NODE_ENV === 'production' ? 'AIzaSyDOh8D1GMQ_Uxq3NwSXIkvM-ZUS8PgI-Ts' : 'AIzaSyDmkJ8gIsSaSMACE2oFXBkJbuMAs-8Jvcs',
+                    language: 'kr',
+                    region: 'KR',
+                    v: 3.38,
+                    //libraries: "geometry,drawing,places"
+                }}
+                heatmapLibrary={true}
+                //heatmap={heatMapData}
                 onGoogleApiLoaded={this._onGoogleApiLoaded}
                 onChange={this._onChange}
                 yesIWantToUseGoogleMapApiInternals
@@ -563,9 +605,9 @@ class LandMap extends Component {
                     fullscreenControl: false,
                     disableDoubleClickZoom: true,
                     minZoom: 5,
-                    //maxZoom: 22,
+                    maxZoom: 22,
                     keyboardShortcuts: false,
-                    //debounced: false
+                    //debounced: true
                 }}>
                 {tiles.map((item) => {
                     return  <LandTileComponent
@@ -575,10 +617,8 @@ class LandMap extends Component {
                         tile={item}
                         mainMap={this.state}
                         user={this.props.user}
-                        myLands={this.props.myLands}
                         tileClick={() => this.tileClick(item)}
                         tileMouseEnter={() => this.tileMouseEnter(item)}
-                        settingReducer={this.props.settingReducer}
                         isDragging={this.state.isDragging}
                         setMultiSelectStart={() => this.setState({ multiSelectStart: null/*, multiClearStart: null*/ })}
                         landInfo={landInfo}
@@ -591,9 +631,9 @@ class LandMap extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const {lands, authentication: {user}, map, alert, users, settingReducer, lands: {myLands, areaLand,landInfo}, screens} = state;
+    const {lands, authentication: {user}, map, alert, users, settingReducer, lands: {myLands, areaLand,landInfo , loadingLandAction}, screens} = state;
     return {
-        user, alert, lands, map, users, settingReducer, myLands , areaLand, landInfo, screens
+        user, alert, lands, map, users, settingReducer, myLands , areaLand, landInfo, screens, loadingLandAction
     };
 };
 

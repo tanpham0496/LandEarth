@@ -4,6 +4,8 @@ import _ from 'lodash';
 import * as t from '../../actionTypes/landActionTypes/landActionTypes'
 
 import {
+    // GET_LIST_FOR_SALE_LANDS_SUCCESS,
+    // GET_LIST_FOR_SALE_LANDS_FAILURE,
     CLEAR_REMOVE_HISTORY_TRADING_LAND_STATUS_SOCKET,
     CLEAR_SELL_LAND_STATUS_SOCKET,
     GET_ALL_LAND_SOCKET_FAILURE,
@@ -17,22 +19,29 @@ import {
 } from '../../actions/commonActions/socketActions';
 
 const defaultState = {
-    categories: [],
     updates: [],
-    updatedStateLands: []
+    updatedStateLands: [],
+    loadingLandAction: false
 }
 
-export default function (state=defaultState, action) {
+export default function (state=defaultState, action={}) {
     switch (action.type) {
+        // case t.GET_LIST_FOR_SALE_LANDS_SUCCESS:
+        //     //console.log('GET_LIST_FOR_SALE_LANDS_SUCCESS', action);
+        //     return { ...state, ...action.res};
+        // case t.GET_LIST_FOR_SALE_LANDS_FAILURE:
+        //     //console.log('GET_LIST_FOR_SALE_LANDS_FAILURE', action);
+        //     return { ...state, ...action.res };
         case t.GET_SELL_LAND_INFOS_SUCCESS:
             //console.log('GET_SELL_LAND_INFOS_SUCCESS', action);
-            return { ...state, ...action.result };
+            //const { sellLands, status } = action.result;
+            return { ...state, sellLands: action.result.sellLands, getListSellLandSuccess: action.result.status };
         case t.GET_SELL_LAND_INFOS_FAILURE:
-            return { ...state, ...action.result };
+            return { ...state, getListSellLandFailure: action.result.status };
         case t.REMOVE_SELL_LAND_INFOS:
-        console.log('REMOVE_SELL_LAND_INFOS')
+            //console.log('REMOVE_SELL_LAND_INFOS')
             if(state.sellLands) delete state.sellLands;
-            if(state.status) delete state.status;
+            if(state.getListSellLandSuccess) delete state.getListSellLandSuccess;
             return { ...state };
 
         case t.GET_ALL_LAND_MARK_CATEGORY_IN_MAP_SUCCESS:
@@ -50,7 +59,7 @@ export default function (state=defaultState, action) {
             //console.log('GET_ALL_LAND_BY_ID_SUCCESS', action.res);
             return {
                 ...state,
-                myLands: action.res.myLand
+                ...action.res
             };
         case t.GET_ALL_LAND_BY_ID_FAILURE:
             return {...state, ...action.res};
@@ -116,7 +125,7 @@ export default function (state=defaultState, action) {
             let resSell = action.res;
             if (resSell && resSell.success && (resSell.updates || resSell.updateslt22)) {
                 const newLandUpdateInMap = resSell.updateslt22 && !_.isEmpty(resSell.updateslt22) ? resSell.updateslt22 : resSell.updates;
-                const newLand = state.allLands.map(land => {
+                const newLand = state.allLands && state.allLands.map(land => {
                     const fLand = newLandUpdateInMap.find(ud => ud.quadKey === land.quadKey);
                     land = fLand || land;
                     return land;
@@ -222,6 +231,7 @@ export default function (state=defaultState, action) {
             return {
                 ...state,
                 categoryList: action.categoryList
+                // categoryList: []
             };
         case t.SAVE_LAND_SELECTED_POSITION:
             return {
@@ -464,7 +474,17 @@ export default function (state=defaultState, action) {
                 ...state,
                 error: action.error
             }
-        default:
-            return state
+        case t.LOADING_LAND_STATUS: {
+            return {
+                ...state,
+                loadingLandAction: action.status
+            }
+        }
+        default:{
+            return {
+                ...state,
+                ...action.result
+            }
+        }
     }
 }

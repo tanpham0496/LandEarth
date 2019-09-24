@@ -44,18 +44,17 @@ const settingReducer = (state = initState, action) => {
         case SET_TODAY_LAND_INFO_SUCCESS:
             //console.log('action', action)
             if(action.status) return { ...state, todayLandInfo: action.todayLandInfo }
-            return {
-                ...state,
-            };
+            return { ...state }
         case SET_TODAY_LAND_INFO_FAILURE:
             return {
                 ...state,
                 error: action.error
             };
         case SET_LAND_SHOW_INFO_SUCCESS:
+            //console.log('SET_LAND_SHOW_INFO_SUCCESS', action)
             return {
                 ...state,
-                landSetting: action.land.land
+                land: action.land.land
             };
         case SET_LAND_SHOW_INFO_FAILURE:
             return {

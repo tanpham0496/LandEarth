@@ -4,12 +4,12 @@ import {screenActions, TranslateLanguage, MessageBox} from "../../../../../../he
 
 
 function UsingBloodToUseNutrientAlert(props) {
-    const {removePopup, screens: {UsingBloodToUseNutrientAlert: {needGoldBlood , useItem}} , wallet: {info: {goldBlood}} , addPopup} = props;
+    const {removePopup, screens: {UsingBloodToUseNutrientAlert: {needGoldBlood , confirmUsingNutrient}} , wallet: {info: {goldBlood}} , addPopup} = props;
 
     const checkGoldBloodAndUseItem = () => {
         removePopup({name: 'UsingBloodToUseNutrientAlert'});
         (needGoldBlood <= 0 || goldBlood <= 0 || goldBlood < needGoldBlood) ?
-            addPopup({name: 'NotEnoughMoneyAlert'}) : useItem();
+            addPopup({name: 'NotEnoughMoneyAlert'}) : confirmUsingNutrient();
     };
 
     const mode = "question"; //question //info //customize

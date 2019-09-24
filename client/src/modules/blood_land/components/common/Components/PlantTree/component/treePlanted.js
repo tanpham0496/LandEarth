@@ -1,5 +1,4 @@
 import React , {PureComponent }from "react";
-import CloneDeep  from 'lodash.clonedeep';
 import {
     common,
     getMapImgByItemId,
@@ -12,27 +11,21 @@ import {StyledCheckbox} from "../../../../../../../components/customStyled/Check
 class TreePlanted extends PureComponent {
     state = {};
 
+    onCheckAll = (e) => {
+        const {lands} = this.props;
+        this.setState({
+            checkedAll: !this.state.checkedAll
+        });
 
-    clickCheckbox = (e) => {
-        this.setState({
-            [e.target.id]: e.checked
-        });
-        this.props.getLandToPlantTree({value: e.value , status: e.checked})
+        lands.map(l => this.props.getLandToPlantTree({value: l , status: e.checked , checkAll: true}))
+
     };
-    onHandleAllChange = (e) => {
-        const {onHandleGetTreePlanted ,  lands} = this.props;
-        const landsUpdate = CloneDeep(lands);
-        landsUpdate.map(l => l.checked = e.checked);
-        this.setState({
-            checkAll: e.checked
-        });
-        onHandleGetTreePlanted(landsUpdate)
-    };
-    treePlantedRender = (lands) => {
-        // console.log('lands', lands)
+
+    treePlantedRender = () => {
+        const {lands , selectedLandToPlantTree} = this.props;
         const spacing = <div className='item-row'><div className='tree-col'/><div className='blood-col'/><div className='land-col' /><div className='water-col' /></div>;
         const {settingReducer: {language}} = this.props;
-        const {checkAll} = this.state;
+        const {checkedAll} = this.state;
         return (
             <div className='tree-cultivate-container'>
                 <div className='header-grid'>
@@ -44,7 +37,8 @@ class TreePlanted extends PureComponent {
                     </div>
 
                     <div className='tree-sub-col'>
-                        <StyledCheckbox onChange={(e) => this.onHandleAllChange(e)} checked={checkAll}/>
+                        <StyledCheckbox  onChange={(e) => this.onCheckAll(e)}
+                                          checked={checkedAll}/>
                         <span><TranslateLanguage direct={'menuTab.myLand.landOwned.tree.selectAll'}/></span>
                         {/*<div > &nbsp;{`(${ (Array.isArray(lands) && lands.length) || 0 })`} </div>*/}
                     </div>
@@ -66,8 +60,8 @@ class TreePlanted extends PureComponent {
                             return (
                                 <div className='item-row' key={index}>
                                     <div className='tree-col'>
-                                        <StyledCheckbox id={_id} value={item} onChange={(e) => this.clickCheckbox(e)}
-                                                         checked={this.state[_id]}/>
+                                        <StyledCheckbox id={_id} value={item} onChange={(e) => this.props.getLandToPlantTree({value: e.value , status: e.checked})}
+                                                         checked={selectedLandToPlantTree.some(s => s._id === _id)}/>
                                         <div className='signal-tree'>
                                             {treePlanted && <img src={getMapImgByItemId(treePlanted.itemId)} alt=''/>}
                                         </div>
@@ -95,7 +89,7 @@ class TreePlanted extends PureComponent {
                         <TranslateLanguage direct={'menuTab.myLand.landOwned.tree.landQuantity'}/>
                     </div>
                     <div className='footer2-col'>
-                        <div className='value'>{lands.filter(l => l.checked).length}</div>
+                        <div className='value'>{selectedLandToPlantTree.length}</div>
                         <TranslateLanguage direct={'menuTab.myLand.landOwned.tree.land'}/>
                     </div>
                 </div>
@@ -105,13 +99,13 @@ class TreePlanted extends PureComponent {
     render() {
         const {lands} = this.props;
         return (
-            !lands ? <div>Loading</div> : this.treePlantedRender(lands)
+            !lands ? <div>Loading</div> : this.treePlantedRender()
         );
     }
 }
 const mapStateToProps = (state) => {
-    const {settingReducer} = state;
-    return {settingReducer};
+    const {settingReducer , objectsReducer: {selectedLandToPlantTree}} = state;
+    return {settingReducer , selectedLandToPlantTree};
 };
 const mapDispatchToProps = (dispatch) => ({
     getLandToPlantTree: (param) => dispatch(objectsActions.getLandToPlantTree(param))

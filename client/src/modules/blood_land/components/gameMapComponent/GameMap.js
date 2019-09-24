@@ -297,7 +297,10 @@ class GameMap extends PureComponent {
     };
 
     tileClick = (tile) => {
-        if(!newVersionUI) return;
+
+        //disable click game map
+        return null;
+        //if(!newVersionUI) return;
         if (this.state.selectMode === "none") {
             if (this.state.multiClearStart === null) {
                 if (!this.state.isDragging) {
@@ -437,6 +440,13 @@ class GameMap extends PureComponent {
             <GoogleMap
                 center={center}
                 zoom={22}
+                bootstrapURLKeys={{
+                    key: process.env.NODE_ENV === 'production' ? 'AIzaSyDOh8D1GMQ_Uxq3NwSXIkvM-ZUS8PgI-Ts' : 'AIzaSyDmkJ8gIsSaSMACE2oFXBkJbuMAs-8Jvcs',
+                    language: 'kr',
+                    region: 'KR',
+                    v: "3.exp",
+                    //libraries: "geometry,drawing,places"
+                }}
                 onChange={this._onChange}
                 onGoogleApiLoaded={this._onGoogleApiLoaded}
                 yesIWantToUseGoogleMapApiInternals

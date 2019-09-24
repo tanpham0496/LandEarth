@@ -30,14 +30,23 @@ router.post('/getAllLandCategory', getAllLandCategory);
 router.post('/getAllLandCategoryNew', getAllLandCategoryNew);
 router.post('/updateLandMarksState', updateLandMarksState);
 router.post('/getAllLandByCategoryId', getAllLandByCategoryId);
-
 router.post('/getSellLandInfos', getSellLandInfos);
+router.post('/changePriceSellLand', changePriceSellLand);
+router.post('/getListForSaleLands', getListForSaleLands);
 
+function getListForSaleLands(req, res, next) {
+    services.getListForSaleLands(req.body)
+        .then(result => response.handleResponseWithLogs(req, res, true, result))
+        .catch(err => next(err));
+}
 
-module.exports = router;
+function changePriceSellLand(req, res, next) {
+    services.changePriceSellLand(req.body)
+        .then(result => response.handleResponseWithLogs(req, res, true, result))
+        .catch(err => next(err));
+}
 
 function getSellLandInfos(req, res, next) {
-    console.log('req.body', req.body);
     services.getSellLandInfos(req.body)
         .then(result => response.handleResponseWithLogs(req, res, true, result))
         .catch(err => next(err));
@@ -275,3 +284,4 @@ function removeHistory(req, res, next) {
         .catch(err => next(err));
 }
 
+module.exports = router;

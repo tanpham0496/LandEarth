@@ -8,6 +8,8 @@ import { store } from "../../../helpers/store";
 import { handleResponses, handleErrorResponses } from "../../../helpers/handleResponse"
 
 export const landActions = {
+    getListForSaleLands,
+    changePriceSellLands,
     getSellLandInfos,
     getAllLandMarkCategoryInMap,
     addCenterCategory,
@@ -37,6 +39,39 @@ export const landActions = {
     transferLandCategoryNew,
     getAllLandByCategoryId
 };
+
+function getListForSaleLands(param) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(param)
+    }
+    return dispatch => {
+        fetch(`${apiLand}/lands/getListForSaleLands`, requestOptions)
+            .then(handleResponses).catch(err => err.toString() === 'TypeError: Failed to fetch' && store.dispatch(alertActions.tokenExpiredPopup(err)))
+            .then(
+                result => dispatch({ type: t.GET_LIST_FOR_SALE_LANDS_SUCCESS, result }),
+                error => dispatch({ type: t.GET_LIST_FOR_SALE_LANDS_FAILURE, error })
+            );
+    };
+}
+
+
+function changePriceSellLands(param) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(param)
+    }
+    return dispatch => {
+        fetch(`${apiLand}/lands/changePriceSellLands`, requestOptions)
+            .then(handleResponses).catch(err => err.toString() === 'TypeError: Failed to fetch' && store.dispatch(alertActions.tokenExpiredPopup(err)))
+            .then(
+                result => console.log('result', result) /*dispatch({ type: t.GET_SELL_LAND_INFOS_SUCCESS, result })*/,
+                error => dispatch({ type: t.GET_SELL_LAND_INFOS_FAILURE, error })
+            );
+    };
+}
 
 function getSellLandInfos(param) {
     const requestOptions = {
@@ -174,27 +209,23 @@ function getDefault() {
 
 function getAllLandById(userId) {
     // console.log('getAllLandById')
+
+    // console.log('param', userId)
     return dispatch => {
+        // dispatch(loadingLandAction(true))
         //dispatch({ type: GET_ALL_LAND_BY_ID });
         landService.getAllLandById(userId)
             .then(
-                res => dispatch({ type: t.GET_ALL_LAND_BY_ID_SUCCESS, res }),
+
+                res => {
+                    // console.log('res', res);
+                    // dispatch(loadingLandAction(false))
+                    dispatch({ type: t.GET_ALL_LAND_BY_ID_SUCCESS, res })
+                },
                 error => dispatch({ type: t.GET_ALL_LAND_BY_ID_FAILURE, error })
             );
     };
 }
-
-// function getAllLand(startEndTile) {
-//     // console.log('getAllLand')
-//     return dispatch => {
-//         dispatch({ type: t.GET_ALL_LAND });
-//         landService.getAllLand(startEndTile)
-//             .then(
-//                 res => dispatch({ type: t.GET_ALL_LAND_SUCCESS, res }),
-//                 error => dispatch({ type: t.GET_ALL_LAND_FAILURE, error })
-//             );
-//     };
-// }
 
 function getAreaLand(startEndTile) {
     // console.log('getAreaLand')
@@ -271,13 +302,12 @@ function transferLandCategoryNew(param) {
         cateId: param.oldCateId,
         userId: param.userId
     };
-
     return dispatch => {
         landService.transferLandCategoryNew(param)
             .then(
                 result => {
                     dispatch(getAllLandCategoryNew({userId: param.userId}));
-                    dispatch(getLandByCategoryNew(paramGetLandByCategory));
+                    dispatch(objectsActions.getObjectByQuadKey(paramGetLandByCategory));
                     result && dispatch(success(result))
                 }
             );
@@ -433,4 +463,10 @@ function getLandByQuadKeys(param) {
                 error => dispatch({ type: t.GET_LAND_BY_QUADKEY_FAILURE, param, error })
             );
     };
+}
+
+function loadingLandAction(status) {
+    return{
+        type: t.LOADING_LAND_STATUS , status
+    }
 }

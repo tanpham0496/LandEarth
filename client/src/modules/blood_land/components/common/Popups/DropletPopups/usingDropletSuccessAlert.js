@@ -8,12 +8,13 @@ import {
 
 
 function UsingDropletSuccessAlert(props) {
-    const {removePopup , user: {_id}, screens: {UsingDropletSuccessAlert: {selectedLands}}} = props;
+    const {removePopup , user: {_id}, currentCategoryId } = props;
     const reloadTreeInCategoryDetail = () => {
         const param = {
-            cateId: selectedLands[0].categoryId,
+            cateId: currentCategoryId,
             userId: _id
         };
+
         props.getObjectByQuadKey(param)
     };
 
@@ -31,8 +32,8 @@ function UsingDropletSuccessAlert(props) {
 
 export default connect(
     state => {
-        const {authentication: {user}, screens} = state;
-        return {user, screens};
+        const {authentication: {user}, screens ,  objectsReducer: {currentCategoryId}} = state;
+        return {user, screens , currentCategoryId};
     },
     dispatch => ({
         // addPopup: (screen) => dispatch(screenActions.addPopup(screen)),

@@ -4,6 +4,7 @@ import {
     landActions, screenActions,
     loadingImage
 } from "../../../../../helpers/importModule";
+import _ from 'lodash';
 
 const socialLogo = {
     'facebook': loadingImage(`/images/game-ui/blood-email/facebook.svg`),
@@ -14,7 +15,7 @@ const socialLogo = {
 };
 
 function NoIdentityCardComponent(props){
-    const { user, lands: { myLands } } = props;
+    const { user, lands: { myLandAmount } } = props;
 
     const snsList = user.wSns && user.wSns;
     const getSocialLogo = (social) => {
@@ -23,7 +24,7 @@ function NoIdentityCardComponent(props){
 
     return (
         <Fragment>
-            {typeof user.email !== "undefined" && (user.email) && myLands ?
+            {user.email && _.isNumber(myLandAmount) ?
                 <li className='no-bg-hover' onClick={() => props.addPopup({ name: 'IdentityCardComponent', close: "NoIdentityCardComponent" })} style={{height: '62px'}}>
                     <div className='avatar-icon-container'>
                         <img src={loadingImage('/images/game-ui/blood-email.svg')} alt=''  /*onLoad={()=>this.handleImageLoaded()} onError={()=>this.handleImageErrored()}*//>

@@ -8,6 +8,7 @@ module.exports = {
 			name: "api",
 			script: "api/app.js",
 			watch: true,
+			node_args: "--max_old_space_size=4000",
 			env: {
 				"PORT": 5001,
 				"NODE_ENV": "development"
@@ -25,6 +26,7 @@ module.exports = {
 			name: "api_game",
 			script: "api_game/app.js",
 			watch: true,
+			node_args: "--max_old_space_size=4000",
 			env: {
 				"PORT": 5002,
 				"NODE_ENV": "development"

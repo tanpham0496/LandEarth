@@ -14,7 +14,7 @@ import PlantingTreeSuccessAlert from "../../common/Popups/GameMapPopups/Planting
 import UseItemSuccessAlert from "../../common/Popups/GameMapPopups/UseItemSuccessAlert"
 import LoadingPopup from '../../common/Popups/commomPopups/LoadingPopup'
 import UseItemFailureAlert from '../../common/Popups/GameMapPopups/UseItemFailureAlert'
-import CheckForSaleStatusAlertForItemPopup from '../../common/Popups/GameMapPopups/CheckForSaleStatusAlertForItemPopup'
+import CheckForSaleStatusAlertForItemPopup from '../../common/Popups/commomPopups/CheckForSaleStatusAlertForItemPopup'
 import PlantTreeBeforeNutrientAlert from '../../common/Popups/GameMapPopups/PlantTreeBeforeNutrientAlert'
 import PlantTreeBeforeShovelAlert from '../../common/Popups/GameMapPopups/PlantTreeBeforeShovelAlert'
 import PlantTreeBeforeDropletAlert from '../../common/Popups/GameMapPopups/PlantTreeBeforeDropletAlert'

@@ -26,6 +26,7 @@ class WithAuthorization extends React.Component {
     }
 
     render() {
+
         const { user } = this.props;
         const action = this.checkCase({ user });
         if(process.env.NODE_ENV === "development"){
@@ -34,25 +35,25 @@ class WithAuthorization extends React.Component {
             } else if(action === 'logout'){
                 return <Redirect to={{ pathname: '/login', state: { from: this.props.location } }} />;
             } else if(action === 'refresh'){
-                return <div className={`load`}>
+
+                return <div className={`load`} style={{zIndex: 1}}>
                     <div className='load__icon-wrap'>
-                        <div className="lds-roller">
+                        <div className="lds-facebook">
                                 <div/><div/><div/><div/><div/><div/><div/><div/>
                         </div>
                     </div>
                 </div>;
             }
+
         } else {
             if(action === 'login'){
-                //console.log('old', typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token));
-                //console.log('new', Boolean(user && user.role && user.token));
                 return (typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token))?<WrappedComponent {...this.props} />:<Route component={() => { window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId); return null;} }/>;
             } else if(action === 'logout'){
                 return <Route component={() => { window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId); return null;} }/>
             } else if(action === 'refresh'){
                 return <div className={`load`}>
                     <div className='load__icon-wrap'>
-                        <div className="lds-roller">
+                        <div className="lds-facebook">
                                 <div/><div/><div/><div/><div/><div/><div/><div/>
                         </div>
                     </div>
@@ -70,8 +71,18 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-    const { authentication: {loggingIn, user}, userToken } = state;
-    return { userToken, loggingIn, user };
+    const { authentication: {loggingIn, user}, userToken   } = state;
+    return { userToken, loggingIn, user  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithAuthorization);
+
+// loadingLandAction ? <div className='load' style={{zIndex: 1}}>
+//     <div className='load__icon-wrap'>
+//         <div className="lds-facebook">
+//             <div></div>
+//             <div></div>
+//             <div></div>
+//         </div>
+//     </div>
+// </div>

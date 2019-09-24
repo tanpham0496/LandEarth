@@ -67,6 +67,7 @@ const {
 } = require("../../../helpers/custom/quadKeyConvert");
 
 module.exports = {
+    getListForSaleLands,
     getSellLandInfos,
     getLandInfo,
     getLandByQuadKeys,
@@ -101,6 +102,19 @@ module.exports = {
 };
 
 const MAX_SELECTED_LAND = 300;
+
+async function getListForSaleLands({ wToken }){
+    try {
+        if(!wToken) return { status: false, err: 'noToken' };
+        const user = await db.User.findOne({ wToken });
+        if(!user) return { status: false, err: 'noUser' };
+        const forSaleLands = await db.Land23.find({ 'user._id': user._id, forSaleStatus: true }).select('quadKey sellPrice user._id name -_id');
+        if(!forSaleLands) return { status: false, err: 'cannotGeForSaleLand' };
+        return { status: true, forSaleLands };
+    } catch(e){
+        return { status: false, err: e };
+    }
+}
 
 function splitLandLevel24({ quadKeys, level=24 }) {
     while(quadKeys.some(qk => qk.length < level)){
@@ -237,8 +251,13 @@ async function getAreaLand({ parents1, level }) {
 }
 
 async function getAllLandById({ userId }) {
-    let myLand = await Land23.find({ 'user._id': userId }).lean();
-    return { myLand: myLand };
+    try {
+        if(!userId) return { status: false };
+        const myLandQuadKeys = await db.Land23.distinct("quadKey", { "user._id": ObjectId(userId) });
+        return { status: true, myLandAmount: myLandQuadKeys.length, myLandQuadKeys };
+    } catch(e) {
+        return { status: false };
+    }
 }
 
 //quadKeys= ["123", "212"]
@@ -291,99 +310,169 @@ async function cancelSellLand({ userId, quadKeys, mode, zoom }){
     }
 }
 
+async function changePriceSellLand({ userId, quadKeys, mode, zoom }){
+    try {
+        //check user
+        if(!userId) return { success: false, updates: [], mode };
+        const user = await db.User.findOne({ _id: ObjectId(userId) });
+        
+        if(!user) return { success: false, updates: [] };
+        
+        //check quadKey
+        if(!_.isArray(quadKeys) || _.isEmpty(quadKeys)) return { success: false, updates: [] };
+        const hasOtherUserLand = await db.Land23.findOne({ quadKey: { $in: quadKeys.map(q => q.quadKey) }, 'user._id': { $ne: ObjectId(userId) } });
+        if(hasOtherUserLand) return { success: false, updates: [] };
+        
+        //check zoom
+        if(zoom > 22 || zoom < 18) return { success: false, updates: [] };
+
+        const nid = Number(user.nid);
+        
+        //check pending
+        const pendingLandQuadKeys = await db.LandPending.find({ 'quadKey': { $in: quadKeys.map(q => q.quadKey) } }).lean();
+        if (pendingLandQuadKeys.length > 0){
+            quadKeys.map(itemQK => landLogService.createLandChangePriceHistory({ success: false, sellerId: userId, quadKey: itemQK.quadKey, price: itemQK.landPrice, sellerNid: nid }));
+            return { updates: [], success: false, mode };
+        }
+        //==========================================================Validate==========================================================
+
+        //đất còn lại
+        const notPendingLandQuadKeys = quadKeys.filter(qk => !pendingLandQuadKeys.some(q => q.quadKey === qk));
+
+        //check sellLand in BigTreeQuadKey?
+        const myObjects = await db.Object.find({ userId, bigTreeQuadKeys: { $exists: true } }).lean();
+        const allBigTreeQuadKey = myObjects.length > 0 ? myObjects.reduce((totalQK, obj) => totalQK.concat(obj.bigTreeQuadKeys), []) : [];
+        if(allBigTreeQuadKey.length > 0 && notPendingLandQuadKeys.length > 0){
+            const allowQuadKeys = notPendingLandQuadKeys.map(npQK => npQK.quadKey);
+            const includeQuaKeys = _.intersection(allowQuadKeys, allBigTreeQuadKey);
+            if(includeQuaKeys.length > 0){
+                return { updates: [], success: false, mode };
+            }
+        }
+
+        //update change price
+        let sellUpdates = await Promise.all(notPendingLandQuadKeys.map(itemQK => Land23.findOneAndUpdate({ quadKey: itemQK.quadKey, 'user._id': ObjectId(userId), forSaleStatus: true }, { sellPrice: itemQK.landPrice }, { new: true }) ));
+
+        //create change price failure
+        sellUpdates = sellUpdates.filter(l => l !== null);
+        let updateFailure = quadKeys.filter(itemQK => !sellUpdates.some(sUpdate => sUpdate.quadKey === itemQK.quadKey));
+        if (updateFailure && updateFailure.length > 0) {
+            if (mode === "sell") {
+                updateFailure.map(itemQKFail => landLogService.createLandSellHistory({ success: false, sellerId: userId, quadKey: itemQKFail.quadKey, price: itemQKFail.sellPrice, sellerNid: nid }));
+            }
+        }
+        
+        //create history change price success 
+        sellUpdates.map(landS => createAdminLandHistory({ type: 'resell', quadKey: landS.quadKey, price: landS.sellPrice, buyer: null, seller: userId, nid }));
+        sellUpdates.map(landS => landLogService.createLandChangePriceHistory({ success: true, sellerId: userId, quadKey: landS.quadKey, price: landS.sellPrice, sellerNid: nid }));
+        
+        //update zoom < 22 
+        let updateslt22 = [];
+        if(zoom < 22 && sellUpdates.length > 0){
+            const QUADKEY_LEVEL_OFFSET = 2;
+            const quadKeys = sellUpdates.map(update => update.quadKey.substring(0, zoom + QUADKEY_LEVEL_OFFSET));
+            const uniqQuadKeys = _.uniq(quadKeys);
+            updateslt22 = await landCollections[zoom+LAND_LEVEL_OFFSET].find({ quadKey: { $in: uniqQuadKeys } });
+            //console.log('updateslt22', updateslt22);
+        }
+
+        return { success: sellUpdates.length > 0, updates: sellUpdates, mode, updateFailure, updateslt22, zoom }
+    } catch (e) {
+        console.log('Error: ', e);
+        return { success: false, err: e };
+    }
+}
+
+
+async function sellMyLands({ userId, quadKeys, mode, zoom }) {
+    try {
+        //check user
+        if(!userId) return { success: false, updates: [], mode };
+        const user = await db.User.findOne({ _id: ObjectId(userId) });
+        if(!user) return { success: false, updates: [] };
+        
+        //check quadKey
+        if(!_.isArray(quadKeys) || _.isEmpty(quadKeys)) return { success: false, updates: [] };
+        const hasOtherUserLand = await db.Land23.findOne({ quadKey: { $in: quadKeys.map(q => q.quadKey) }, 'user._id': { $ne: ObjectId(userId) } });
+        if(hasOtherUserLand) return { success: false, updates: [] };
+        
+        //check zoom
+        if(zoom > 22 || zoom < 18) return { success: false, updates: [] };
+
+        const nid = Number(user.nid);
+        
+        //check pending
+        const pendingLandQuadKeys = await db.LandPending.find({ 'quadKey': { $in: quadKeys.map(q => q.quadKey) } }).lean();
+        if (pendingLandQuadKeys.length > 0 && mode === 're_selling') {
+            quadKeys.map(itemQK => landLogService.createLandChangePriceHistory({ success: false, sellerId: userId, quadKey: itemQK.quadKey, price: itemQK.landPrice, sellerNid: nid }));
+            return { updates: [], success: false, mode };
+        }
+        //==========================================================Validate==========================================================
+
+        //đất còn lại
+        const notPendingLandQuadKeys = quadKeys.filter(qk => !pendingLandQuadKeys.some(q => q.quadKey === qk));
+
+        //check sellLand in BigTreeQuadKey?
+        const myObjects = await db.Object.find({ userId, bigTreeQuadKeys: { $exists: true } }).lean();
+        const allBigTreeQuadKey = myObjects.length > 0 ? myObjects.reduce((totalQK, obj) => totalQK.concat(obj.bigTreeQuadKeys), []) : [];
+        if(allBigTreeQuadKey.length > 0 && notPendingLandQuadKeys.length > 0){
+            const allowQuadKeys = notPendingLandQuadKeys.map(npQK => npQK.quadKey);
+            const includeQuaKeys = _.intersection(allowQuadKeys, allBigTreeQuadKey);
+            if(includeQuaKeys.length > 0){
+                return { updates: [], success: false, mode };
+            }
+        }
+
+        let sellUpdates = [];
+        if(mode === "sell"){
+            sellUpdates = await Promise.all(notPendingLandQuadKeys.map(itemQK => Land23.findOneAndUpdate({ quadKey: itemQK.quadKey, 'user._id': ObjectId(userId), forSaleStatus: false }, { forSaleStatus: true, sellPrice: itemQK.landPrice }, { new: true }) ));
+        } else if(mode === 're_selling'){
+            sellUpdates = await Promise.all(notPendingLandQuadKeys.map(itemQK => Land23.findOneAndUpdate({ quadKey: itemQK.quadKey, 'user._id': ObjectId(userId), forSaleStatus: true }, { sellPrice: itemQK.landPrice }, { new: true }) ));
+        }
+
+        //filter
+        sellUpdates = sellUpdates.filter(l => l !== null);
+        let updateFailure = quadKeys.filter(itemQK => !sellUpdates.some(sUpdate => sUpdate.quadKey === itemQK.quadKey));
+        if (updateFailure && updateFailure.length > 0) {
+            if (mode === "sell") {
+                updateFailure.map(itemQKFail => landLogService.createLandSellHistory({ success: false, sellerId: userId, quadKey: itemQKFail.quadKey, price: itemQKFail.sellPrice, sellerNid: nid }));
+            }
+        }
+        
+        //update history sellLand
+        sellUpdates.map(landS => createAdminLandHistory({ type: 'sell', quadKey: landS.quadKey, price: landS.sellPrice, buyer: null, seller: userId, nid }));
+        sellUpdates.map(landS => landLogService.createLandSellHistory({ success: true, sellerId: userId, quadKey: landS.quadKey, price: landS.sellPrice, sellerNid: nid }));
+        //update landLevel
+        await updateParent(sellUpdates, 'sell');
+ 
+        //update zoom < 22 
+        let updateslt22 = [];
+        if(zoom < 22 && sellUpdates.length > 0){
+            const QUADKEY_LEVEL_OFFSET = 2;
+            const quadKeys = sellUpdates.map(update => update.quadKey.substring(0, zoom + QUADKEY_LEVEL_OFFSET));
+            const uniqQuadKeys = _.uniq(quadKeys);
+            updateslt22 = await landCollections[zoom+LAND_LEVEL_OFFSET].find({ quadKey: { $in: uniqQuadKeys } });
+            //console.log('updateslt22', updateslt22);
+        }
+
+        return { success: sellUpdates.length > 0, updates: sellUpdates, mode, updateFailure, updateslt22, zoom };
+    } catch(e) {
+        console.log('Err:', e);
+        return { success: false, err: e, updates: [] };
+    }
+}
+
 //sellLand + remove sell land + change price sell land
 //param = { userId, forSaleStatus, quadKeys, mode }
 async function updateLandsState({ userId, forSaleStatus, quadKeys, mode, zoom=22 }) {
-
     if(mode === "remove_sell"){
         return await cancelSellLand({ userId, quadKeys, mode, zoom });
+    } else if(mode === 're_selling'){
+        return await changePriceSellLand({ userId, quadKeys, mode, zoom })
+    } else if(mode === 'sell'){
+        //console.log('sell', { userId, quadKeys, mode, zoom });
+        return await sellMyLands({ userId, quadKeys, mode, zoom });
     }
-
-    //==========================================================Validate==========================================================
-    if(mode !== 'sell' && mode !== 're_selling') return { success: false, updates: [] };
-    
-    //check user
-    if(!userId) return { success: false, updates: [], mode };
-    const user = await db.User.findOne({ _id: ObjectId(userId) });
-    
-    if(!user) return { success: false, updates: [] };
-    
-    //check quadKey
-    if(!_.isArray(quadKeys) || _.isEmpty(quadKeys)) return { success: false, updates: [] };
-    const hasOtherUserLand = await db.Land23.findOne({ quadKey: { $in: quadKeys.map(q => q.quadKey) }, 'user._id': { $ne: ObjectId(userId) } });
-    if(hasOtherUserLand) return { success: false, updates: [] };
-    
-    //check zoom
-    if(zoom > 22 || zoom < 18) return { success: false, updates: [] };
-
-    const nid = Number(user.nid);
-    
-    //check pending
-    const pendingLandQuadKeys = await db.LandPending.find({ 'quadKey': { $in: quadKeys.map(q => q.quadKey) } }).lean();
-    if (pendingLandQuadKeys.length > 0 && mode === 're_selling') {
-        quadKeys.map(itemQK => landLogService.createLandChangePriceHistory({ success: false, sellerId: userId, quadKey: itemQK.quadKey, price: itemQK.landPrice, sellerNid: nid }));
-        return { updates: [], success: false, mode };
-    }
-    //==========================================================Validate==========================================================
-
-    //đất còn lại
-    const notPendingLandQuadKeys = quadKeys.filter(qk => !pendingLandQuadKeys.some(q => q.quadKey === qk));
-
-    //check sellLand in BigTreeQuadKey?
-    const myObjects = await db.Object.find({ userId, bigTreeQuadKeys: { $exists: true } }).lean();
-    const allBigTreeQuadKey = myObjects.length > 0 ? myObjects.reduce((totalQK, obj) => totalQK.concat(obj.bigTreeQuadKeys), []) : [];
-    if(allBigTreeQuadKey.length > 0 && notPendingLandQuadKeys.length > 0){
-        const allowQuadKeys = notPendingLandQuadKeys.map(npQK => npQK.quadKey);
-        const includeQuaKeys = _.intersection(allowQuadKeys, allBigTreeQuadKey);
-        if(includeQuaKeys.length > 0){
-            return { updates: [], success: false, mode };
-        }
-    }
-
-
-    let sellUpdates = [];
-    if(mode === "sell"){
-        sellUpdates = await Promise.all(notPendingLandQuadKeys.map(itemQK => Land23.findOneAndUpdate({ quadKey: itemQK.quadKey, 'user._id': ObjectId(userId), forSaleStatus: false }, { forSaleStatus: true, sellPrice: itemQK.landPrice }, { new: true }) ));
-    } else if(mode === "re_selling"){
-        sellUpdates = await Promise.all(notPendingLandQuadKeys.map(itemQK => Land23.findOneAndUpdate({ quadKey: itemQK.quadKey, 'user._id': ObjectId(userId), forSaleStatus: true }, { sellPrice: itemQK.landPrice }, { new: true }) ));
-    }
-
-    //filter
-    sellUpdates = sellUpdates.filter(l => l !== null);
-    let updateFailure = quadKeys.filter(itemQK => !sellUpdates.some(sUpdate => sUpdate.quadKey === itemQK.quadKey));
-    if (updateFailure && updateFailure.length > 0) {
-        if (mode === "sell") {
-            updateFailure.map(itemQKFail => landLogService.createLandSellHistory({ success: false, sellerId: userId, quadKey: itemQKFail.quadKey, price: itemQKFail.sellPrice, sellerNid: nid }));
-        }
-    }
-    
-    if (mode === "sell") {
-        try {
-            sellUpdates.map(landS => createAdminLandHistory({ type: 'sell', quadKey: landS.quadKey, price: landS.sellPrice, buyer: null, seller: userId, nid }));
-            sellUpdates.map(landS => landLogService.createLandSellHistory({ success: true, sellerId: userId, quadKey: landS.quadKey, price: landS.sellPrice, sellerNid: nid }));
-        } catch (e) { console.log('Error: ', e) }
-        await updateParent(sellUpdates, 'sell');
-    } else if (mode === "re_selling") {
-        try {
-            sellUpdates.map(landS => createAdminLandHistory({ type: 'resell', quadKey: landS.quadKey, price: landS.sellPrice, buyer: null, seller: userId, nid }));
-            sellUpdates.map(landS => landLogService.createLandChangePriceHistory({ success: true, sellerId: userId, quadKey: landS.quadKey, price: landS.sellPrice, sellerNid: nid }));
-        } catch (e) { console.log('Error: ', e) }
-        //do not update Parent
-    }
-
-    //==========================================New UI==========================================
-    //update zoom < 22 
-    let updateslt22 = [];
-    if(zoom < 22 && sellUpdates.length > 0){
-        const QUADKEY_LEVEL_OFFSET = 2;
-        const quadKeys = sellUpdates.map(update => update.quadKey.substring(0, zoom + QUADKEY_LEVEL_OFFSET));
-        const uniqQuadKeys = _.uniq(quadKeys);
-        updateslt22 = await landCollections[zoom+LAND_LEVEL_OFFSET].find({ quadKey: { $in: uniqQuadKeys } });
-        //console.log('updateslt22', updateslt22);
-    }
-    //==========================================New UI==========================================
-
-    return { success: sellUpdates.length > 0, updates: sellUpdates, mode, updateFailure, updateslt22, zoom }
 }
 
 //=================================================================PUSCHASE LAND==================================================================================
@@ -557,28 +646,24 @@ async function getAllLandMarkCategory({ userId }) {
     return _result;
 }
 
+/*
+{
+    _id: 5d5fbf290ed19023c4f19134,
+    center: { lat: 0, lng: 0 },
+    name: 'jjjjj',
+    typeOfCate: 'normal',
+    userId: 5d5fbd65eaf638148cdd059e,
+    landCount: 500
+}
+*/
+
 async function getAllLandCategoryNew({ userId }) {
     try {
-        const categories = await db.LandCategory.aggregate([
-            { $match: { userId: ObjectId(userId) } },
-            { $lookup: {
-                from: "land23",
-                as: "lands",
-                localField: "_id",
-                foreignField: "categoryId"
-            } },
-            {
-                $project: {
-                    name: 1,
-                    center: 1,
-                    name: 1,
-                    typeOfCate: 1,
-                    userId: 1,
-                    landCount: { $cond: { if: { $isArray: "$lands" }, then: { $size: "$lands" }, else: 0} }
-                }
-            }
-        ])
-        //console.log('categories', categories);
+        const arrCategory = await db.LandCategory.find({ userId: ObjectId(userId) }).select('name center typeOfCate userId').lean();
+        const categories = await Promise.all(arrCategory.map(async(cate) => {
+            cate.landCount = await db.Land23.count({ "user._id": ObjectId(userId), categoryId: ObjectId(cate._id) });
+            return cate;
+        }));
         return { status: true, categories };
     } catch(e){
         console.log('Err', e);
@@ -756,23 +841,43 @@ async function createLandHistory({ landId, soldPrice, seller, buyer }) {
 
 async function getAllHistoryTradingLandById({ userId }) {
     try {
-        return db.LandHistory.aggregate([
-           {
-              $match: {
-                   $or: [
+        // console.time("histories");
+        // const histories = await db.LandHistory.find({
+        //     $or: [
+        //         { 'buyer': ObjectId(userId), buyerDeleted: false },
+        //         { 'seller': ObjectId(userId), sellerDeleted: false }
+        //     ]
+        // }).select('status seller sellerDeleted buyer buyerDeleted soldPrice dateTrading landId').lean();
+        // //console.log('histories', histories);
+        // const aHistories = await Promise.all(histories.map(async history => {
+        //     //console.log('history', history);
+        //     const land = await db.Land23.findOne({ _id: history.landId }).select('quadKey');
+        //     //console.log('land', land);
+        //     history.quadKey = land.quadKey;
+        //     return history;
+        // }));
+
+        // console.timeEnd("histories", histories);
+        // console.log('aHistories ==> ', aHistories.length);
+        
+        
+        
+        //console.time("allHistory");
+        const allHistory = db.LandHistory.aggregate([
+            {
+                $match: {
+                    $or: [
                         { 'buyer': ObjectId(userId), buyerDeleted: false },
                         { 'seller': ObjectId(userId), sellerDeleted: false }
                     ]
-              }
-           }
-           ,{
-             $lookup:
-               {
-                 from: "land23",
-                 localField: "landId",
-                 foreignField: "_id",
-                 as: "land"
-               }
+                }
+            },{
+                $lookup: {
+                    from: "land23",
+                    localField: "landId",
+                    foreignField: "_id",
+                    as: "land"
+                }
            },
            {$unwind: '$land'},
            {
@@ -789,6 +894,9 @@ async function getAllHistoryTradingLandById({ userId }) {
                 }
            },{$sort: { dateTrading: -1 }}
         ]);
+        //console.timeEnd("allHistory");
+        //console.log('allHistory ==> ', allHistory.length);
+        return allHistory;
     } catch (e) {
         console.log('Error', e);
         return [];
@@ -925,15 +1033,21 @@ async function transferLandCategory(param) {
 
 async function transferLandCategoryNew({ oldCateId, newCateId, userId, quadKeys }) {
     try{
-        if(!oldCateId || !newCateId || !userId || !quadKeys || quadKeys.length === 0) return { status: false };
+        if(!oldCateId || !newCateId || !userId || !_.isArray(quadKeys) || quadKeys.length === 0) return { status: false };
         const lands = await db.Land23.find({ quadKey: { $in: quadKeys }, "user._id": ObjectId(userId), categoryId: ObjectId(oldCateId) });
+
+        //check lower 500 ô đất
+        const MAX_LAND_IN_CATEGORY = 500;
+        const quantityLandInCategory = await db.Land23.count({ categoryId: ObjectId(newCateId) });
+        if(quantityLandInCategory + quadKeys.length > MAX_LAND_IN_CATEGORY) return { status: false, err: 'over500Lands' };
+
         if(lands.length !== quadKeys.length) return { status: false };
         const updateCate = await db.Land23.updateMany({ quadKey: { $in: quadKeys }, "user._id": ObjectId(userId), categoryId: ObjectId(oldCateId) }, { $set: { categoryId: ObjectId(newCateId) } });
         if(!updateCate || updateCate.nModified !== quadKeys.length) return { status: false };
         return { status: true };
     } catch(e){
         console.log('Err', e);
-        return { status: false };
+        return { status: false, err: e };
     }
 }
 

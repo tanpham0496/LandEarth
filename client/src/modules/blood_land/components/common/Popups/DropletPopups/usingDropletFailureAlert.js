@@ -8,19 +8,12 @@ import {
 
 
 function UsingDropletFailureAlert(props) {
-    const {removePopup , user: {_id}, screens: {UsingDropletFailureAlert: {selectedLands}}} = props;
-    const reloadTreeInCategoryDetail = () => {
-        const param = {
-            cateId: selectedLands[0].categoryId,
-            userId: _id
-        };
-        props.getObjectByQuadKey(param)
-    };
+    const {removePopup } = props;
+
     const mode = "info"; //question //info //customize
     const sign = "error"; //blood //success //error //delete //loading
     const confirmBtn = () => {
-        removePopup({name: 'UsingDropletFailureAlert'});
-        reloadTreeInCategoryDetail() };
+        removePopup({name: 'UsingDropletFailureAlert'});};
     const header = <TranslateLanguage direct={'alert.removal.getUsingItemUnsuccessAlert.header'}/>;
     const body = <TranslateLanguage direct={'menuTab.shop.alert.getPurchaseUnSuccessAlertPopup.body'}/>;
     return <MessageBox modal={true} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body} />;

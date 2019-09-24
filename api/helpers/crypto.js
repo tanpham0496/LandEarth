@@ -30,7 +30,7 @@ function encryptAES(textString){
 }
 
 function parseText(test){
-    var arr = test.split(separate);
+    var arr =test.split(separate);
     return [arr[0]+arr[2],arr[1]];
 }
 
