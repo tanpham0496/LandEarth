@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
     mainWalletAddress: { type: String }, // Main Wallet Address
     wCreatedDate: { type: String }, // Main Wallet Address
     wName: { type: String }, //wallet Name
-    wToken: { type: String, trim: true}, //wallet Token
+    wToken: { type: String, trim: true, index: true }, //wallet Token
+    sId: { type: String, trim: true, index: true }, //wallet Token
     tokenHash: { type: String, trim: true}, //wallet Token Hash
     goldBlood: { type: Number, default: 0 }, //gold blood used for BloodLand
     bitamin: { type: Number, default: 0 }, //bitamin

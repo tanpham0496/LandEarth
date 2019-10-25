@@ -5,7 +5,7 @@ import { userActions } from "../store/actions/commonActions/userActions";
 import React from 'react';
 import isEmpty from 'lodash.isempty';
 import { bloodAppId } from "../../src/helpers/config";
-import WrappedComponent from '../modules/blood_land';
+import WrappedComponent from '../modules/blood_land_V2';
 
 class WithAuthorization extends React.Component {
 
@@ -31,7 +31,8 @@ class WithAuthorization extends React.Component {
         const action = this.checkCase({ user });
         if(process.env.NODE_ENV === "development"){
             if(action === 'login'){
-                return (typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token))?<WrappedComponent {...this.props} />: <Redirect to={{ pathname: '/login', state: { from: this.props.location } }} />;
+                return (typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token))?
+                    <WrappedComponent {...this.props} />: <Redirect to={{ pathname: '/login', state: { from: this.props.location } }} />;
             } else if(action === 'logout'){
                 return <Redirect to={{ pathname: '/login', state: { from: this.props.location } }} />;
             } else if(action === 'refresh'){
@@ -47,7 +48,8 @@ class WithAuthorization extends React.Component {
 
         } else {
             if(action === 'login'){
-                return (typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token))?<WrappedComponent {...this.props} />:<Route component={() => { window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId); return null;} }/>;
+                return (typeof user !== 'undefined' && typeof user.role !== 'undefined' && !isEmpty(user.token))?
+                    <WrappedComponent {...this.props} />:<Route component={() => { window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId); return null;} }/>;
             } else if(action === 'logout'){
                 return <Route component={() => { window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId); return null;} }/>
             } else if(action === 'refresh'){

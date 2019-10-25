@@ -1,14 +1,17 @@
-const combineEvents = (...param) => {
-    return Object.assign(...param);
-};
-
 const applySocketMiddeware = (socket, allSocketFn) => {
     return store => next => action => {
-        //console.log("socket",socket);
+        // /console.log("action.type", action.type);
         const isFnExist = allSocketFn.hasOwnProperty(action.type);
         if (isFnExist) {
             const socketEmitter = allSocketFn[action.type];
-            // console.log("action.type",action.type);
+            // console.log('allSocketFn', action.type, allSocketFn[action.type])
+            // const token = localStorage.getItem('token');
+            // const socketId = socket.land.id;
+            // console.log("action.type", token, socketId);
+            action.token = localStorage.getItem('token');
+            action.socketId = socket.land.id;
+            //console.log('action', action)
+            
             socketEmitter(socket, action);
         }
         next(action);
@@ -16,6 +19,5 @@ const applySocketMiddeware = (socket, allSocketFn) => {
 };
 
 export {
-    combineEvents,
     applySocketMiddeware
 }

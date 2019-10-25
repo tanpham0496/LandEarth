@@ -1,4 +1,16 @@
 {
+    "characterBad" : {
+        "one" : {
+            "en": {"title" : "fuck", "tip" : ""},
+            "kr": {"title" : "đm", "tip" : ""},
+            "vi": {"title" : "đm", "tip" : ""}
+        },
+        "two" : {
+            "en": {"title" : "Total Selected Land", "tip" : ""},
+            "kr": {"title" : "총 선택된 랜드", "tip" : ""},
+            "vi": {"title" : "Đất chọn", "tip" : ""}
+        }
+    },
     "mapTab": {
         "map1": {
             "en": {"title" : "Map 1", "tip" : ""},

@@ -1,0 +1,255 @@
+@import "../../variables";
+.menu-button-container {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  right: 2%;
+  top: 3%;
+  z-index: 3;
+  &.active{
+    transform: rotate(360deg) scale(1);
+    transition: transform 0.4s ease-in-out;
+  }
+  &.disabled{
+    transform: rotate(180deg) scale(0.8);
+    transition: transform 0.4s ease-in-out;
+  }
+
+}
+
+.menu-wrapper {
+  position: absolute;
+  z-index: 1;
+  top: 2%;
+  right: 1%;
+  width: 13rem;
+  height: 25rem;
+
+  .menu-icon-container {
+    width: 9rem;
+    height: auto;
+    min-height: 23rem;
+    position: absolute;
+    right: 12%;
+    top: 17%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse;
+
+    .left-menu-icon-container {
+      width: 45%;
+      margin-top: 1rem;
+    }
+
+    .right-menu-icon-container {
+      width: 45%;
+      margin-left: 0.8rem;
+      margin-top: 3rem;
+    }
+
+    .menu-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: $whiter-alpha;
+      margin-bottom: 0.8rem;
+      box-shadow: 0px 1px 13px 9px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease 0s;
+      opacity: 0;
+      //display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      display: none;
+
+      img {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+
+      &.fadeIn {
+        animation-name: fadeIn;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+      }
+      &.fadeOut {
+        opacity: 1;
+        animation-name: fadeOut;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+      }
+      &.active {
+        border: 2px solid $menu-color;
+        background: $green-light;
+        //transform: scale(1.2);
+      }
+      &:hover {
+        border: 2px solid $menu-color;
+        background: $green-light;
+        transform: scale(1.2);
+        transition: all 0.3s ease 0s;
+
+        img {
+          transform: scale(1.2);
+          transition: transform 0.3s ease 0s;
+        }
+      }
+    }
+  }
+
+  .tooltip-container {
+    width: auto;
+    min-width: 129px;
+    height: 44px;
+    background: $whiter-alpha;
+    position: absolute;
+    border-radius: 28px;
+    box-shadow: 0px 1px 13px 9px rgba(0, 0, 0, 0.1);
+    right: 58%;
+    top: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.4s;
+    color: $menu-color;
+    font-weight: bold;
+
+  }
+}
+
+.menu-icon-tab-list-container {
+  position: absolute;
+  width: auto;
+  height: auto;
+  background: $whiter-alpha1;
+  right: 95%;
+  top: 20%;
+  box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);
+  border-radius: 28px;
+  z-index: 3;
+  animation: fadeIn 0.3s;
+  transition: all 0.5s linear ;
+  &.active-addFriend {
+    min-height: 14rem;;
+    min-width: 18rem;
+  }
+  &.active-friendList, &.active-blockFriend {
+    min-height: 45rem;
+    min-width: 18rem;
+  }
+
+  &.disabled{
+    min-width: 18rem;
+    min-height: 21rem;
+  }
+  &:hover{
+    background: $menu-color-alpha;
+  }
+  .icon-tab-list-container{
+    width:100%;
+    height: auto;
+    //background: yellow;
+    display: flex;
+    justify-content: center;
+    &.disabled {
+      opacity: 0;
+      display: none;
+      transition: all 1s linear;
+    }
+    .icon-tab-container{
+      padding-bottom: 1rem;
+      //background: red;
+      overflow: hidden;
+      height: auto;
+      .icon-tab , .icon-tab-children{
+        width: 3.5rem;
+        height: 3.5rem;
+        background: $whiter-alpha;
+        box-shadow: 0px 1px 5px 3px rgba(0, 0, 0, 0.1);
+        margin-top: 1.5rem;
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img{
+          width: 2rem;
+          height: 2rem;
+        }
+        &:hover {
+          border: 2px solid $menu-color;
+          background: $green-light;
+          transform: scale(1.2);
+          transition: all 0.3s ease 0s;
+
+          img {
+            transform: scale(1.2);
+            transition: transform 0.3s ease 0s;
+          }
+        }
+      }
+      .icon-tab-children {
+        animation: fadeIn 0.5s;
+      }
+    }
+
+  }
+}
+
+.menu-detail-container {
+  position: absolute;
+  top: 20%;
+  right: 95%;
+  background: $whiter-alpha1;
+  border-radius: 28px;
+  animation-fill-mode: forwards;
+  display: none;
+  flex-direction: column;
+  &.active-friendList , &.active-blockFriend{
+    z-index: 3;
+    background: white;
+    animation: fadeIn 1.5s;
+    display: flex;
+    width: 18rem;
+    height: 45rem;
+  }
+  &.active-addFriend{
+    z-index: 3;
+    background: white;
+    animation: fadeIn 1.5s;
+    display: flex;
+    width: 18rem;
+    height: 14rem;
+  }
+  &.disabled {
+    z-index: 2;
+    background: none;
+    animation: fadeOut 1.5s;
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+

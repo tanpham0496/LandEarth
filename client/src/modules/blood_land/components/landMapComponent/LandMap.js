@@ -91,14 +91,11 @@ class LandMap extends Component {
         }
 
         if(zoom !== this.state.zoom){
-            _.debounce(() => {
-                const tiles = this.drawTiles({ zoom, bounds, selectedTiles: [], dBugPlace: "_onChange zoom change" });
-                //set state, thay đổi tiles hiện tại và sẽ render lại tiles
-                this.setState({ tiles, zoom, bounds, selectedTiles: [] });
-                //clear selected when zoom
-                this.props.clearSelected();
-            }, 300)
-
+            const tiles = this.drawTiles({ zoom, bounds, selectedTiles: [], dBugPlace: "_onChange zoom change" });
+            //set state, thay đổi tiles hiện tại và sẽ render lại tiles
+            this.setState({ tiles, zoom, bounds, selectedTiles: [] });
+            //clear selected when zoom
+            this.props.clearSelected();
         }
 
         // //get area Land
@@ -138,12 +135,6 @@ class LandMap extends Component {
         if(this.state.loaded && !_.isEqual(prevProps.map.selected, selected)){
             //console.log('change prevProps.map.selected, selected');
             this.props.getLandByQuadKeys({ userId: this.props.user._id, quadKeys: selected.map(tile => tile.quadKey) });
-
-            //remove showTotalBlood popup when double click (multi select map)
-            if(selected && !selected.length){
-                this.props.removePopup( {name: "showTotalBlood"} );
-            }
-
 
             // if(dBug) console.log('state seleted change');
             // const {zoom, bounds} = this.state;

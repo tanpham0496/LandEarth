@@ -43,7 +43,6 @@ class AdsToggle extends Component {
         this.props.addPopup({name : 'NotificationBlood'});
     };
 
-
     render(){
         const {active} = this.state;
         const {screens,notifies,develops} = this.props;

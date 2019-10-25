@@ -17,7 +17,6 @@ var noApplyTokenMiddlewareRoutes = [
     '/lands/getDefault',
     '/lands/getAllLandMarkCategoryInMap',
     '/users/settings/get',
-
     '/lands/updateLandMarksState',
     //'/googlemap'
 ];

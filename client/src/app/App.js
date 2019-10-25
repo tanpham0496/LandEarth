@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {hot} from 'react-hot-loader';
 import 'bootstrap/dist/css/bootstrap.css'
+import '../scssNew/app.scss';
 import '../scss/app.scss';
 import Router from './Router';
 import { connect } from "react-redux";

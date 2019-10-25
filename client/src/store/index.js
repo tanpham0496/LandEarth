@@ -47,7 +47,7 @@ const rootReducer = combineReducers({
     users: usersReducer,
     lands: landsReducer,
     centerMap: centerMapReducer,
-    socket: socketReducer,
+    sockets: socketReducer,
     chatRooms: chatReducer,
     wallet: walletReducer,
     map: mapReducer,

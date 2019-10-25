@@ -1,18 +1,32 @@
-import { apiLand } from './../config';
+import { apiLand, apiChat } from './../config';
 import io from 'socket.io-client';
-import { combineEvents, applySocketMiddeware } from './middleware';
+import { applySocketMiddeware } from './middleware';
 import { landEvent, landSocket } from './landSocket';
+import { chatEvent, chatSocket } from './chatSocket';
 
-const socket_land = io(apiLand);
-const allSocketFn = combineEvents(landEvent);
-const socketServers = {
-    'land': socket_land,
-};
+const servers = {
+    land: io(apiLand),
+    chat: io(apiChat)
+}
 
-const socketMiddleware = applySocketMiddeware(socketServers, allSocketFn);
+function combineEvents(...param){
+    return Object.assign(...param);
+}
+
+const socketMiddleware = applySocketMiddeware(servers, combineEvents(landEvent, chatEvent));
 const socketReceiver = (dispatch) => {
-    landSocket(dispatch, socketServers);
-};
+	
+	servers.land.on('connect', () => {
+
+		//save socket io to storage
+		dispatch({ type: 'SAVE_CONNECT_SOCKET', connectData: { ...servers, socketId: servers.land.id } });
+
+	    landSocket(dispatch, servers);
+		chatSocket(dispatch, servers);
+
+	})
+
+}
 
 export {
     socketMiddleware,

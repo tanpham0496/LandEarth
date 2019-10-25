@@ -65,7 +65,7 @@ class BloodLand extends Component {
         if (!config.devMode) {
             //console.log('!config.devMode')
             if (!wId || wId === '') {
-                console.log("!wId || wId === ''")
+                // console.log("!wId || wId === ''")
                 this.setState({
                     wIdExistAlert: alertPopup.wIdAlert
                 })
@@ -127,6 +127,7 @@ const mapDispatchToProps = (dispatch) => ({
     getDefault: () => dispatch(landActions.getDefault()),
     getAllLandMarkCategoryInMap: () => dispatch(landActions.getAllLandMarkCategoryInMap()),
     onHandleGetShop: () => dispatch(shopsActions.getShop()),
+    dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(BloodLand));

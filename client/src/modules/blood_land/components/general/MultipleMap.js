@@ -13,7 +13,7 @@ import Functions from "../horizontalBarComponent";
 import Notice from "../noticeComponent"
 import BloodExchangeTrade from "../horizontalBarComponent/component/BloodExchangeTrade";
 import InfoCurrentZoom from "../horizontalBarComponent/component/InfoCurrenZoom";
-import {newVersionUI, settingLandInfo, notification} from "../../../../helpers/config";
+import {newVersionUI, settingLandInfo, notification, mapBox} from "../../../../helpers/config";
 import ContextMenu from "../landMapComponent/component/ContextMenu";
 import {screenActions} from "../../../../helpers/importModule";
 import LandMapRightClick from "../landMapComponent/component/LandMapRightClick"
@@ -33,7 +33,8 @@ import NoLandCanSaleAlert from '../common/Popups/commomPopups/NoLandCanSaleAlert
 import {notificationAction} from "../../../../store/actions/commonActions/notifyActions";
 import {developmentalAction} from "../../../../store/actions/commonActions/developActions";
 
-import SearchBar from "../horizontalBarComponent/component/SearchBar"
+import SearchBar from "../horizontalBarComponent/component/SearchBar";
+import LandMapBox from "../../components/mapBoxComponent/LandMapBox";
 
 const MultipleMap = memo((props) => {
 
@@ -48,6 +49,9 @@ const MultipleMap = memo((props) => {
     };
 
     useEffect(() => {
+
+        
+
         if (props.user && props.user._id) {
             props.getAllLandCategoryNew({userId: props.user._id});
             notification && getNotification(props.user._id);
@@ -55,12 +59,15 @@ const MultipleMap = memo((props) => {
         }
         onHandleGetShop();
         getAllLandMarkCategoryInMap();
+
     }, []);
+
+
 
     return (
         <div className='map-container'>
             {/*check right click notice and function GameUi*/}
-            <div onContextMenu={newVersionUI ? (() => props.removePopup({name: 'ContextMenu'})) : ''}>
+{/*            <div onContextMenu={newVersionUI ? (() => props.removePopup({name: 'ContextMenu'})) : ''}>
 
                 {!loadingLandAction && newVersionUI ? <MiniMapComponentNewVersionUi/> : !loadingLandAction &&
                     <MiniMapComponent/>}
@@ -71,30 +78,32 @@ const MultipleMap = memo((props) => {
                 {checkDisplay && <Fragment>
                     <GameUI gameMode={gameMode}/>
                     <div
-                        className={`game-tools ${mapExpanding ? 'minimap-expanding' : ''}`} /*onContextMenu={() => props.removePopup({name : 'ContextMenu'})} */>
+                        className={`game-tools ${mapExpanding ? 'minimap-expanding' : ''}`}>
                         <SearchBar/>
                         <Functions/>
                     </div>
                 </Fragment>}
                 {(settingLandInfo && landsPerCellInfo) && <InfoCurrentZoom/>}
-            </div>
+            </div>*/}
             <div className='mainMap' id='mainMap'>
-                {gameMode ? <GameMap dataMap={defaultMap}/> : <LandMap dataMap={defaultMap}/>}
+                { mapBox ? <LandMapBox dataMap={defaultMap} /> : null }
+                {/*gameMode && !mapBox ? <GameMap dataMap={defaultMap}/> : <LandMap dataMap={defaultMap}/>*/}
                 {newVersionUI ? screens["ContextMenu"] && <ContextMenu/> : ''}
                 {newVersionUI ? <LandMapRightClick/> : ''}
             </div>
-            {newVersionUI && !gameMode && screens["showTotalBlood"] &&
+{/*            {newVersionUI && !gameMode && screens["showTotalBlood"] &&
             <DetailSelectedLand {...screens["showTotalBlood"]}/>}
-            {/*Purchase Land*/}
+       
             {screens['NoLandSelectedAlert'] && <NoLandSelectedAlert/>}
             {screens['TooManySelectedLandAlert'] && <TooManySelectedLandAlert/>}
             {screens["BuyLandSuccessAlert"] && <BuyLandSuccessAlert {...screens["BuyLandSuccessAlert"]} />}
             {screens["ErrorBuyLandAlert"] && <ErrorBuyLandAlert/>}
             {screens["ErrorOver500LandsInCategory"] && <ErrorOver500LandsInCategory/>}
-            {/*SellLand*/}
+            
             {screens['NoSelectedAlert'] && <NoSelectedAlert/>}
             {screens['EmptyCategoryAlert'] && <EmptyCategoryAlert/>}
-            {screens['NoLandCanSaleAlert'] && <NoLandCanSaleAlert/>}
+            {screens['NoLandCanSaleAlert'] && <NoLandCanSaleAlert/>}*/}
+
         </div>
     )
 });
@@ -102,7 +111,7 @@ const MultipleMap = memo((props) => {
 
 export default connect(
     state => {
-        const {map, lands, settings, settingReducer: {gameMode, mapExpanding}, screens, authentication: {user}, lands: {categoryList}} = state;
+        const {map, lands, settings, settingReducer: {gameMode, mapExpanding}, screens, authentication: {user}, lands: {categoryList}, socket} = state;
         return {
             map,
             lands,
@@ -111,10 +120,12 @@ export default connect(
             mapExpanding,
             screens,
             user,
-            categoryList
+            categoryList,
+            socket
         };
     },
     dispatch => ({
+        //
         removePopup: (screen) => dispatch(screenActions.removePopup(screen)),
         getAllLandMarkCategoryInMap: () => dispatch(landActions.getAllLandMarkCategoryInMap()),
         onHandleGetShop: () => dispatch(shopsActions.getShop()),

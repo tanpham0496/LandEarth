@@ -54,11 +54,3 @@ function setExpire(key, seconds)
 {
     client.expire(key, seconds);
 }
-
-// var client = require("../../../helpers/redis");
-// client.setRedis("DndComponent key", 'value DndComponent');
-// client.setExpire("DndComponent key",60);
-// client.checkExist("DndComponent key");
-// client.deleteAllKey();
-// const getAwait = await client.getAwait("DndComponent key");
-// console.log('getAwait',getAwait);

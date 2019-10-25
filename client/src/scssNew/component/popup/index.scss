@@ -1,0 +1,131 @@
+@import "../../variables";
+
+.fade-bg{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  background: $fade-bg;
+  animation: fadeIn 0.5s;
+}
+.popup-wrapper {
+  width: 17rem;
+  height: 14rem;
+  position: fixed;
+  top: 20rem;
+  left: 49rem;
+  z-index: 10;
+  border-radius: 28px;
+  background: white;
+  border: 2px solid $menu-color;
+  animation: fadeIn 0.5s;
+  display: flex;
+  flex-direction: column;
+
+  .title-container {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+
+    .title {
+      width: 70%;
+      margin-left: 10%;
+      color: $menu-color;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .button-close {
+      width: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      div {
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 2px solid $grey-light-alpha;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        div {
+          width: 10px;
+          height: 1px;
+          border-radius: 0;
+          background: $grey-light-alpha;
+        }
+      }
+    }
+  }
+
+  .body-container {
+    height: 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    img{
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 0.8rem;
+      margin-top: 1rem;
+    }
+    .body-content {
+      font-size: 0.9rem;
+      color: $menu-color;
+      font-weight: bold;
+
+    }
+  }
+
+  .buttonPopup-container{
+    height: 3rem;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: space-between;
+    &.active{
+      justify-content: center;
+    }
+    .buttonPopup{
+      width: 6.2rem;
+      height: 2.1rem;
+      //background: #0b5a91;
+      border-radius: 28px;
+      border: 2px solid $menu-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $menu-color;
+      font-weight: bold;
+      transition: all 0.5s linear;
+      &:hover{
+        background: $green-light;
+      }
+    }
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+

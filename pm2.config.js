@@ -40,6 +40,24 @@ module.exports = {
 				"NODE_ENV": "production",
 			}
 		},
+		{
+			name: "api_chat",
+			script: "api_game/app.js",
+			watch: true,
+			node_args: "--max_old_space_size=4000",
+			env: {
+				"PORT": 5003,
+				"NODE_ENV": "development"
+			},
+			env_staging: {
+				"PORT": 5001,
+				"NODE_ENV": "staging",
+			},
+			env_production: {
+				"PORT": 5001,
+				"NODE_ENV": "production",
+			}
+		},
 		// {
 		// 	name: "cron-api",
 		// 	script: "api_cron/app.js",

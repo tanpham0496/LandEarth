@@ -8,21 +8,21 @@ const redis = require('redis');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http');
-const socketIO = require('socket.io');
 const fileUpload = require('express-fileupload');
 const server = http.createServer(app);
-const io = module.exports.io = socketIO(server);
 const dotenv = require('dotenv');
 dotenv.config();
 const config = require('./db/config');
 const tokenMiddleware = require('./helpers/tokenMiddleware');
-const socketManager = require('./helpers/socket').socketHandle;
+
 const chalk = require('chalk');
 const morganHelper = require('./helpers/morganHelper');
 const winstonLogger = require('./helpers/logger');
 
-// const jwt = require('./helpers/jwt');
-// require('./helpers/cron')(io);
+//setup socket
+const socketIO = require('socket.io');
+const io = socketIO(server);
+require('./socket')(io);
 
 logger.token('customMethod', morganHelper.customMethod);
 logger.token('timeFormat', morganHelper.timeFormat);
@@ -43,13 +43,13 @@ const morganLogger = logger(function (tokens, req, res) {
     ].join(' ');
 });
 
-io.on('connection', socketManager);
-
 app.use(morganLogger);
 app.use(cookieParser());
 app.use(fileUpload());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+
 
 
 // if (process.env.NODE_ENV !== 'development' && (config.clientHost === 'http://178.128.109.233' || config.clientHost === 'https://blood.land')) {

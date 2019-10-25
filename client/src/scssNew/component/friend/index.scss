@@ -1,0 +1,423 @@
+@import "../../variables";
+//friend-list
+.friend-header {
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+
+  .icon-header {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 22px;
+      height: 19px;
+    }
+  }
+
+  .title-header {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    color: $menu-color;
+    font-weight: bold;
+  }
+
+  .button-header {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .button-return {
+      width: 2rem;
+      height: 2rem;
+      border: 2px solid $grey-light;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s linear;
+
+      .icon-button {
+        width: 10px;
+        height: 3px;
+        background: $grey-light;
+      }
+
+      &:hover {
+        background: $green-light;
+        transform: scale(1.1);
+        border: 2px solid $menu-color;
+
+        .icon-button {
+          background: $menu-color;
+        }
+      }
+    }
+  }
+}
+
+.friend-body {
+  height: 38rem;
+  display: flex;
+  flex-direction: column;
+  .friend-empty-container{
+    height: 38rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: $menu-color;
+    font-size: 1rem;
+    font-weight: bold;
+    animation: fadeIn 1s;
+    img{
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 1rem;
+    }
+  }
+  .friend-list-function-button-container {
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .friend-list-button {
+      width: 23%;
+      height: 2.8rem;
+      border-radius: 11px;
+      background: $green-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s linear;
+      cursor: pointer;
+      animation: fadeIn 1s;
+
+      &:nth-child(1) {
+        margin-left: 5px;
+      }
+
+      &:nth-child(4) {
+        margin-right: 5px;
+      }
+
+      img {
+        width: 0.9rem;
+        height: 0.8rem;
+      }
+
+      .button-name {
+        margin-left: 5px;
+        font-weight: bold;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+  }
+
+  .checkAll-container {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+
+    .checkAll-button {
+      margin-left: 1rem;
+    }
+
+    .checkAll-title {
+      margin-left: 0.5rem;
+      color: $menu-color;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .friend-selected {
+      display: flex;
+      color: $green-light;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.2rem;
+    }
+  }
+  .unBlock-container {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    background: $green-light;
+    cursor: pointer;
+    filter: brightness(90%);
+    transition: all 0.5s linear;
+    &:hover{
+      filter: brightness(100%);
+    }
+    .unBlock-button {
+      margin-left: 1.1rem;
+      img{
+        width: 1.1rem;
+        height: 1rem;
+      }
+    }
+
+    .checkAll-title {
+      margin-left: 0.5rem;
+      color: $menu-color;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .friend-selected {
+      display: flex;
+      color: $green-light;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.2rem;
+    }
+  }
+
+  .line-container {
+    align-self: center;
+    height: 1px;
+    width: 90%;
+    background: $grey-light-alpha;
+  }
+
+  .friend-list-container {
+    height: 30rem;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    scroll-behavior: smooth;
+    &.expand {
+      height: 38rem;
+    }
+    &::-webkit-scrollbar {
+      width: 3px;
+      border-radius: 50%;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $grey-light-alpha;
+    }
+
+    .friend-list-item {
+      display: flex;
+      height: auto;
+      align-items: center;
+      margin-bottom: 5px;
+      animation: fadeIn 3s;
+
+      .item-check-button {
+        margin-left: 1rem;
+      }
+
+      .item-name {
+        margin-left: 0.5rem;
+        color: $menu-color;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .item-effect {
+        margin-left: 12rem;
+
+        div {
+          width: 10px;
+          height: 10px;
+          background: $grey-light-alpha;
+          border-radius: 50%;
+          transition: all 0.5s linear;
+
+          &.active {
+            background: $green-light;
+            transition: all 0.5s linear;
+          }
+        }
+      }
+    }
+  }
+}
+
+//add friend
+.addFriend-header {
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+
+  .title-header {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    color: $menu-color;
+    font-weight: bold;
+    margin-left: 1rem;
+  }
+
+  .button-header {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .button-return {
+      width: 2rem;
+      height: 2rem;
+      border: 2px solid $grey-light;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s linear;
+
+      .icon-button {
+        width: 10px;
+        height: 3px;
+        background: $grey-light;
+      }
+
+      &:hover {
+        background: $green-light;
+        transform: scale(1.1);
+        border: 2px solid $menu-color;
+
+        .icon-button {
+          background: $menu-color;
+        }
+      }
+    }
+  }
+}
+
+.line-container {
+  align-self: center;
+  height: 1px;
+  width: 80%;
+  background: $grey-light-alpha;
+}
+
+.searchFriend-container {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .searchField {
+    height: 60%;
+    width: 80%;
+    border: 2px solid $green-light;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+
+    img {
+
+      width: 1rem;
+      height: 1rem;
+      margin-left: 5px;
+    }
+
+    input {
+      height: 19px;
+      width: 11rem;
+      border-top: none;
+      border-bottom: none;
+      margin-left: 1rem;
+      border-left: 1px solid $grey-light-alpha;
+      border-right: 1px solid $grey-light-alpha;
+      padding: 4px;
+      color: $grey-light;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+.result-search {
+  height: 6rem;
+  display: flex;
+  flex-direction: column;
+
+  .friend-name {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $menu-color;
+    font-weight: bold;
+    font-size: 1rem;
+    animation: fadeIn 0.5s;
+  }
+
+  .friend-button-container {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s;
+    .friend-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4rem;
+      height: 2rem;
+      border-radius: 28px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.46);
+      div{
+        padding-top: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid $grey-light;
+        color: $grey-light;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .error-icon{
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s;
+    img{
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  .error-mess{
+    height: 3rem;
+    color: $menu-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    animation: fadeIn 0.5s;
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

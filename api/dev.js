@@ -973,17 +973,125 @@ async function buyLandsVituals({ vitualDatas, user, landConfig }){
     })
 }
 
+//REMOVE MANAGER LANDMARK
+async function setLandmarkIntoNormalLowerZoom22(){
+
+    //set forSaleStatus=false
+    // await db.Land23.updateMany({ 'user.role': 'manager' }, { $set: { forSaleStatus: false }});
+    // console.log('set forSaleStatus=false');
+
+    //remove land mark in level 1-22
+    for(let landLevel = 1; landLevel < 23; landLevel++){
+        await landCollections[landLevel].update({ landmarkCount: { $exists: true }}, { $unset: { landmarkCount: "" } }, { multi: true });
+        console.log(`remove landmark in landlevel ${landLevel} => Done`);
+    }
+
+}
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function createObjectUser(i){
+    const goldBlood = getRandomInt(0, 1000000000000);
+    const bitamin = getRandomInt(0, 100000);
+    const randomName = Math.random().toString(36).substring(2, 20);
+    const wId = "wId" + getRandomInt(0, 999999999999);
+    const nid = i;
+    const wToken = "wTk" + getRandomInt(0, 999999999999);
+    const user = {
+        wSns: [],
+        wBlood: 0,
+        goldBlood,
+        bitamin,
+        role: "user",
+        updatedDate: new Date(),
+        createdDate: new Date(),
+        userName: randomName,
+        firstName: randomName,
+        lastName: randomName,
+        wId,
+        nid,
+        wToken,
+        email: randomName +"@gmail.com",
+        hash: "$2a$10$BHNebtJLbvkbc5njZG9A6er7vkjEiOpGUpkZSJg.Z0iIRietPOO3G"
+    }
+    return user;
+}
+
+async function createUsers(numberUSer, landConfig, land22){
+    const origin = 262144;
+    const range = 16;
+    const limitNumberUSer = origin/range; //== 16384
+    try {
+        for(let i = 1; i <= limitNumberUSer; i++){
+            console.log('User', i);
+            const newObjUser = createObjectUser(i);
+            const newUser = await db.User.create(newObjUser);
+            const newUserSetting = {
+                "land" : { "showInfo" : true },
+                "bgMusic" : { "turnOn" : true, "volume" : 30 },
+                "effMusic" : { "turnOn" : false, "volume" : 100 },
+                "userId" : ObjectId(newUser._id),
+            }
+            db.UserSetting.create(newUserSetting);
+
+            if((i+1)*range <= origin){
+                //buy lands
+                const arrLand22 = land22.slice(i*range, (i+1)*range);
+                const LandInCate = arrLand22.map(quadKeys22 => {
+                    return {
+                        categoryName: quadKeys22,
+                        quadKeys: splitMuti({ quadKeys: [quadKeys22] })
+                    }
+                });
+                buyLandsVituals({ vitualDatas: LandInCate, user: newUser, landConfig });
+
+
+
+                // const quadKeys22 = land22[i];
+                // const LandInCate = [{
+                //     categoryName: quadKeys22,
+                //     quadKeys: splitMuti({ quadKeys: [quadKeys22] })
+                // }];
+                //console.log('LandInCate', LandInCate);
+            }
+        }
+    } catch (e){
+        console.log(e);
+        return false;
+    }
+}
+
+function splitMuti({ quadKeys }){
+    let rsQuadKeys = [];
+    for(const quadKey of quadKeys){
+        rsQuadKeys = [...rsQuadKeys, ...[quadKey + 0, quadKey + 1, quadKey + 2, quadKey + 3]];
+    }
+    return rsQuadKeys;
+}
+
+function splitMultiDeep({ quadKeys, maxDeep=24 }){
+    let allQK = quadKeys;
+    while(allQK[0].length < maxDeep){
+        //console.time('======>');
+        allQK = splitMuti({ quadKeys: allQK });
+        //console.log('deep', allQK[0].length, allQK.length);
+        //console.timeEnd('======>');
+    }
+    return allQK;
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const landService = require('./containers/users/services/trades');
 const { list } = require('./listup-landmarks-result');
 const { vitualDatas, vitualDatas2, splitCategory } = require('./testData');
+const { land22 } = require('./land22');
 
 (async () => {
-    
-    //split 500 every category
-    //await scriptSplit500Land();
-    
+
+
+    ////==========================================================================================MAIN=====================================================================================================
     console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
     if(process.env.NODE_ENV === 'development'){
+
         console.log('remove DB');
         bloodDB.dropDatabase();
         landLogDB.dropDatabase();
@@ -999,7 +1107,7 @@ const { vitualDatas, vitualDatas2, splitCategory } = require('./testData');
         const landConfig = await db.LandConfig.create({ landPrice: 10000, landFee: 0 });
         //console.log('===> ', landConfig);
 
-        
+
         console.log('create test data: 15000 lands and 235 categories for user aa... Please wait 30s!');
         const rsCre = await buyLandsVituals({ vitualDatas, user: userAA, landConfig });
         console.log('rsCre', rsCre)
@@ -1010,6 +1118,11 @@ const { vitualDatas, vitualDatas2, splitCategory } = require('./testData');
         //console.log('rsCre2', rsCre2);
         console.log('create test done!!!');
 
+
+
+        console.log('-----------------------------------------');
+        await createUsers(262144, landConfig, land22);
+        console.log('-----------------------------------------');
 
         // //land mark wrong at present
         console.log('addUserManagerAndAddLandMark');
@@ -1042,6 +1155,15 @@ const { vitualDatas, vitualDatas2, splitCategory } = require('./testData');
     }  else if(process.env.NODE_ENV === 'production'){
         //do nothing
     }
+    ////==========================================================================================MAIN=====================================================================================================
+    
+    
+    // //remove manager landmark
+    //await setLandmarkIntoNormalLowerZoom22();
+    
+    // //re-check
+    //split 500 every category
+    //await scriptSplit500Land();
 
     // //for test
     // console.log('create Bitamin for Test')
