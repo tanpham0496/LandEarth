@@ -1,126 +1,134 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import {loadingImage} from "../../../blood_land/components/general/System";
-import MiniMapComponent from "../../../blood_land/components/miniMapComponent/component/MiniMapComponent";
-const infoMapCity = {
-    center: [37.566535, 126.9779692],
-    zoom: 12,
-    mapOptions: {
-        maxZoom: 14,
-        minZoom: 10,
-        disableDoubleClickZoom: true,
-        fullscreenControl: false,
-    },
-    loadTile: false,
-    loadPin: true,
-};
-const infoMapTown = {
-    center: [37.566535, 126.9779692],
-    zoom: 17,
-    mapOptions: {
-        maxZoom: 19,
-        minZoom: 15,
-        disableDoubleClickZoom: true,
-        fullscreenControl: false,
-    },
-    loadTile: false,
-    loadPin: true,
-};
-const infoMapCountry = {
-    center: [37.566535, 126.9779692],
-    zoom: 6,
-    mapOptions: {
-        maxZoom: 8,
-        minZoom: 4,
-        disableDoubleClickZoom: true,
-        fullscreenControl: false,
-    },
-    loadTile: false,
-    loadPin: true,
-};
-const ListMap = [
+import MiniMapBox from "../../component/mapBoxComponent/MiniMapBox";
+import { useSelector } from 'react-redux';
+import { getFisrtLocation } from '../mapBoxComponent/mapFunction'
+
+const miniMaps = [
     {
-        tab : '1',
         classname : 'map map-1',
-        state: 'toggleMap1',
-        setState: 'setToggleMap1',
         name: 'MAP 1',
-        map : <MiniMapComponent dataMap={infoMapCity}/>
+        data: {
+            //center,
+            zoom: 17,
+            maxZoom: 19,
+            minZoom: 15,
+        }
     },
     {
-        tab : '2',
         classname : 'map map-2',
-        state: 'toggleMap2',
-        setState: 'setToggleMap2',
         name: 'MAP 2',
-        map : <MiniMapComponent dataMap={infoMapTown}/>
-    } ,
+        data: {
+            //center,
+            zoom: 12,
+            maxZoom: 14,
+            minZoom: 10,
+        }
+    },
     {
-        tab : '3',
         classname : 'map map-3',
-        state: 'toggleMap3',
-        setState: 'setToggleMap3',
         name: 'MAP 3',
-        map : <MiniMapComponent dataMap={infoMapCountry}/>
+        data: {
+            //center,
+            zoom: 6,
+            maxZoom: 8,
+            minZoom: 4,
+        }
     }
 ];
+
 function MenuMap(props) {
-    const [toggleMap, setToggleMap] = useState(false);
 
-    const [activeIndexMap, setActiveIndexMap] = useState(0);
+    const { maps } = useSelector(state => state);
 
-    const [zoomMap, setZoomMap] = useState(false);
-    //State width height Map
-    const [widthMap, setWidthMap] = useState(353);
-    const [heightMap, setHeightMap]= useState(55);
+    const [toggleMap, setToggleMap] = useState(null); //null, small, large
+    const [selectedMap, setSelectedMap] = useState(miniMaps[0]);
+    const [center, setCenterMiniMap] = useState(null);
+    //set size
+    const CLOSE_SIZE = { width: 353, height: 55 };
+    const SMALL_SIZE = { width: 353, height: 275 };
+    const LARGE_SIZE = { width: 510, height: 387 };
+    const [size, setSize] = useState(CLOSE_SIZE);
 
-    const onHandleToggleMap = (state,tab,ind) => {
-        setActiveIndexMap(ind);
-        setTimeout(()=> { setWidthMap(353);  setHeightMap(215); },0.01);
-        setToggleMap(true);
-    };
+    //get center first load
+    useEffect(() => {
+        getFisrtLocation().then(location => {
+            // console.log('location', location);
+            setCenterMiniMap(location);
+        });
+    }, []);
 
-    const onHandleResizeMap = () => {
-        setToggleMap(!toggleMap);
-        setZoomMap(false);
-        setTimeout(()=> {
-            if(toggleMap){setHeightMap(55); setWidthMap(353)}
-            else  {setHeightMap(275);  setWidthMap(353) }
-        },0.01)
-    };
-    const onHandleZoomMap = () => {
-        setZoomMap(!zoomMap);
-        setToggleMap(false);
-        if(zoomMap) {setHeightMap(55); setWidthMap(353)}
-        else  { setHeightMap(387); setWidthMap(510)}
-    };
+    //
+    useEffect(() => {
+        if(maps.center){
+            setCenterMiniMap(maps.center);
+        }
+    }, [maps.center]);
+
     useEffect(()=> {
-        props.receiveState(heightMap);
-    }, [heightMap])
+        props.receiveState(size.height);
+    }, [size]);
+
+    const onHandleToggleMap = (index) => {
+        setSelectedMap(miniMaps[index]);
+        if(!toggleMap){
+            setTimeout(() => setSize(SMALL_SIZE), 0.01);
+            setToggleMap('small');
+        }
+    };
+
+    const onHandleToggleSmallSize = () => {
+        if(toggleMap === 'small'){
+            setTimeout(()=> setSize(CLOSE_SIZE), 0.01);
+            setToggleMap(null);
+            setSelectedMap(miniMaps[0])
+        } else {
+            setTimeout(()=> setSize(SMALL_SIZE), 0.01);
+            setToggleMap('small');
+            setSelectedMap(miniMaps[0]);
+        }
+    };
+
+    const onHandleToggleLargeSize = () => {
+        if(toggleMap === 'large'){
+            setTimeout(()=> setSize(CLOSE_SIZE), 0.01);
+            setToggleMap(null);
+            setSelectedMap(miniMaps[0])
+        } else {
+            setTimeout(()=> setSize(LARGE_SIZE), 0.01);
+            setToggleMap('large');
+            setSelectedMap(miniMaps[0]);
+        }
+    };
+
+    useEffect(()=> {
+        props.receiveState(size.height);
+    }, [size]);
 
     return (
         <Fragment>
-            <div className={`${toggleMap ? 'container-child-map show' : 'container-child-map' }`} style={{width: `${widthMap + 'px'}` , height: `${heightMap + 'px'}` }}>
-                <div className={`${toggleMap || zoomMap ? 'toggle-map-active' : 'toggle-map'}`} onClick={onHandleResizeMap}>
+            <div className={`${toggleMap === 'small' ? 'container-child-map show' : 'container-child-map' }`} style={{ ...size, position: 'relative', overflow: 'hidden' }}>
+                <div className={`${(toggleMap === 'small' || toggleMap === 'large')? 'toggle-map-active' : 'toggle-map'}`} onClick={onHandleToggleSmallSize}>
                     <img src={loadingImage('/images/bloodLandNew/func/Toggle-map-chat.png')} />
                 </div>
-                <div className={`${zoomMap ? 'zoom active' : 'zoom' }`} onClick={onHandleZoomMap}>
+                <div className={`${toggleMap === 'large' ? 'zoom active' : 'zoom' }`} onClick={onHandleToggleLargeSize}>
                     <img  src={loadingImage('/images/bloodLandNew/func/Zoom.png')} />
                 </div>
-                {ListMap.map((value,ind) => {
-                    const {tab, classname, state,name, map} = value;
-                    const classActive = activeIndexMap === ind ? 'active' : '';
-                    return(
-                        <div>
-                            <div key={ind} className={`${classActive} ${classname}`} onClick={()=>onHandleToggleMap(state,tab,ind)}>
-                                {name}
-                            </div>
-                            {(toggleMap || zoomMap) && <div className={'mapView-container'}>
-                                {map}
-                            </div>}
+                {
+                    //selectedMap
+                    miniMaps.map((map, index) => {
+                        const {classname, name } = map;
+                        return (<div className={`${miniMaps[index].name === selectedMap.name ? 'active' : ''} ${classname}`} key={index} onClick={() => onHandleToggleMap(index)}>
+                            {name}
+                        </div>)
+                    })
+                }
+                {
+                    selectedMap && selectedMap.data && center && size &&
+                        <div className={'mapView-container'}>
+                            <MiniMapBox {...selectedMap.data } { ...{center} } { ...size } />
                         </div>
-                        
-                    )
-                })}
+                }
 
             </div>
         </Fragment>

@@ -15,7 +15,8 @@ import {
     //======================
     CLEAR_SELECTED,
     CLEAR_CART,
-    SAVE_CART
+    SAVE_CART,
+    LAND_MODE
 } from '../../actions/commonActions/mapActions';
 
 const miniLeafMap = {
@@ -42,7 +43,8 @@ const defaultState = {
     mode: "single",
     miniMap: miniLeafMap,
     zoom: 22,
-}
+    landMode : true,
+};
 
 export default function (state = { ...defaultState }, action) {
     switch (action.type) {
@@ -137,6 +139,11 @@ export default function (state = { ...defaultState }, action) {
             return {
                 ...state,
                 mode: action.mode
+            };
+        case LAND_MODE:
+            return {
+                ...state,
+                landMode: action.mode
             };
         default:
             return state

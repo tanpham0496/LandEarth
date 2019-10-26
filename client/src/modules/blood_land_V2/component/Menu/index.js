@@ -8,6 +8,7 @@ import {screenActions} from "../../../../store/actions/commonActions/screenActio
 import classNames from 'classnames';
 import MenuDetailComponent from "./MenuDetail";
 import {MenuList} from "./data"
+import PopupGame from "../Game/PopupGame";
 
 const MenuComponent = () => {
     const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const MenuComponent = () => {
     }, 500);
 
     const onMenuIconHover = _.debounce((item) => {
-        setToolTipValue(item.name)
+        setToolTipValue(item.name);
         setIsToolTipOpen(true)
     }, 200);
 
@@ -62,14 +63,23 @@ const MenuComponent = () => {
         const {type, name} = item;
         if (type === 'left') {
             if (screens[name]) {
-                if(screens['friendList'] || screens['addFriend'] || screens['blockFriend']){
-                    dispatch(screenActions.removePopup({names: ['friendList' , 'addFriend', 'blockFriend']}))
+                if(screens['friendList'] || screens['addFriend'] || screens['blockFriend'] || screens['receiveMail'] || screens['readMail'] || screens['sendMail'] ){
+                    dispatch(screenActions.removePopup({names: ['friendList' , 'addFriend', 'blockFriend', 'receiveMail' , 'readMail' , 'sendMail']}))
                 }else{
                     dispatch(screenActions.removePopup({name}));
                 }
             } else {
                 dispatch(screenActions.addPopup({name , close: menuTabOpen }));
-                dispatch(screenActions.removePopup({names: ['friendList' , 'addFriend' , 'blockFriend']}));
+                dispatch(screenActions.removePopup({names: ['friendList' , 'addFriend' , 'blockFriend' ,  'receiveMail' , 'readMail' , 'sendMail']}));
+                setMenuTabOpen(name)
+            }
+        }
+        if (type === 'right') {
+            if(screens[name]) {
+                dispatch(screenActions.removePopup({name}));
+            }
+            else {
+                dispatch(screenActions.addPopup({name , close: menuTabOpen }));
                 setMenuTabOpen(name)
             }
         }
@@ -96,6 +106,8 @@ const MenuComponent = () => {
                 {/*render menu Detail*/}
                 <MenuDetailComponent/>
             </div>
+            {/*show popup Game*/}
+            {screens['game'] && <PopupGame />}
         </Fragment>
     )
 };

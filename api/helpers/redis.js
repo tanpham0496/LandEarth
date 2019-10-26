@@ -31,8 +31,7 @@ function createClient(redisHost, redisPort) {
     });
 }
 
-function setRedis(key,value)
-{
+function setRedis(key, value){
     client.set(key, JSON.stringify(value));
 }
 

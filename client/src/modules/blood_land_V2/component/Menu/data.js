@@ -6,54 +6,62 @@ export const MenuList = [
         type: 'right',
         imageUrl: '/images/bloodLandNew/myWallet.png',
         timeDelayOpen: 0,
-        timeDelayClose: 0.8
+        timeDelayClose: 0.9
     }, {
         name: 'shop',
         type: 'right',
         imageUrl: '/images/bloodLandNew/shop.png',
         timeDelayOpen: 0.05,
-        timeDelayClose: 0.7
+        timeDelayClose: 0.8
     }, {
         name: 'wareHouse',
         type: 'right',
         imageUrl: '/images/bloodLandNew/wareHouse.png',
         timeDelayOpen: 0.1,
-        timeDelayClose: 0.6
+        timeDelayClose: 0.7
     }, {
+        name: 'game',
+        type: 'right',
+        imageUrl: '/images/bloodLandNew/game.png',
+        timeDelayOpen: 0.15,
+        timeDelayClose: 0.6
+    },{
         name: 'setting',
         type: 'right',
         imageUrl: '/images/bloodLandNew/setting.png',
-        timeDelayOpen: 0.15,
+        timeDelayOpen: 0.2,
         timeDelayClose: 0.5
-    }, {
+    },
+
+    {
         name: 'myAccount',
         type: 'left',
         imageUrl: '/images/bloodLandNew/character.png',
-        timeDelayOpen: 0.2,
+        timeDelayOpen: 0.25,
         timeDelayClose: 0.4
     }, {
         name: 'myLand',
         type: 'left',
         imageUrl: '/images/bloodLandNew/myLand.png',
-        timeDelayOpen: 0.25,
+        timeDelayOpen: 0.3,
         timeDelayClose: 0.3
     }, {
         name: 'advertisement',
         type: 'left',
         imageUrl: '/images/bloodLandNew/advertisement.png',
-        timeDelayOpen: 0.3,
+        timeDelayOpen: 0.35,
         timeDelayClose: 0.2
     }, {
         name: 'historyLand',
         type: 'left',
         imageUrl: '/images/bloodLandNew/historyLand.png',
-        timeDelayOpen: 0.35,
+        timeDelayOpen: 0.4,
         timeDelayClose: 0.1
     }, {
         name: 'searching',
         type: 'left',
         imageUrl: '/images/bloodLandNew/searching.png',
-        timeDelayOpen: 0.4,
+        timeDelayOpen: 0.45,
         timeDelayClose: 0
     }
 ];
@@ -90,7 +98,20 @@ export const IconTabList = [
         name: 'mail',
         imageUrl: loadingImage('/images/bloodLandNew/mail.png'),
         imageUrlActive: loadingImage('/images/bloodLandNew/mailHover.png'),
-        tabIndex: 3
+        tabIndex: 3,
+        childrenTab: [
+            {
+                name: 'receiveMail',
+                imageUrl: loadingImage('/images/bloodLandNew/mail/receive-mail.png'),
+                imageUrlActive: loadingImage('/images/bloodLandNew/mail/receive-mail-hover.png'),
+                tabParent: 3,
+            }, {
+                name: 'sendMail',
+                imageUrl: loadingImage('/images/bloodLandNew/mail/send-mail.png'),
+                imageUrlActive: loadingImage('/images/bloodLandNew/mail/send-mail-hover.png'),
+                tabParent: 3,
+            }
+        ]
     },
 
 ];

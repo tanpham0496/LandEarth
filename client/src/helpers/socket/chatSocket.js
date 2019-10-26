@@ -14,9 +14,15 @@ const chatEvent = {
 };
 
 const chatSocket = (dispatch, socket) => {
-    // socket.land.on('INVALID_TOKEN', (res) => {
-    //     dispatch(alertActions.tokenExpiredPopup('authentication failed'));
-    // });
+    
+    socket.chat.on('SEND_MESSAGE_RESPONSE', (result) => {
+        // console.log('SEND_MESSAGE_RESPONSE', result)
+        // dispatch(alertActions.tokenExpiredPopup('authentication failed'));
+        if(result.status){
+            dispatch({ type: 'RECEIVE_MESSAGE', message: result.message });
+        }
+    });
+
 };
 
 export {

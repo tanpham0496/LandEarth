@@ -28,7 +28,6 @@ const SoundHowlerComponent = memo((props) => {
     )
 });
 
-
 class BloodLand extends Component {
     constructor(props) {
         super(props);

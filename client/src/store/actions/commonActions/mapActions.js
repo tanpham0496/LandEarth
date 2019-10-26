@@ -16,8 +16,13 @@ export const UPDATE_TILES = 'UPDATE_TILES';
 export const CLEAR_CART = 'CLEAR_CART';
 export const SAVE_CART = 'SAVE_CART';
 export const DISABLE_TILE_MAP = 'DISABLE_TILE_MAP';
+//-------------------------------------------------------------------
+export const LAND_MODE = "LAND_MODE"
 
 export const mapActions = {
+    //=================
+    syncMap,
+    //=================
     disableTileMap,
     clearInvalidToken,
     invalidToken,
@@ -31,9 +36,10 @@ export const mapActions = {
     selectMode,
     addSelected,
     clearSelected,
-    addCenterMapGeo
+    addCenterMapGeo,
     //clearCart,
     //saveCart,
+    toggleAdMode
 };
 
 function addCenterMapGeo(centerMapGeo){
@@ -75,11 +81,28 @@ function updateMap(map){
 function clearSelected(clearQuadKeys=[]){
     return { type: CLEAR_SELECTED, clearQuadKeys }
 }
+function toggleAdMode(mode){
+    return { type: LAND_MODE, LAND_MODE }
+}
 
 function syncCenterMap(center=null, zoom=null, centerQuadKey=null, centerChange=false, leafMap=null){
     const mapChange = {};
     if(center) mapChange.center = center;
     if(zoom) mapChange.zoom = zoom;
+    if(centerQuadKey) mapChange.centerQuadKey = centerQuadKey;
+    if(centerChange) mapChange.centerChange = centerChange;
+    if(leafMap) mapChange.leafMap = leafMap;
+    return {
+        type: SYNC_CENTER_MAP,
+        ...mapChange
+    }
+}
+//==============================================NEW MAPBOX===========================================================
+function syncMap({center=null, zoom=null, centerQuadKey=null, centerChange=false, leafMap=null, oddZoom=null}){
+    const mapChange = {};
+    if(center) mapChange.center = center;
+    if(zoom) mapChange.zoom = zoom;
+    if(oddZoom) mapChange.oddZoom = oddZoom;
     if(centerQuadKey) mapChange.centerQuadKey = centerQuadKey;
     if(centerChange) mapChange.centerChange = centerChange;
     if(leafMap) mapChange.leafMap = leafMap;

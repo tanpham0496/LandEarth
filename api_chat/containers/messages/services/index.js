@@ -5,7 +5,7 @@ async function addMessage({ user, roomId, message }) {
 	try {
 		if(!message) return { status: false, err: 'noMessage' };
 
-		const newMessage = await db.Message.create({ message, roomId, senderId: user._id });
+		const newMessage = await db.Message.create({ message, roomId, senderId: user._id, senderName: user.userName });
 		if(!newMessage) return { status: false };
 
 		console.log('message', newMessage);
@@ -24,11 +24,12 @@ async function addMessage({ user, roomId, message }) {
  * @return     {object}  The messages by room identifier. { status: true, room: { id: roomId, messages } }
  * 
  */
-async function getMessagesByRoomId({ roomId }) {
+async function getMessagesByRoomId({ roomId, pageLoadMsg }) {
 	try {
 		// //if(!message) return { status: false, err: 'noMessage' };
 
-		const messages = await db.Message.find({ roomId }).select('-updatedAt').limit(50);
+		let messages = await db.Message.find({ roomId }).sort({ _id: -1 }).skip(pageLoadMsg).limit(50);
+		messages.reverse();
 		//console.log('messages', messages);
 		if(!messages) return { status: false };
 

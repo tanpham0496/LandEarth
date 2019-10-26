@@ -66,7 +66,7 @@ module.exports = function (io, socket) {
             let userConnected = await pushCharacterToList(data.socketId, 'user_' + data.user.user, data.user.user);
             // if (userConnected) {
             socket.broadcast.to(socket.room).emit('OTHER_USER_CONNECTED', socket.id);
-            //}
+            // }
         }
     });
 

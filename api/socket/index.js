@@ -13,20 +13,16 @@ module.exports = (io) => {
         //==============================================================================================================================================
         socket.on("USER_NEW_CONNECT", async (socketData) => {
             
-            //console.log('USER_NEW_CONNECT', socketData);
+            // console.log('USER_NEW_CONNECT', socketData);
             const { user, socketId } = socketData;
             const updateUser = await db.User.findOneAndUpdate({ _id: user._id }, { sId: socketId }, { new: true });
+            // console.log('==> Update sId', 'updateUser');
             if(!updateUser){
                 socket.emit('ERROR', { err: "cantUpdateSID" });
                 return;
             }
 
-            console.log('USER_NEW_CONNECT_RESPONSE', { h: 'klkl' });
-            console.log('socketId', socketId);
-            socket.emit('USER_NEW_CONNECT_RESPONSE');
-
-
-            
+            socket.emit('USER_NEW_CONNECT_RESPONSE');    
         });
         //==============================================================================================================================================
 

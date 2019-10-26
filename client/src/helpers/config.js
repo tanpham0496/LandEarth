@@ -13,8 +13,8 @@ const environment = {
 		settingLandInfo: true,
 		infiniteScroll: true, //using when scroll list
 		mapBox: true,
-		newBloodLandVersion: false
-
+		newBloodLandVersion: false,
+		mapBoxKey: 'pk.eyJ1IjoiYmxhbmQxIiwiYSI6ImNrMWtldHl2ejBjczgzb25wNWlreDVkMjgifQ.7pdpqi8QyPySNEhFbcLzdA'
 	},
 	staging: {
 		apiLand: 'http://178.128.109.233:3001',
@@ -29,7 +29,8 @@ const environment = {
 		notification : true,
 		settingLandInfo: true,
 		infiniteScroll: true,
-		newBloodLandVersion: false
+		newBloodLandVersion: false,
+		mapBoxKey: 'pk.eyJ1IjoiYmxhbmQxIiwiYSI6ImNrMWtldHl2ejBjczgzb25wNWlreDVkMjgifQ.7pdpqi8QyPySNEhFbcLzdA'
 	},
 	production: {
 		apiLand: 'https://if-land.blood.land:4000',
@@ -43,7 +44,8 @@ const environment = {
 		notification : true,
 		settingLandInfo: true,
 		infiniteScroll: false,
-		newBloodLandVersion: false
+		newBloodLandVersion: false,
+		mapBoxKey: 'pk.eyJ1IjoiYmxhbmQxIiwiYSI6ImNrMWtldHl2ejBjczgzb25wNWlreDVkMjgifQ.7pdpqi8QyPySNEhFbcLzdA'
 	}
 };
 

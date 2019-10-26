@@ -1,5 +1,6 @@
 import {
     SAVE_CONNECT_SOCKET,
+    //===============================================================================
 
     TRANSFER_BLOOD_SOCKET,
     TRANSFER_BLOOD_TRADING_LAND,
@@ -20,16 +21,12 @@ import {
 
 import * as t from "../../actionTypes/landActionTypes/landActionTypes"
 
-export default function (state = {}, action) {
+export default function (state = { rooms: {} }, action) {
     switch (action.type) {
+        //======================================================
         case SAVE_CONNECT_SOCKET:
             //console.log('SAVE_CONNECT_SOCKET', action);
-            return { ...state, ...action.connectData }
-        // case USER_NEW_CONNECT:
-        //     console.log('REDUCER', USER_NEW_CONNECT);
-        //     return {
-        //         ...state
-        //     };
+            return { ...state, socketId: action.connectData.socketId }
         //======================================================
         case TRANSFER_BLOOD_SOCKET:
             return { ...state, action: action };

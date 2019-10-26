@@ -17,24 +17,34 @@ module.exports = {
     getBeBlockedUser
 };
 
+
+
+(async () => {
+
+
+
+})()
+
+
+
 /**
  * 2019.3.22 Xuân Giao
  * hàm này tìm bạn bè // 친구 찾음
  * @param { userName, currentUserId}
  */
-async function find(param) {
-    let foundUser = await User.find({ userName: param.userName }).select('userName');
+async function find({ userName, currentUserId }) {
+    let foundUser = await db.User.find({ userName: userName }).select('userName');
     if(foundUser.length > 0)
     {
         let status = 'normal';
-        let checkBlock = await UserFriend.findOne({ $and: [ { "userId": param.currentUserId }, { "blockList.list.userId": foundUser[0]._id }] });
+        let checkBlock = await UserFriend.findOne({ $and: [ { "userId": currentUserId }, { "blockList.list.userId": foundUser[0]._id }] });
         if(!isNull(checkBlock))
             status = 'block';
-        let checkFriend = await UserFriend.findOne({ $and: [ { "userId": param.currentUserId }, { "friendList.list.userId": foundUser[0]._id }] });
+        let checkFriend = await UserFriend.findOne({ $and: [ { "userId": currentUserId }, { "friendList.list.userId": foundUser[0]._id }] });
         if(!isNull(checkFriend))
             status = 'friend';
 
-        if(param.currentUserId === foundUser[0]._id.toString())
+        if(currentUserId === foundUser[0]._id.toString())
             status = 'self';
         return {foundUser, status}
     }
@@ -46,9 +56,7 @@ async function find(param) {
  * hàm này thêm bạn bè  // 친구 추가
  * @param { userId, friendList}
  */
-async function add(param) {
-    const {userId} = param;
-    let {friendList} = param;
+async function add({ userId, friendList }) {
     try {
         friendList = friendList.filter(f => f.userId.toString() !== userId.toString());
         const isUserExist = await UserFriend.findOne({ userId: userId });
@@ -94,11 +102,10 @@ async function add(param) {
         const data = await getFriendListBlockList({userId});
         return { addStatus: success,...data};
     } catch (err) {
-        console.log("err",err);
+        console.log("Err", err);
         const data = await getFriendListBlockList({userId});
         return { addStatus: false,...data};
     }
-  
 }
 
 /**

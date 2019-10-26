@@ -40,6 +40,10 @@ const rootPersistConfig = {
 };
 
 const rootReducer = combineReducers({
+    //=============NEW MAPBOX===========
+    auth: authenticationReducer,
+    maps: mapReducer,
+    //===========END NEW MAPBOX==========
     screens: screenReducer,
     alert: alertReducer,
     authentication: authenticationReducer,
@@ -48,7 +52,7 @@ const rootReducer = combineReducers({
     lands: landsReducer,
     centerMap: centerMapReducer,
     sockets: socketReducer,
-    chatRooms: chatReducer,
+    chats: chatReducer,
     wallet: walletReducer,
     map: mapReducer,
     develop: developReducer,

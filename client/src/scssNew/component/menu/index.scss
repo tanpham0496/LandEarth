@@ -136,7 +136,7 @@
     min-height: 14rem;;
     min-width: 18rem;
   }
-  &.active-friendList, &.active-blockFriend {
+  &.active-friendList, &.active-blockFriend , &.active-receiveMail ,  &.active-readMail , &.active-sendMail{
     min-height: 45rem;
     min-width: 18rem;
   }
@@ -145,9 +145,12 @@
     min-width: 18rem;
     min-height: 21rem;
   }
-  &:hover{
-    background: $menu-color-alpha;
+  &.hidden{
+    visibility: hidden;
   }
+  //&:hover{
+  //  background: $menu-color-alpha;
+  //}
   .icon-tab-list-container{
     width:100%;
     height: auto;
@@ -178,8 +181,8 @@
         align-items: center;
         justify-content: center;
         img{
-          width: 2rem;
-          height: 2rem;
+          width: 1.5rem;
+          height: 1.5rem;
         }
         &:hover {
           border: 2px solid $menu-color;
@@ -210,7 +213,7 @@
   animation-fill-mode: forwards;
   display: none;
   flex-direction: column;
-  &.active-friendList , &.active-blockFriend{
+  &.active-friendList , &.active-blockFriend , &.active-receiveMail , &.active-readMail , &.active-sendMail{
     z-index: 3;
     background: white;
     animation: fadeIn 1.5s;

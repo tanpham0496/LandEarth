@@ -33,9 +33,11 @@ function middleware(socket){
                 return;
             }
 
-            // if(user.sId){
-            // 
-            // }
+            console.log('socketId', socketId);
+            console.log('user.sId', user.sId);
+            if(user.sId !== socketId){
+                socket.to(user.sId).emit('DISCONNECT', { err: "openOtherTab" });
+            }
 
             packet[1].user = user;
             console.log('===> PASS')

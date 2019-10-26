@@ -24,12 +24,12 @@ function NotificationBlood (props){
     };
     const tabList = [
         {
-            name : 'Notification',
+            name : 'NOTIFICATION',
             tabCode: 1,
             type: 'Notify'
         },
         {
-            name : 'Development',
+            name : 'DEVELOPMENT',
             tabCode: 2,
             type: 'Develop'
         }
@@ -39,19 +39,21 @@ function NotificationBlood (props){
     return (
         <Fragment>
             <Modal isOpen={true} backdrop="static" className={`custom-modal modal--notice`}>
-                <div className='custom-modal-header'>
-                    <img src={loadingImage('/images/game-ui/tab1/nav1.svg')} />
+                <div className='modal-header--notice'>
+                    <img src={loadingImage('/images/bloodLandNew/func/Notify.png')} />
                     <span>
                         <TranslateLanguage direct={'menuTab.user.notify'}/>
                     </span>
-                    <span className="lnr lnr-cross lnr-custom-close" onClick={() =>{props.removePopup({name : "NotificationBlood"}); props.removePopup({name : "filterGlobar"})} }/>
+                    <div className={'close-popup'} onClick={() =>{props.removePopup({name : "NotificationBlood"}); props.removePopup({name : "filterGlobar"})} }>
+                        <img className="image-zoom-in" src={loadingImage('/images/bloodLandNew/func/zoom-in.png')} />
+                    </div>
                 </div>
-                <div className='custom-modal-body'>
-                    <div className="tab-inventory-container">
+                <div className='custom-modal-body modal-body--notice'>
+                    <div className="tab-notice-container">
                         {tabList.map((value,index) => {
                             const {name, tabCode,type} = value;
                             return(
-                                <div className={`tab-inventory ${tab === tabCode && 'active'}`}  key={index}
+                                <div className={`tab-notice ${tab === tabCode && 'active'}`}  key={index}
                                      onClick={() => onHandleChangeTab(tabCode,type)}>
                                     {haveNotify && haveNotify.length > 0 && type === "Notify" && <div className={'has-new'}> New </div>}
                                     {haveDevelop && haveDevelop.length > 0 && type === "Develop" && <div className={'has-new'}> New </div>}

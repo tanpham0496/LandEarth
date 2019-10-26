@@ -4,16 +4,11 @@ import { socketActions } from '../../store/actions/commonActions/socketActions';
 import {bloodAppId} from "../config";
 
 const landEvent = {
-    TRANSFER_BLOOD_SOCKET: (socket, action) => {
-        const token = localStorage.getItem('token');
-        const socketId = socket.land.id;
-
-        //console.log('action', action.dataTransfer)
-        
-        socket.land.emit('TRANSFER_BLOOD_SOCKET', { socketId, token });
-
-    },
-
+    // TRANSFER_BLOOD_SOCKET: (socket, action) => {
+    //     const token = localStorage.getItem('token');
+    //     const socketId = socket.land.id;
+    //     socket.land.emit('TRANSFER_BLOOD_SOCKET', { socketId, token });
+    // },
     // REMOVE_HISTORY_TRADING_LAND_SOCKET: (socket, action) => {
     //     const token = localStorage.getItem('token');
     //     const socketId = socket.land.id;
@@ -40,10 +35,15 @@ const landEvent = {
 
 const landSocket = (dispatch, socket) => {
     socket.land.on('USER_NEW_CONNECT_RESPONSE', (res) => {
-        
-        console.log('USER_NEW_CONNECT_RESPONSE')
+        //console.log('USER_NEW_CONNECT_RESPONSE')
         //dispatch(alertActions.tokenExpiredPopup('authentication failed'));
     });
+
+    socket.land.on('DISCONNECT', (res) => {
+        dispatch(alertActions.tokenExpiredPopup(res.err));
+    });
+
+    
 
     // socket.land.on('OTHER_USER_CONNECTED', async (res) => {
     //     window.location.replace('https://wallet.blood.land/sns/logout/ext?appId='+bloodAppId);

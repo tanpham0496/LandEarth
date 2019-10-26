@@ -34,7 +34,7 @@ import {notificationAction} from "../../../../store/actions/commonActions/notify
 import {developmentalAction} from "../../../../store/actions/commonActions/developActions";
 
 import SearchBar from "../horizontalBarComponent/component/SearchBar";
-import LandMapBox from "../../components/mapBoxComponent/LandMapBox";
+//import LandMapBox from "../../components/mapBoxComponent/LandMapBox";
 
 const MultipleMap = memo((props) => {
 
@@ -50,8 +50,6 @@ const MultipleMap = memo((props) => {
 
     useEffect(() => {
 
-        
-
         if (props.user && props.user._id) {
             props.getAllLandCategoryNew({userId: props.user._id});
             notification && getNotification(props.user._id);
@@ -61,8 +59,6 @@ const MultipleMap = memo((props) => {
         getAllLandMarkCategoryInMap();
 
     }, []);
-
-
 
     return (
         <div className='map-container'>
@@ -86,7 +82,6 @@ const MultipleMap = memo((props) => {
                 {(settingLandInfo && landsPerCellInfo) && <InfoCurrentZoom/>}
             </div>*/}
             <div className='mainMap' id='mainMap'>
-                { mapBox ? <LandMapBox dataMap={defaultMap} /> : null }
                 {/*gameMode && !mapBox ? <GameMap dataMap={defaultMap}/> : <LandMap dataMap={defaultMap}/>*/}
                 {newVersionUI ? screens["ContextMenu"] && <ContextMenu/> : ''}
                 {newVersionUI ? <LandMapRightClick/> : ''}
@@ -98,7 +93,7 @@ const MultipleMap = memo((props) => {
             {screens['TooManySelectedLandAlert'] && <TooManySelectedLandAlert/>}
             {screens["BuyLandSuccessAlert"] && <BuyLandSuccessAlert {...screens["BuyLandSuccessAlert"]} />}
             {screens["ErrorBuyLandAlert"] && <ErrorBuyLandAlert/>}
-            {screens["ErrorOver500LandsInCategory"] && <ErrorOver500LandsInCategory/>}
+            {screens["ErrorOver500LandsInCategory"] && <ErrorOver500Lanotice-final-containerndsInCategory/>}
             
             {screens['NoSelectedAlert'] && <NoSelectedAlert/>}
             {screens['EmptyCategoryAlert'] && <EmptyCategoryAlert/>}

@@ -1,3 +1,10 @@
+import { apiChat } from '../../../helpers/config';
+import { handleResponses, handleErrorResponses } from "../../../helpers/handleResponse";
+import { authHeader } from '../../../helpers/authHeader';
+import { store } from "../../../helpers/store";
+import axios from 'axios';
+import alertActions from "../../actions/commonActions/alertActions";
+
 import { chatService } from '../../services/commonServices/chatService'
 export const GETALL_CHATROOMS_SUCCESS = 'GETALL_CHATROOMS_SUCCESS';
 export const GETALL_CHATROOMS_FAILURE = 'GETALL_CHATROOMS_FAILURE';
@@ -15,7 +22,18 @@ export const LOAD_MORE_MESSAGE_ERROR = 'LOAD_MORE_MESSAGE_ERROR';
 
 export const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
 
+
+//========================================================================================
+export const SET_CURRENT_ROOM = 'SET_CURRENT_ROOM';
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+//export const GET_MESSAGES_BY_ROOM_ID = 'GET_MESSAGES_BY_ROOM_ID';
+export const GET_MESSAGES_BY_ROOM_ID_SUCCESS = 'GET_MESSAGES_BY_ROOM_ID_SUCCESS';
+export const GET_MESSAGES_BY_ROOM_ID_FAILURE = 'GET_MESSAGES_BY_ROOM_ID_FAILURE';
+//========================================================================================
+
 export const chatActions = {
+    getMessagesByRoomId,
+    //========================
     getAll,
     create,
     joinRoomRequest,
@@ -31,109 +49,146 @@ export const chatActions = {
 };
 
 
-function clearNotifications(rooms){
-    return {
-        type: CLEAR_NOTIFICATIONS,
-        rooms: rooms
+
+function getMessagesByRoomId(param) {
+    //console.log('getMessagesByRoomId', param);
+    // return dispatch => {
+    //     axios({
+    //         method: 'post',
+    //         url: `${apiLand}/messages/getMessagesByRoomId`,
+    //         headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    //         data
+    //     })
+    //     .then(
+    //         result => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_SUCCESS, result }),
+    //         error => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_FAILURE, error })
+    //     )
+    //     .catch(function (error) {
+    //         // handle error
+    //         console.log(error);
+    //     })
+    // };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(param)
     }
+    return dispatch => {
+        fetch(`${apiChat}/messages/getMessagesByRoomId`, requestOptions)
+            .then(handleResponses).catch(err => err.toString() === 'TypeError: Failed to fetch' && store.dispatch(alertActions.tokenExpiredPopup(err)))
+            .then(
+                result => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_SUCCESS, result }),
+                error => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_FAILURE, error })
+            );
+    };
+}
+
+
+
+function clearNotifications(rooms){
+    // return {
+    //     type: CLEAR_NOTIFICATIONS,
+    //     rooms: rooms
+    // }
 }
 
 function addRecentlyChatUser(user) {
-    return {
-        type: ADD_RECENTLY_CHAT_USER,
-        user: user
-    }
+    // return {
+    //     type: ADD_RECENTLY_CHAT_USER,
+    //     user: user
+    // }
 }
 
 function loadMore(currentRoom, n,topMessIndex) {
-    return dispatch => {
-        dispatch(request());
-        chatService.loadMoreMessage(currentRoom, n,topMessIndex)
-            .then(rs => {
-                dispatch(success(rs));
-            })
-            .catch(err => dispatch(failure()));
-    };
+    // return dispatch => {
+    //     dispatch(request());
+    //     chatService.loadMoreMessage(currentRoom, n,topMessIndex)
+    //         .then(rs => {
+    //             dispatch(success(rs));
+    //         })
+    //         .catch(err => dispatch(failure()));
+    // };
 
-    function request() { return { type: LOAD_MORE_MESSAGE_REQUEST } }
-    function success(result) { return { type: LOAD_MORE_MESSAGE_SUCCESS, result } }
-    function failure() { return { type: LOAD_MORE_MESSAGE_ERROR } }
+    // function request() { return { type: LOAD_MORE_MESSAGE_REQUEST } }
+    // function success(result) { return { type: LOAD_MORE_MESSAGE_SUCCESS, result } }
+    // function failure() { return { type: LOAD_MORE_MESSAGE_ERROR } }
 }
 
 
 function create(room) {
-    return dispatch => {
-        chatService.create(room)
-            .then(
-                res => {
+    // return dispatch => {
+    //     chatService.create(room)
+    //         .then(
+    //             res => {
 
-                },
-                error => {
+    //             },
+    //             error => {
 
-                }
-            );
-    }
+    //             }
+    //         );
+    // }
 }
 
 function getAll() {
-    return dispatch => {
-        chatService.getAll()
-            .then(
-                chatRooms => {
-                    dispatch(success(chatRooms));
-                },
-                error => {
-                    dispatch(failure(error));
-                }
-            )
-    };
-    function success(chatRooms) { return { type: GETALL_CHATROOMS_SUCCESS, chatRooms } }
-    function failure(error) { return { type: GETALL_CHATROOMS_FAILURE, error } }
+    // return dispatch => {
+    //     chatService.getAll()
+    //         .then(
+    //             chatRooms => {
+    //                 dispatch(success(chatRooms));
+    //             },
+    //             error => {
+    //                 dispatch(failure(error));
+    //             }
+    //         )
+    // };
+    // function success(chatRooms) { return { type: GETALL_CHATROOMS_SUCCESS, chatRooms } }
+    // function failure(error) { return { type: GETALL_CHATROOMS_FAILURE, error } }
 }
 
 function joinRoomRequest(roomName,user) {
-    return {
-        type: JOIN_ROOM_REQUEST,
-        roomName: roomName,
-        user:user
-    }
+    // return {
+    //     type: JOIN_ROOM_REQUEST,
+    //     roomName: roomName,
+    //     user:user
+    // }
 }
 
 function leaveRoomRequest(roomName) {
-    return {
-        type: LEAVE_ROOM_REQUEST,
-        roomName: roomName
-    }
+    // return {
+    //     type: LEAVE_ROOM_REQUEST,
+    //     roomName: roomName
+    // }
 }
 
 function uploadImage(selectedFile) {
-    return chatService.uploadImage(selectedFile);
+    // return chatService.uploadImage(selectedFile);
 }
 
 function fetchMessages(messages) {
-    return {
-        type: FETCH_MESSAGES,
-        messages: messages
-    }
+    // return {
+    //     type: FETCH_MESSAGES,
+    //     messages: messages
+    // }
 }
 
 function pushMessage(newMessage) {
-    return {
-        type: PUSH_MESSAGE,
-        newMessage: newMessage
-    }
+    // return {
+    //     type: PUSH_MESSAGE,
+    //     newMessage: newMessage
+    // }
 }
 
 function updateUserStatus(onlineUsers) {
-    return {
-        type: UPDATE_USER_STATUS,
-        onlineUsers: onlineUsers
-    }
+    // return {
+    //     type: UPDATE_USER_STATUS,
+    //     onlineUsers: onlineUsers
+    // }
 }
 
 function pushNotification(fromRoom) {
-    return {
-        type: NOTIFICATION,
-        fromRoom
-    };
+    // return {
+    //     type: NOTIFICATION,
+    //     fromRoom
+    // };
 }

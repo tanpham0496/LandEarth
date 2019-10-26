@@ -5,7 +5,7 @@ import {
 } from '../../actions/commonActions/screenActions';
 
 export default function (state = {}, action) {
-    const { name, data, close, names, closes } = action.screen || action;
+    const { onlyName, name, data, close, names, closes } = action.screen || action;
     switch (action.type) {
         case REMOVE_POPUP:
             // console.log('REMOVE_POPUP', state[name]);
@@ -34,6 +34,11 @@ export default function (state = {}, action) {
                     ...state,
                     [name]: { ...data }
                 }
+            }
+            if(onlyName) {
+               return{
+                 [onlyName] :{...data}
+               }
             }
             return { ...state };
         default:

@@ -36,7 +36,7 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next) {
-    console.log('req123123',req.body);
+    //console.log('req123123',req.body);
     services.create(req.body)
         .then(result => {
             if(result) response.handleResponseWithLogs(req,res,false,result);

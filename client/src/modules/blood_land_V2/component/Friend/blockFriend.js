@@ -6,32 +6,15 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import {screenActions} from "../../../../store/actions/commonActions/screenActions";
 import {useDispatch, useSelector} from "react-redux";
+import {userActions} from "../../../../store/actions/commonActions/userActions";
 
-
+// getFriendListBlockList: (userId) => dispatch(userActions.getFriendListBlockList({userId: userId})),
 let list = [];
 for (let i = 0; i < 1000; i++) {
     let temp = {"type": i, "name": "Hell"}
     list.push(temp)
 }
-const FriendListButton = [
-    {
-        name: '채팅',
-        type: 'chat',
-        imageUrl: loadingImage('/images/bloodLandNew/friend/chat.png')
-    }, {
-        name: '편지',
-        type: 'mail',
-        imageUrl: loadingImage('/images/bloodLandNew/friend/mail.png')
-    }, {
-        name: '차단',
-        type: 'block',
-        imageUrl: loadingImage('/images/bloodLandNew/friend/block.png')
-    }, {
-        name: '삭제',
-        type: 'remove',
-        imageUrl: loadingImage('/images/bloodLandNew/friend/remove.png')
-    },
-];
+
 const BlockFriendComponent = () => {
     const dispatch = useDispatch();
     const [isCheckAll, setIsCheckAll] = useState(false);
@@ -44,6 +27,10 @@ const BlockFriendComponent = () => {
         }, 500);
     };
     const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems, "friend-list-container");
+
+    useEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         if (list) {

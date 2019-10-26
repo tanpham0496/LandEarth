@@ -11,7 +11,8 @@ export const alertActions = {
     clear,
     popup,
     closePopup,
-    setCurrentComponent, tokenExpiredPopup
+    setCurrentComponent,
+    tokenExpiredPopup,
 
 };
 
@@ -46,11 +47,9 @@ function closePopup() {
 }
 
 function tokenExpiredPopup(err){
-    return dispatch => {
-        dispatch( {
-            type: TOKEN_EXPIRED,
-            tokenError: err
-        })
+    return {
+        type: TOKEN_EXPIRED,
+        tokenError: err,
     }
 }
 

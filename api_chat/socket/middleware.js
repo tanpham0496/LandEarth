@@ -31,12 +31,8 @@ function middleware(socket){
                 return;
             }
 
-            // if(user.sId){
-            // 
-            // }
-
             packet[1].user = user;
-            console.log('===> PASS CHAT SOCKET')
+            console.log('===> PASS CHAT SOCKET');
             return next();
         }
     });

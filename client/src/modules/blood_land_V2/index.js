@@ -1,17 +1,14 @@
-import React, {Component, Fragment , memo} from 'react';
-import {translate} from 'react-i18next';
+import React, {Component, Fragment , memo, useEffect} from 'react';
+import { translate } from 'react-i18next';
 import connect from "react-redux/es/connect/connect";
 import MultipleMap from "../blood_land/components/general/MultipleMap";
-import {settingActions} from "../../store/actions/commonActions/settingActions";
+import { settingActions } from "../../store/actions/commonActions/settingActions";
 import ReactHowler from 'react-howler'
-import config from '../../helpers/config';
-// import {alertPopup, getChromeDetectAlert, getTokenErrorAlert, getWIdExistAlert} from "./alertPopup";
-import {landActions} from "../../store/actions/landActions/landActions";
-import {shopsActions} from "../../store/actions/gameActions/shopsActions";
+import { bloodAppId } from '../../helpers/config';
+import { getTokenErrorAlert } from "../blood_land/alertPopup";
+import { landActions } from "../../store/actions/landActions/landActions";
+import { shopsActions } from "../../store/actions/gameActions/shopsActions";
 import BloodLand from "./BloodLand";
-
-
-
 
 const SoundHowlerComponent = memo((props) => {
     const {setting:{bgMusic}, sound } = props;
@@ -27,97 +24,33 @@ const SoundHowlerComponent = memo((props) => {
 });
 
 
-class WrapperCompomnent extends Component {
-    constructor(props) {
-        super(props);
-        // this.checkBrowser();
+function WrapperCompomnent(props) {
+    useEffect(() => {
         props.getDefault();
         props.getSetting(props.user._id);
-        // this.state = {
-        //     currentPopup: alertPopup.noPopup
-        // };
-    }
-
-    // checkBrowser = () => {
-    //     if (navigator.userAgent.indexOf("Chrome") === -1) {
-    //         this.setState({
-    //             currentPopup: alertPopup.chromeDetectedAlert
-    //         })
-    //     }
-    // };
-
-    // componentDidMount() {
-    //     const {user: {wId}} = this.props;
-    //     if (!config.devMode) {
-    //         if (!wId || wId === '') {
-    //             this.setState({
-    //                 currentPopup: alertPopup.wIdAlert
-    //             })
-    //         }
-    //     }
-    // }
-
-    // componentWillReceiveProps(nextProps, nextContext) {
-    //     //console.log('componentWillReceiveProps', nextProps);
-    //     const {tokenError, user: {wId}} = nextProps;
-    //     if (!config.devMode) {
-    //         //console.log('!config.devMode')
-    //         if (!wId || wId === '') {
-    //             console.log("!wId || wId === ''")
-    //             this.setState({
-    //                 wIdExistAlert: alertPopup.wIdAlert
-    //             })
-    //         }
-    //     }
-    //     if (tokenError) {
-    //         this.setState({
-    //             currentPopup: alertPopup.tokenErrorAlert,
-    //         })
-    //     }
-    // }
-    //
-    // handleShowPopup = () => {
-    //     const {currentPopup} = this.state;
-    //     const chromeDetectedAlertStatus = currentPopup === alertPopup.chromeDetectedAlert;
-    //     const wIdAlertStatus = currentPopup === alertPopup.wIdAlert;
-    //     const tokenErrorAlertStatus = currentPopup === alertPopup.tokenErrorAlert;
-    //     return (
-    //         <Fragment>
-    //             {chromeDetectedAlertStatus && getChromeDetectAlert(chromeDetectedAlertStatus)}
-    //             {wIdAlertStatus && !config.devMode && getWIdExistAlert(wIdAlertStatus)}
-    //             {tokenErrorAlertStatus && getTokenErrorAlert()}
-    //         </Fragment>
-    //     )
-    // };
-
-    render() {
-        const {settingReducer} = this.props;
-        // const {currentPopup} = this.state;
-
-        // const checkDisplay = currentPopup === alertPopup.noPopup;
-        return (
-            <Fragment>
-                {/*{<MultipleMap checkDisplay={checkDisplay}/>}*/}
-                <BloodLand/>
-                {settingReducer && <SoundHowlerComponent
-                    setting={this.props.settingReducer}
-                    sound={`${process.env.PUBLIC_URL}/sounds/bg3.mp3`}
-                    playing={true}
-                />}
-                {/*{this.handleShowPopup()}*/}
-            </Fragment>
-        )
-    }
+    }, [])
+    return (
+        <Fragment>
+            {/*{<MultipleMap checkDisplay={checkDisplay}/>}*/}
+            <BloodLand/>
+            {props.settingReducer && <SoundHowlerComponent
+                setting={props.settingReducer}
+                sound={`${process.env.PUBLIC_URL}/sounds/bg3.mp3`}
+                playing={true}
+            />}
+            { props.alert.tokenError && getTokenErrorAlert() }
+            {/*{this.handleShowPopup()}*/}
+        </Fragment>
+    )
 }
 
 const mapStateToProps = (state) => {
-    const {settingReducer, alert, lands, authentication: {user}, alert: {tokenError}} = state;
+    const {settingReducer, alert, lands, authentication: {user}} = state;
     return {
         settingReducer,
         lands,
         user,
-        alert,
-        tokenError
+        alert
     };
 };
 
@@ -128,7 +61,7 @@ const mapDispatchToProps = (dispatch) => ({
     onHandleGetShop: () => dispatch(shopsActions.getShop()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(WrapperCompomnent));
+export default connect(mapStateToProps, mapDispatchToProps)(WrapperCompomnent);
 
 
 

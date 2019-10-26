@@ -20,7 +20,6 @@ module.exports = (io) => {
         //         return;
         //     }
 
-        //     console.log('USER_NEW_CONNECT_RESPONSE', { h: 'klkl' });
         //     console.log('socketId', socketId);
         //     socket.emit('USER_NEW_CONNECT_RESPONSE');
 

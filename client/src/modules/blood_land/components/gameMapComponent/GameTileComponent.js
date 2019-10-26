@@ -27,7 +27,6 @@ export const SingleTile = memo((props) => {
     )
 });
 
-
 const mapStateToProps = (state) => {
     const {
         wallet, lands, authentication: {user},

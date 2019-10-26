@@ -1,9 +1,19 @@
+import { apiChat } from '../../../helpers/config';
+import { handleResponses, handleErrorResponses } from "../../../helpers/handleResponse";
+import { authHeader } from '../../../helpers/authHeader';
+import { store } from "../../../helpers/store";
+import axios from 'axios';
+import alertActions from "../../actions/commonActions/alertActions";
+
+
+//=========SOCKET=========
 export const SAVE_CONNECT_SOCKET = 'SAVE_CONNECT_SOCKET';
 export const USER_NEW_CONNECT = 'USER_NEW_CONNECT';
 export const USER_DISCONNECTED = 'USER_DISCONNECTED';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+//=======END SOCKET=======
 
-//=======RE-PERFORMENT SOCKET=======
+
 export const TRANSFER_BLOOD_SOCKET = 'TRANSFER_BLOOD_SOCKET';
 export const REMOVE_HISTORY_TRADING_LAND_SOCKET = 'REMOVE_HISTORY_TRADING_LAND_SOCKET';
 export const REMOVE_HISTORY_TRADING_LAND_SOCKET_SUCCESS = 'REMOVE_HISTORY_TRADING_LAND_SOCKET_SUCCESS';
@@ -25,6 +35,9 @@ export const CLEAR_SELL_LAND_STATUS_SOCKET = 'CLEAR_SELL_LAND_STATUS_SOCKET';
 export const RESPONSE_SELL_LAND_SOCKET_SUCCESS = 'RESPONSE_SELL_LAND_SOCKET_SUCCESS';
 export const RESPONSE_SELL_LAND_SOCKET_FAILURE = 'RESPONSE_SELL_LAND_SOCKET_FAILURE';
 export const TRANSFER_BLOOD_TRADING_LAND = 'TRANSFER_BLOOD_TRADING_LAND';
+
+
+
 
 //============================================CHAT SOCKET==========================================
 
@@ -52,8 +65,9 @@ export const socketActions = {
 
 function userSendMessage (data) {
     //console.log('data', data);
-    return {  type : SEND_MESSAGE , data }
+    //return {  type : SEND_MESSAGE , data }
 }
+
 //=============================================END CHAT SOCKET=======================================
 
 

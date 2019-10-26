@@ -1,59 +1,97 @@
 import React, {useState, useEffect, Fragment, useRef} from 'react'
 import {loadingImage} from "../../../blood_land/components/general/System";
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import {socketActions} from '../../../../store/actions/commonActions/socketActions';
+import {chatActions} from '../../../../store/actions/commonActions/chatActions';
 import {screenActions} from '../../../../store/actions/commonActions/screenActions';
 import {translate} from "react-i18next";
+import moment from 'moment';
+import ContextMenuChat from "./ContextMenuChat";
 
-let list = [];
-function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
-}
-for (let i = 1; i <= 100; i++) {
-    let tmp = {"time": i, "name": "Tan", 'userId': getRndInteger(0,9999) ,'content' : 'Hôm nay giá tăng thêm 10% chị ạ, ok nhé!', 'classname': i%5===0 ? 'myself' : 'other-people'};
-    list.push(tmp)
-}
+const listContext = [
+    {
+        name : '채팅',
+        tab : '1'
+    },
+    {
+        name : '친구 차단',
+        tab : '2'
+    },
+    {
+        name : '편지 보냄',
+        tab : '3'
+    }
+]
 
-
-const ContentChat = (props) =>{
+const ContextChat = (props) =>{
+    const dispatch = useDispatch();
     const [listMessChat, setListMessChat] = useState();
     const messagesEndRef = useRef();
+    const [changeLocation, setChangeLocation] = useState();
 
     useEffect(()=> {
-        setListMessChat(list);
-        const objDiv = document.getElementById("list-message-chat");
-        objDiv.scrollTop = objDiv.scrollHeight;
-    });
+        dispatch(chatActions.getMessagesByRoomId({ roomId: props.chats.currentRoomId, pageLoadMsg: props.chats.pageLoadMsg }));
+    }, []);
+
+    useEffect(()=> {
+        const publicRoom = props.chats.rooms[null];
+        if(publicRoom){
+            const { id, messages } = publicRoom;
+            setListMessChat(messages);
+            document.getElementById("list-message-chat").scrollTop = document.getElementById("list-message-chat").scrollHeight;
+        }
+    }, [props.chats.rooms]);
+
+    useEffect(()=> {
+
+        document.getElementById("list-message-chat").scrollTop = document.getElementById("list-message-chat").scrollHeight;
+        // if(listMessChat && listMessChat.length !==0) {
+        //     document.getElementById("list-message-chat").scrollTop = document.getElementById("list-message-chat").scrollHeight;
+        // }
+    },[listMessChat]);
+
+    const handleShowContentMenu = (e) => {
+        setChangeLocation({clientX : e.clientX, clientY : e.clientY});
+        props.addPopup({name : 'showContextMenu'});
+    };
+    
+    //scroll list remove popup
+    const handleScroll = (e) => {
+        props.removePopup({name : 'showContextMenu'});
+    };
 
     return (
         <Fragment>
-            <div ref={messagesEndRef} className={'content-Chat'} style={{width : `${props.widthChat - 28  + 'px'}`, height : `${props.heightChat - 125  + 'px'}`}} id={'list-message-chat'}>
-                {listMessChat && listMessChat.map((value,ind) => {
+            <div ref={messagesEndRef} onScroll={handleScroll} className={'content-Chat'} style={{width : `${props.widthChat - 28  + 'px'}`, height : `${props.heightChat - 125  + 'px'}`}} id={'list-message-chat'}>
+                {listMessChat && listMessChat.map((message,ind) => {
                     return (
-                        <div className={value.classname}  key={ind}>
-                            <div className='item-mess'>
+                        <div className={props.user._id === message.senderId ? 'myself' : 'other-people'}  key={ind} >
+                            <div className='item-mess' onClick={e => props.user._id !== message.senderId && handleShowContentMenu(e)} >
                                 <div className='item-name'>
-                                    {value.name} ( {value.userId}xxx) : (time : {value.time} )
+                                    {message.senderName} ( {message.userId}xxx) : (time : { moment(message.createdAt).format('DD-MM-YYYY') } )
                                 </div>
                                 <div className='item-content'>
-                                    {value.content}
+                                    {message.message}
                                 </div>
                             </div>
                         </div>
                     )
                 })}
             </div>
+            {props.screens['showContextMenu'] && <ContextMenuChat listContext={listContext} changeLocation={changeLocation}/>}
         </Fragment>
     )
 };
 
 
 const mapStateToProps = (state) => {
-    const { authentication: {user} , screens ,  settingReducer:{language}} = state;
+    const { authentication: {user} , screens ,  settingReducer:{language}, sockets, chats} = state;
     return {
         user,
         screens,
-        language
+        language,
+        sockets,
+        chats
     };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -61,4 +99,4 @@ const mapDispatchToProps = (dispatch) => ({
     addPopup : (screen) => dispatch(screenActions.addPopup(screen)),
     removePopup : (screen) => dispatch(screenActions.removePopup(screen))
 })
-export default connect (mapStateToProps, mapDispatchToProps)(translate('common')(ContentChat))
+export default connect (mapStateToProps, mapDispatchToProps)(translate('common')(ContextChat))

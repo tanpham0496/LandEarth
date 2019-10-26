@@ -1,7 +1,8 @@
-import React, {useState} from 'react'
+import React, {useState,Fragment} from 'react'
 import {screenActions} from "../../../../store/actions/commonActions/screenActions";
-import {useDispatch} from "react-redux";
-import {IconTabList} from "./data"
+import {useDispatch ,useSelector} from "react-redux";
+import {IconTabList} from "./data" ;
+import InformationPopup from '../Popup/componentPopupMenu/informationPopup'
 
 
 //Directory
@@ -13,9 +14,13 @@ const MenuMyAccountComponent = () => {
     const [tabSelected, setTabSelected] = useState();
     const [tabChildrenSelected , setTabChildrenSelected] = useState();
     const dispatch = useDispatch();
+    const {screens} = useSelector(state=> state);
 
     const onHandleIconTabClick = (e, item) => {
         e.persist();
+        if(item.tabIndex === 1) {
+            dispatch(screenActions.addPopup({name : 'information'}))
+        }
         if (tabSelected === item.tabIndex) {
             setTabSelected();
         } else if (item.childrenTab) {
@@ -23,6 +28,7 @@ const MenuMyAccountComponent = () => {
         }
     };
     const onHandleIconChildrenClick = (e, item) => {
+
         e.persist();
         dispatch(screenActions.addPopup({name: item.name , close: tabChildrenSelected}))
         setTabChildrenSelected(item.name);
@@ -42,7 +48,8 @@ const MenuMyAccountComponent = () => {
     };
     return(
         IconTabList.map((item, index) => {
-                return (
+            return (
+                <Fragment>
                     <div className='icon-tab-container' key={index}>
                         {iconRender('icon-tab' , item )}
                         {item.childrenTab && item.childrenTab.map((itemChild, indexChild) => {
@@ -53,8 +60,11 @@ const MenuMyAccountComponent = () => {
                             )
                         })}
                     </div>
-                )
-            })
+                    {screens['information'] && <InformationPopup/>}
+                </Fragment>
+
+            )
+        })
     )
 };
 export default MenuMyAccountComponent
