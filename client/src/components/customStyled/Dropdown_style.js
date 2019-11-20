@@ -1,39 +1,50 @@
 import StyledComponent from "../style-component";
 import styled from "styled-components";
-import { Dropdown } from "primereact/dropdown";
+import {Dropdown} from "primereact/dropdown";
 
 export const StyledDropdown = styled(StyledComponent(Dropdown))`
   .p-dropdown {
-    width: auto !important;
+    width: 7rem !important;
     height: auto !important;
     border-radius: 63px !important;
-    border: none;
+    border: 2px solid #6EF488
+  }
+  .p-dropdown:focus {
+      outline: none;
+      border-color :#6EF488 !important 
   }
   .p-dropdown .p-dropdown-trigger {
-    border-radius: 10px;
-    width: 33px;
-    background: #efeeee;
+    border-radius: 28px;
+    width: 10px;
+    height: 10px;
+    display: flex;
+  
+    background: rgba(110, 244, 136 , 0.7);
+    margin-top: 9px;
+    margin-right: 8px;
+    box-shadow: 0px 2px 6px 7px rgba(110,244,136 ,0.6);
+}
+
   }
   .p-dropdown-trigger .p-dropdown-trigger-icon {
     position: unset !important;
     margin: unset !important;
     width: 0.7rem;
     height: 0.7rem;
-    background: url("/images/bloodland-ui/dropdown-btn-bg.svg") no-repeat center;
+    background: url("/images/bloodlandNew/dropdown-icon.svg") no-repeat center;
   }
   .p-dropdown-trigger .p-dropdown-trigger-icon:before {
     content: none;
   }
   .p-inputtext {
-    border-radius: 6px;
+    border-radius: 28px;
     padding-left: 10px;
-    font-size: 11px;
-    width: 160px !important;
-    color: black;
-    background: #efeeee;
+    font-size: 13px;
+    color: #12354F;
+    font-weight: bold
   }
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    background: #ac0000 !important;
+    background: #6EF488 !important;
   }
   .p-dropdown-item{
       display:flex;

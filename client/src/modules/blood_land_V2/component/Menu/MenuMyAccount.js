@@ -1,7 +1,7 @@
 import React, {useState,Fragment} from 'react'
 import {screenActions} from "../../../../store/actions/commonActions/screenActions";
 import {useDispatch ,useSelector} from "react-redux";
-import {IconTabList} from "./data" ;
+import {IconTabListMyAccount} from "./data" ;
 import InformationPopup from '../Popup/componentPopupMenu/informationPopup'
 
 
@@ -47,7 +47,7 @@ const MenuMyAccountComponent = () => {
         )
     };
     return(
-        IconTabList.map((item, index) => {
+        IconTabListMyAccount.map((item, index) => {
             return (
                 <Fragment>
                     <div className='icon-tab-container' key={index}>

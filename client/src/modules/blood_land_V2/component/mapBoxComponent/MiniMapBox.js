@@ -12,11 +12,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function MiniMapBox(props){
 
-  let map = useRef();
+  // let map = useRef();
   const dispatch = useDispatch();
 
   const [zoom, setZoom] = useState(props.zoom);
   const [center, setCenter] = useState(props.center);
+  const { maps } = useSelector(state => state);
+  // const [pinCenter, setPinCenter] = useState(props.center);
   //const [pitch, setPitch] = useState(0/*45*/);
   // const [bearing, setBearing] = useState(0/*-17*/);
 
@@ -28,7 +30,7 @@ function MiniMapBox(props){
 
   const _onChange = (viewport) => {
     const {latitude, longitude, zoom, pitch, bearing} = viewport;
-    const newZoom = Math.round(zoom); 
+    // const newZoom = Math.round(zoom); 
     setZoom(zoom);
     setCenter({ lat: latitude, lng: longitude });
     //setPitch(pitch);
@@ -44,7 +46,8 @@ function MiniMapBox(props){
   const _onClick = ({ lngLat: [lng, lat] }) => {
     //console.log('onClick', [lng, lat]);
     const newCenter = { lat, lng };
-    setCenter(newCenter);
+    //setCenter(newCenter);
+    // setPinCenter(newCenter);
     dispatch(mapActions.syncMap({
       center: newCenter,
       //oddZoom: zoom,
@@ -54,7 +57,7 @@ function MiniMapBox(props){
 
   return (
     <ReactMapGL
-      ref={ m => map = m }
+      // ref={ m => map = m }
       width={ props.width }
       height={ props.height }
       mapStyle={'mapbox://styles/mapbox/streets-v11'}
@@ -70,6 +73,16 @@ function MiniMapBox(props){
       // pitch={pitch}
       // bearing={bearing}
     >
+      <Marker
+        //style={{ display: props.isLoadPin ? 'block' : 'none' }}
+        className={`pinLeaf`}
+        latitude={maps.center.lat}
+        longitude={maps.center.lng}
+        captureDrag={false}
+        captureClick={false}
+        
+      >
+      </Marker>
     </ReactMapGL>
   );
 

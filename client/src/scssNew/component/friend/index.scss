@@ -113,8 +113,12 @@
       }
 
       .button-name {
-        margin-left: 5px;
-        font-weight: bold;
+          margin-left: 5px;
+          font-weight: bold;
+          font-size: 11px;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
       }
 
       &:hover {
@@ -126,8 +130,12 @@
 
   .checkAll-container {
     height: 3rem;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-align: center;
     align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 
     .checkAll-button {
       margin-left: 1rem;
@@ -141,6 +149,30 @@
     }
 
     .friend-selected {
+      display: flex;
+      color: $green-light;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.2rem;
+    }
+  }
+  .header-accept-friend {
+    height: 3rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .title {
+      margin-left: 1.5rem;
+      color: $menu-color;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .friend-waiting-accept {
       display: flex;
       color: $green-light;
       font-size: 0.8rem;
@@ -185,7 +217,7 @@
 
   .line-container {
     align-self: center;
-    height: 1px;
+    height: 2px;
     width: 90%;
     background: $grey-light-alpha;
   }
@@ -197,6 +229,7 @@
     flex-direction: column;
     margin-top: 0.5rem;
     scroll-behavior: smooth;
+    //border-bottom: 2px solid #ddd;
     &.expand {
       height: 38rem;
     }
@@ -210,6 +243,7 @@
     }
 
     .friend-list-item {
+      padding-top: 10px;
       display: flex;
       height: auto;
       align-items: center;
@@ -218,6 +252,24 @@
 
       .item-check-button {
         margin-left: 1rem;
+      }
+      .accept-friend{
+        position: absolute;
+        right: 55px;
+        cursor: pointer;
+        transition: all 0.5s linear;
+        &:hover{
+           transform: scale(1.1);
+        }
+      }
+      .block-friend{
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        transition: all 0.5s linear;
+        &:hover{
+          transform: scale(1.1);
+        }
       }
 
       .item-name {
@@ -228,7 +280,8 @@
       }
 
       .item-effect {
-        margin-left: 12rem;
+        position: absolute;
+        right: 15px;
 
         div {
           width: 10px;
@@ -300,7 +353,7 @@
 
 .line-container {
   align-self: center;
-  height: 1px;
+  height: 2px;
   width: 80%;
   background: $grey-light-alpha;
 }

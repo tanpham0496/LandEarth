@@ -12,7 +12,7 @@ const land23Schema = new mongoose.Schema({
     forSaleStatus: {type: Boolean, default: false }, // user set forSale
     forbidStatus: {type: Boolean, default: false }, // forbid of land
     name: { type: String, default: '' },
-    //userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    isSpecial: { type: String },
     user: {
         _id: { type: Schema.Types.ObjectId, default: null },
         nid: { type: String },

@@ -4,15 +4,15 @@ import MiniMapBox from "../../component/mapBoxComponent/MiniMapBox";
 import { useSelector } from 'react-redux';
 import { getFisrtLocation } from '../mapBoxComponent/mapFunction'
 
-const miniMaps = [
+const MINIMAPS = [
     {
         classname : 'map map-1',
         name: 'MAP 1',
         data: {
             //center,
-            zoom: 17,
-            maxZoom: 19,
-            minZoom: 15,
+            zoom: 5,
+            maxZoom: 7,
+            minZoom: 3,
         }
     },
     {
@@ -20,9 +20,9 @@ const miniMaps = [
         name: 'MAP 2',
         data: {
             //center,
-            zoom: 12,
-            maxZoom: 14,
-            minZoom: 10,
+            zoom: 11,
+            maxZoom: 13,
+            minZoom: 9,
         }
     },
     {
@@ -30,30 +30,36 @@ const miniMaps = [
         name: 'MAP 3',
         data: {
             //center,
-            zoom: 6,
-            maxZoom: 8,
-            minZoom: 4,
+            zoom: 16,
+            maxZoom: 18,
+            minZoom: 14,
         }
     }
 ];
 
+const SIZES = [
+    { width: 353, height: 55 },
+    { width: 353, height: 275 },
+    { width: 510, height: 387 },
+]
+
 function MenuMap(props) {
 
+    const [CLOSE, SMALL, LARGE] = SIZES;
+    // const [MAP1, MAP2, MAP3] = MINIMAPS;
     const { maps } = useSelector(state => state);
 
     const [toggleMap, setToggleMap] = useState(null); //null, small, large
-    const [selectedMap, setSelectedMap] = useState(miniMaps[0]);
+    const [selectedMap, setSelectedMap] = useState(null);
     const [center, setCenterMiniMap] = useState(null);
     //set size
-    const CLOSE_SIZE = { width: 353, height: 55 };
-    const SMALL_SIZE = { width: 353, height: 275 };
-    const LARGE_SIZE = { width: 510, height: 387 };
-    const [size, setSize] = useState(CLOSE_SIZE);
+
+    const [size, setSize] = useState(CLOSE);
+    const [lastSelectMap, setLastSelect] = useState(MINIMAPS[0]);
 
     //get center first load
     useEffect(() => {
         getFisrtLocation().then(location => {
-            // console.log('location', location);
             setCenterMiniMap(location);
         });
     }, []);
@@ -70,35 +76,39 @@ function MenuMap(props) {
     }, [size]);
 
     const onHandleToggleMap = (index) => {
-        setSelectedMap(miniMaps[index]);
+        setSelectedMap(MINIMAPS[index]);
         if(!toggleMap){
-            setTimeout(() => setSize(SMALL_SIZE), 0.01);
+            setTimeout(() => setSize(SMALL), 0.01);
             setToggleMap('small');
         }
     };
 
-    const onHandleToggleSmallSize = () => {
-        if(toggleMap === 'small'){
-            setTimeout(()=> setSize(CLOSE_SIZE), 0.01);
-            setToggleMap(null);
-            setSelectedMap(miniMaps[0])
-        } else {
-            setTimeout(()=> setSize(SMALL_SIZE), 0.01);
-            setToggleMap('small');
-            setSelectedMap(miniMaps[0]);
-        }
-    };
+    const closeMap = () => {
+        setTimeout(()=> setSize(CLOSE), 0.01);
+        setToggleMap(null);
+        setLastSelect(selectedMap);
+        setSelectedMap(null);
+    }
 
-    const onHandleToggleLargeSize = () => {
-        if(toggleMap === 'large'){
-            setTimeout(()=> setSize(CLOSE_SIZE), 0.01);
-            setToggleMap(null);
-            setSelectedMap(miniMaps[0])
-        } else {
-            setTimeout(()=> setSize(LARGE_SIZE), 0.01);
-            setToggleMap('large');
-            setSelectedMap(miniMaps[0]);
+    const onHandleToggle = (zoomType) => {
+        if(zoomType === 'zoomLarge'){
+            if(toggleMap === 'large'){
+                closeMap();
+            } else {
+                setTimeout(()=> setSize(LARGE), 0.01);
+                setToggleMap('large');
+                setSelectedMap(lastSelectMap);
+            }
+        } else if(zoomType === 'zoomSmall'){
+            if(toggleMap === 'small'){
+                closeMap();
+            } else {
+                setTimeout(()=> setSize(SMALL), 0.01);
+                setToggleMap('small');
+                setSelectedMap(lastSelectMap);
+            }
         }
+
     };
 
     useEffect(()=> {
@@ -108,23 +118,23 @@ function MenuMap(props) {
     return (
         <Fragment>
             <div className={`${toggleMap === 'small' ? 'container-child-map show' : 'container-child-map' }`} style={{ ...size, position: 'relative', overflow: 'hidden' }}>
-                <div className={`${(toggleMap === 'small' || toggleMap === 'large')? 'toggle-map-active' : 'toggle-map'}`} onClick={onHandleToggleSmallSize}>
-                    <img src={loadingImage('/images/bloodLandNew/func/Toggle-map-chat.png')} />
+                <div className={`${(toggleMap === 'small' || toggleMap === 'large')? 'toggle-map-active' : 'toggle-map'}`} onClick={() => onHandleToggle('zoomSmall')}>
+                    <img alt='toggle-map-chat' src={loadingImage('/images/bloodLandNew/func/Toggle-map-chat.png')} />
                 </div>
-                <div className={`${toggleMap === 'large' ? 'zoom active' : 'zoom' }`} onClick={onHandleToggleLargeSize}>
-                    <img  src={loadingImage('/images/bloodLandNew/func/Zoom.png')} />
+                <div className={`${toggleMap === 'large' ? 'zoom active' : 'zoom' }`} onClick={() => onHandleToggle('zoomLarge')}>
+                    <img alt='zoom' src={loadingImage('/images/bloodLandNew/func/Zoom.png')} />
                 </div>
                 {
                     //selectedMap
-                    miniMaps.map((map, index) => {
+                    MINIMAPS.map((map, index) => {
                         const {classname, name } = map;
-                        return (<div className={`${miniMaps[index].name === selectedMap.name ? 'active' : ''} ${classname}`} key={index} onClick={() => onHandleToggleMap(index)}>
+                        return (<div className={`${ selectedMap && MINIMAPS[index].name === selectedMap.name ? 'active' : ''} ${classname}`} key={index} onClick={() => onHandleToggleMap(index)}>
                             {name}
                         </div>)
                     })
                 }
                 {
-                    selectedMap && selectedMap.data && center && size &&
+                    selectedMap && selectedMap.data && center && size && size.height !== CLOSE.height &&
                         <div className={'mapView-container'}>
                             <MiniMapBox {...selectedMap.data } { ...{center} } { ...size } />
                         </div>

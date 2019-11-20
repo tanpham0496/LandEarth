@@ -54,7 +54,7 @@ const rootReducer = combineReducers({
     sockets: socketReducer,
     chats: chatReducer,
     wallet: walletReducer,
-    map: mapReducer,
+    //map: mapReducer,
     develop: developReducer,
     notify: notifyReducer,
     userToken: userTokenReducer,
@@ -65,7 +65,7 @@ const rootReducer = combineReducers({
     shopsReducer,
     inventoryReducer,
     mapGameReducer,
-    languageReducer,
+    // languageReducer,
     bitaminReducer
 });
 

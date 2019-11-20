@@ -11,7 +11,7 @@ import {
 
 function SellLandConfirmAlert(props) {
     const dispatch = useDispatch();
-    const {authentication: {user}, map: { zoom }} = useSelector(state => state);
+    const {authentication: {user}, maps: { zoom }} = useSelector(state => state);
     const { forSellLandSelected=[], modeSell } = props;
     const onHandleModifyPrice = () => {
         const quadKeys = [...forSellLandSelected].reduce((quadKeys, landItem) => quadKeys.concat({quadKey: landItem.quadKey, landPrice: landItem.sellPrice}), []);

@@ -30,7 +30,8 @@ const ContextChat = (props) =>{
     const [changeLocation, setChangeLocation] = useState();
 
     useEffect(()=> {
-        dispatch(chatActions.getMessagesByRoomId({ roomId: props.chats.currentRoomId, pageLoadMsg: props.chats.pageLoadMsg }));
+        // console.log('props.chats.currentRoomId', props.chats.currentRoomId);
+        dispatch(chatActions.getMessagesByRoomId({ roomId: null, pageLoadMsg: props.chats.pageLoadMsg }));
     }, []);
 
     useEffect(()=> {

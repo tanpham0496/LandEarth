@@ -4,7 +4,8 @@ const environment = {
 		apiGame: 'http://127.0.0.1:5002',
 		apiChat: 'http://127.0.0.1:5003',
 		//apiCron: 'http://127.0.0.1:5004',
-		bloodAppId: 'dX2zg30eNH2oJe3x',
+		//bloodAppId: 'dX2zg30eNH2oJe3x',
+		bloodAppId: 'eNXgx2z30e3H2oJd',
 		devMode: false,
 		leafmapMode: false, 
 		myLandNewMode: true, //new MyLand, limit 500 Lands
@@ -17,11 +18,12 @@ const environment = {
 		mapBoxKey: 'pk.eyJ1IjoiYmxhbmQxIiwiYSI6ImNrMWtldHl2ejBjczgzb25wNWlreDVkMjgifQ.7pdpqi8QyPySNEhFbcLzdA'
 	},
 	staging: {
-		apiLand: 'http://178.128.109.233:3001',
-		apiGame: 'http://178.128.109.233:4001',
-		apiChat: 'http://178.128.109.233:5001',
-		//apiCron: 'http://178.128.109.233:6001',
-		bloodAppId: 'dX2zg30eNH2oJe3x',
+		apiLand: 'http://178.128.212.64:3001',
+		apiGame: 'http://178.128.212.64:4001',
+		apiChat: 'http://178.128.212.64:5001',
+		//apiCron: 'http://178.128.212.64:6001',
+		//bloodAppId: 'dX2zg30eNH2oJe3x',
+		bloodAppId: 'eNXgx2z30e3H2oJd',
 		devMode: false,
 		leafmapMode: false,
 		myLandNewMode: true,

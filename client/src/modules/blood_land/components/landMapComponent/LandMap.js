@@ -291,8 +291,7 @@ class LandMap extends Component {
         //     }
         //   });
         // }
-
-
+        
 
     };
 

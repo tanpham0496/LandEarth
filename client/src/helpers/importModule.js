@@ -19,6 +19,7 @@ import {
 
 import TranslateLanguage        from './../modules/blood_land/components/general/TranslateComponent';
 import MessageBox               from '../modules/blood_land/components/general/MessageBox';
+import MessageBoxNew            from '../modules/blood_land_V2/component/Popup/MessageBox';
 import ItemTranslate            from '../modules/blood_land/components/general/ItemTranslate';
 
 import {alertActions}           from "../store/actions/commonActions/alertActions";
@@ -32,6 +33,9 @@ import {mapActions}             from "../store/actions/commonActions/mapActions"
 import {socketActions}          from "../store/actions/commonActions/socketActions"
 import {screenActions}           from "../store/actions/commonActions/screenActions";
 import {mapGameAction}           from "../store/actions/gameActions/mapGameActions";
+import {settingActions}           from "../store/actions/commonActions/settingActions";
+
+
 
 export {
    common,
@@ -64,5 +68,6 @@ export {
    socketActions,
    screenActions,
    mapGameAction,
-
+   settingActions,
+   MessageBoxNew
 };

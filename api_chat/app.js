@@ -16,10 +16,8 @@ const chalk = require('chalk');
 const morganHelper = require('./helpers/morganHelper');
 const winstonLogger = require('./helpers/logger');
 
-
 //setup socket
-const socketIO = require('socket.io');
-const io = socketIO(server);
+const io = require('socket.io')(server);
 require('./socket')(io);
 
 //setup resdis
@@ -79,62 +77,19 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// app.use(function errorHandler(err, req, res, next) {
-//     // set locals, only providing error in development
-//     res.locals.message = err.message;
-//     res.locals.error = req.app.get('env') === 'development' ? err : {};
-	
-// 	if (req.originalUrl === '/users/loginWallet') {	
-//         try {
-//             res.redirect(302, config.loginWalletHost);
-//         } catch(e) {}
-// 		return; // Cannot set headers after they are sent to the client
-// 	}
-
-//     // render the error page
-//     // res.status(err.status || 500);
-//     // res.render('error');
-
-//     if (typeof (err) === 'string') {
-//         // custom application error
-//         console.log('Error:', err);
-//         return res.status(400).json({
-//             status: 400,
-//             message: err
-//         });
-//     }
-
-//     if (err.name === 'ValidationError') {
-//         // mongoose validation error
-//         console.log('Error:', err.message);
-//         return res.status(400).json({
-//             status: 400,
-//             message: err.message
-//         });
-//     }
-
-//     if (err.name === 'UnauthorizedError') {
-//         // jwt authentication error
-//         console.log('Error:', err.message);
-//         return res.status(401).json({
-//             status: 401,
-//             message: err.message
-//         });
-//     }
-
-//     // default to 500 server error
-//     console.log('Error:', err.message);
-//     return res.status(500).json({
-//         status: 500,
-//         message: err.message
-//     });
-// });
-
 console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
 let port;
-if (process.env.NODE_ENV === 'development') port = 5003;
-else if (process.env.NODE_ENV === 'production') port = 3001;
-else port = 3001;
+switch(process.env.NODE_ENV){
+    case 'development':
+        port = 5003;
+        break;
+    case 'staging':
+        port = 5001;
+        break;
+    case 'production':
+        port = 5001;
+        break;
+}
 
 server.listen(port, function () {
     console.log('Server listening on port ' + port);

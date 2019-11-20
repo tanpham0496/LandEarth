@@ -2,6 +2,7 @@
 // /www/api_game NODE_ENV=staging node dev.js
 // fuser -n tcp -k 3001
 // sudo nano ./auto.sh
+// 
 module.exports = {
 	apps : [
 		{
@@ -42,7 +43,7 @@ module.exports = {
 		},
 		{
 			name: "api_chat",
-			script: "api_game/app.js",
+			script: "api_chat/app.js",
 			watch: true,
 			node_args: "--max_old_space_size=4000",
 			env: {
@@ -71,7 +72,7 @@ module.exports = {
 		// 		"NODE_ENV": "staging",
 		// 	},
 		// 	env_production: {
-		// 		"PORT": 80,
+		// 		"PORT": 6001,
 		// 		"NODE_ENV": "production",
 		// 	}
 		// },

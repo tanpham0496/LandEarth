@@ -22,8 +22,8 @@
 
         .custom-modal-header {
           height: 43px;
-          background: $background-color-1;
-          color: $font-color-2;
+          background: #2EE59D;
+          color: #12354F;
           text-align: center;
           font-size: 16px;
           padding: 6px;
@@ -48,7 +48,7 @@
               right: 7px;
               font-size: 23px;
               cursor: pointer;
-
+              color: #fff;
               &:hover {
                 color: $font-color-2;
                 font-weight: bolder;
@@ -85,13 +85,14 @@
             min-width: 64px;
             box-shadow: 0px 3px $border-7-color;
             -webkit-box-shadow: 0px 3px $border-7-color;
-
+            transition: all 0.3ms linear;
             &:hover {
-              border: $border8 !important;
-              background: $background-color-1;
-              color: $font-color-2;
-              box-shadow: 0px 3px $border-8-color;
-              -webkit-box-shadow: 0px 3px $border-8-color;
+              transform: scale(1.1);
+              border: #ddd !important;
+              background: #ddd;
+              color: #12354F;
+              box-shadow: 0px 3px #ddd;
+              -webkit-box-shadow: 0px 3px #ddd;
             }
           }
         }

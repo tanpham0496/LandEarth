@@ -1,0 +1,536 @@
+
+@media only screen and (max-width: 425px) and (min-width: 320px) {
+  .mapboxgl-ctrl-top-right {
+    left: 6% !important;
+    .mapboxgl-ctrl {
+      width: 150px!important;
+    }
+  }
+  .column-left {
+    display: unset;
+    left: 30px;
+    top: 0px;
+    .map-chat {
+      display: none;
+    }
+    .menu-icon-container-left {
+      display: inherit;
+      width: 5rem;
+        img{
+          width: 35px;
+          height: 35px;
+        }
+
+      .choose64{
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 3.2rem;
+        height: 2.2rem;
+        margin-right: 0;
+        transition: all 0.9s linear;
+        .image-raffle{
+          display: none;
+        }
+        &.active{
+          width: auto;
+          z-index: 99;
+          display: flex;
+          order: 1;
+        }
+        .icon-child-left{
+         margin: 0;
+          &:hover{
+            transform: scale(1);
+          }
+        }
+        .choose {
+          display: flex;
+          height: 34px;
+          order: 2;
+          width: 18rem;
+          margin-left: 4px;
+          .choose-one{
+            padding: 6px 10px;
+            border-right: 1px solid #6EF488;
+            border-bottom: none;
+            margin: 0;
+            &:nth-of-type(5) {
+              border-right: none;
+            }
+          }
+        }
+      }
+      .SpecialLand{
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 3.2rem;
+        height: 2.2rem;
+        margin-right: 0;
+        &.active{
+          width: auto;
+          z-index: 99;
+          display: flex;
+          order: 1;
+        }
+        .icon-child-left{
+          margin: 0;
+          .image-raffle{
+            display: none;
+          }
+        }
+        .list-choose-special-land {
+          display: flex;
+          height: 35px;
+          order: 2;
+          width: 16rem;
+          margin-left: 4px;
+          .name-child-special{
+            border-bottom: none;
+            border-right: 1px solid #6EF488;
+            margin: 0;
+            &:nth-of-type(5) {
+              border-right: none;
+            }
+
+          }
+        }
+      }
+      .ThreeMode{
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 3.2rem;
+        height: 2.2rem;
+        margin-right: 0;
+        &.active{
+          width: auto;
+          z-index: 99;
+          display: flex;
+          order: 1;
+          .icon-child-left{
+            .mode{
+              bottom: 9px;
+              top: unset !important;
+              width: 24px !important;
+            }
+          }
+        }
+        .icon-child-left{
+          margin: 0;
+          .image-raffle{
+            display: none;
+          }
+        }
+        .list-choose-special-land {
+          display: flex;
+          height: 35px;
+          order: 2;
+          width: 15rem;
+          margin-left: 4px;
+          .name-child-special{
+            border-bottom: none;
+            border-right: 1px solid #6EF488;
+            margin: 0;
+            &:nth-of-type(3) {
+              border-right: none;
+            }
+
+          }
+        }
+      }
+      .icon--toggle-function {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        left: -5%;
+        transform: rotate(0deg);
+        &.active{
+          transform: rotate(180deg);
+        }
+        img {
+          width: 50px !important;
+          height: auto !important;
+        }
+
+      }
+      .fadeInClass{
+        display: unset;
+    }
+      .icon-child-left {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 2.2rem;
+        height: 2.2rem;
+        font-size: 6px;
+        //notification
+        &:nth-of-type(5) {
+          display: none !important;
+        }
+      }
+    }
+    .menu-icon-container-left .choose64 {
+      width: 2.2rem;
+    }
+  }
+  .menu-button-container{
+    width: 3.5rem;
+    height: 3.5rem;
+    right: 3%;
+  }
+  .menu-wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0%;
+    right: 3%;
+    width: 5rem;
+    height: 38rem;
+    .menu-icon-container {
+      right: 0;
+      top: 12%;
+      display: flex;
+      width: 4rem;
+      flex-direction: column;
+      .right-menu-icon-container{
+        margin-top: 0.2rem;
+        order: 2;
+      }
+      .menu-icon{
+        width: 2.4rem;
+        height: 2.4rem;
+        margin-bottom: 0.5rem;
+        img {
+          width: 35px;
+          height: 35px;
+        }
+      }
+      .left-menu-icon-container{
+        margin-left: 0.8rem;
+        order: 1;
+      }
+    }
+  }
+
+  .menu-wrapper .tooltip-container{
+    display: none;
+  }
+
+  .menu-icon-tab-list-container {
+    top: 15%;
+    &.disabled{
+      min-width: 13rem;
+      min-height: 15rem;
+    }
+    &.active-addFriend {
+      min-height: 14rem;
+      min-width: 12rem
+    }
+    &.active-friendList, &.active-blockFriend , &.active-receiveMail ,  &.active-readMail , &.active-sendMail
+    ,&.active-reserve , &.active-land-for-sale , &.active-land-registered , &.active-wareHouse{
+      min-height: 32rem;
+      min-width: 12rem;
+    }
+    .icon-tab-list-container{
+      .icon-tab-container{
+        .icon-tab{
+          width: 2.6rem;
+          height: 2.6rem;
+          &:hover{
+            transform: scale(1.1);
+          }
+          img {
+            width: 1.8rem;
+            height: 1.8rem;
+          }
+        }
+        .icon-tab-children{
+          width: 2.6rem;
+          height: 2.6rem;
+          img {
+            width: 1.8rem;
+            height: 1.8rem;
+          }
+        }
+      }
+
+    }
+  }
+  .menu-icon-tab-list-container.active-searching{
+    width: 13rem;
+    height: 34rem;
+    min-height: 34rem;
+    min-width: 13rem;
+    .header-child-search{
+      grid-template-columns: 40px 120px auto;
+    }
+    .container-search {
+      width: 13rem;
+      height: 34rem;
+      .btn-action-header {
+        grid-template-columns: auto 2px auto;
+      }
+      .body-search{
+        width: 13rem;
+        height: 24rem;
+      }
+    }
+  }
+  .menu-icon-tab-list-container.active-wareHouse{
+    width: 13rem;
+    height: 34rem;
+    min-height: 34rem;
+    min-width: 13rem;
+    .header-child-wareHose{
+      grid-template-columns: 40px 120px auto;
+    }
+    .container-wareHouse{
+      width: 13rem;
+      height: 34rem;
+      .btn-action-header {
+        grid-template-columns: auto 2px auto;
+      }
+      .body-wareHouse{
+        width: 13rem;
+        height: 24rem;
+      }
+    }
+  }
+
+  .menu-detail-container {
+    top: 16%;
+    &.active-friendList , &.active-blockFriend , &.active-receiveMail , &.active-readMail , &.active-sendMail , &.active-reserve , &.active-land-for-sale, &.active-land-registered{
+      z-index: 3;
+      background: white;
+      animation: fadeIn 1.5s;
+      display: flex;
+      width: 12rem;
+      height: 30rem;
+    }
+    &.active-addFriend{
+      width: 12rem;
+      height: 10rem;
+    }
+    &.disabled {
+
+    }
+    .searchFriend-container .searchField input {
+      width: 6.5rem;
+    }
+    .mail-header {
+      .title-header{
+        font-size: 1rem;
+        padding-left: 5px;
+      }
+    }
+    .mail-body {
+      height: 28rem;
+      .mail-list-function-button-container .delete-mail-button{
+        height: 2rem;
+      }
+      .mail-list-function-button-container .delete-mail-button .button-name{
+        font-size: 0.9rem;
+      }
+      .checkAll-container .checkAll-title{
+        font-size: 0.7rem;
+      }
+    }
+    .friend-body  {
+      height: 30rem;
+      .friend-list-container.expand {
+        height: 19rem;
+        .friend-list-item{
+          position: relative;
+        }
+      }
+      .unBlock-container .checkAll-title {
+          font-size: 0.7rem;
+        }
+      .checkAll-container .checkAll-title{
+        font-size: 0.7rem;
+      }
+    }
+
+    .friend-header
+    {
+      height: 3rem;
+      padding-top: 8px;
+      .title-header {
+        font-size: 0.8rem;
+      }
+    }
+    .container-reserve {
+      .header-child-reserve {
+        grid-template-columns: 47px 100px auto;
+        padding-top: 3px;
+      }
+      .btn-action-header button.btn-items{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .body-reserve, .reverse-child-list {
+        width: 12rem;
+        height: 20rem;
+        margin: auto auto;
+        overflow-y: auto;
+        position: relative;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+    }
+    .container-reserve .reverse-child-list .reverse-child-item .item-edit-name {
+      position: relative;
+      right: 0;
+    }
+    .container-reserve .body-reserve .reserve-list-item .item-check-button, .container-reserve .body-reserve .reverse-child-item .item-check-button,
+    .container-reserve .reverse-child-list .reserve-list-item .item-check-button, .container-reserve .reverse-child-list .reverse-child-item .item-check-button {
+      margin-left: 0.5rem;
+    }
+    .container-reserve .body-reserve .reserve-list-item .item-name, .container-reserve .body-reserve .reverse-child-item .item-name,
+    .container-reserve .reverse-child-list .reserve-list-item .item-name,
+    .container-reserve .reverse-child-list .reverse-child-item .item-name  {
+      position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .container-landForSale{
+      .header-child-landForSale{
+        grid-template-columns: 40px 120px auto;
+        padding-top: 3px;
+      }
+      .total-land-sales{
+        padding-left: 10px;
+        font-size: 0.9rem;
+      }
+      .body-landForSale{
+        width: 12rem;
+        height: 18rem;
+       .landForSale-list-item .item-check-button {
+          margin-left: 0.5rem;
+        }
+        .item-name{
+          position: relative;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        .item-money-blood{
+          position: relative;
+          right: 0;
+        }
+      }
+    }
+    .container-registered .header-child-registered {
+      grid-template-columns: 40px 120px auto;
+      font-size: 13px;
+      padding-top: 3px;
+    }
+    .container-registered .body-registered {
+      width: 11rem;
+      height: 24rem;
+      margin: auto auto;
+      overflow-y: auto;
+      .item-check-button{
+        margin-left: 0.5px;
+      }
+      .item-name{
+        position: relative;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .item-money-blood{
+        position : relative;
+        right: 0;
+      }
+    }
+
+  }
+  .Game-container .modal-content .header-child-game{
+    grid-template-columns: 60px 220px auto;
+  }
+  .information .modal-content .custom-header{
+    grid-template-columns: 50px 180px 20px;
+  }
+  .information .modal-content .IMG-Card{
+    width: 320px;
+  }
+  .information .modal-content .custom-body .custom-body-footer{
+    font-size: 10px;
+    grid-template-columns: none;
+  }
+  .information .modal-content .custom-body{
+    width: 320px;
+    .title-body{
+      font-size: 16px;
+    }
+    .content-body{
+      margin-left: 10px;
+      font-size: 10px;
+      .rowId, .rowEmail{
+        grid-template-columns: 50px 122px auto;
+        .totalBlood{
+          position: relative;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+  }
+  //search map css
+  .mapboxgl-ctrl-geocoder input[type="text"] {
+    font: inherit;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    margin: 0;
+    height: 30px;
+    color: #404040;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 6px 35px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .mapboxgl-ctrl-geocoder--icon-search {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
+  }
+  .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--pin-right > * {
+    z-index: 2;
+    position: absolute;
+    right: 8px;
+    top: 0px;
+  }
+  .modal .modal-dialog {
+    max-width: 360px !important;
+    margin: 0 auto;
+  }
+  .zoomBtn{
+    display: none;
+  }
+  .floor-Zoom-container{
+    bottom: 2%;
+    right: 5%;
+    .floor-Zoom{
+      padding: 10px;
+    }
+    .content{
+      padding: 10px;
+      right: 5px;
+    }
+  }
+  .column-left .menu-icon-container-left .ThreeMode .icon-child-left img.mode{
+    bottom : 21px;
+    top: unset;
+    width: 24px;
+  }
+
+}

@@ -26,12 +26,12 @@ const defaultState = {
 
 export default function (state=defaultState, action={}) {
     switch (action.type) {
-        // case t.GET_LIST_FOR_SALE_LANDS_SUCCESS:
-        //     //console.log('GET_LIST_FOR_SALE_LANDS_SUCCESS', action);
-        //     return { ...state, ...action.res};
-        // case t.GET_LIST_FOR_SALE_LANDS_FAILURE:
-        //     //console.log('GET_LIST_FOR_SALE_LANDS_FAILURE', action);
-        //     return { ...state, ...action.res };
+        case t.GET_LIST_FOR_SALE_LANDS_SUCCESS:
+            // console.log('GET_LIST_FOR_SALE_LANDS_SUCCESS', action);
+            return { ...state, ...action.result};
+        case t.GET_LIST_FOR_SALE_LANDS_FAILURE:
+            //console.log('GET_LIST_FOR_SALE_LANDS_FAILURE', action);
+            return { ...state, ...action.result};
         case t.GET_SELL_LAND_INFOS_SUCCESS:
             //console.log('GET_SELL_LAND_INFOS_SUCCESS', action);
             //const { sellLands, status } = action.result;
@@ -67,21 +67,25 @@ export default function (state=defaultState, action={}) {
         case t.GET_DEFAULT:
             return {...state, landPriceLoading: true, openCountriesLoading: true};
         case t.GET_DEFAULT_SUCCESS:
-            // /console.log('action.res', action.res);
+            //console.log('GET_DEFAULT_SUCCESS', action.res);
+            const [defaultLandPrice, landSpecials] = action.res;
+            const allSpecialQuadKeys = landSpecials.reduce((total,landSp) => [...total, ...landSp.quadKeys], []);
+            //console.log('allSpecialQuadKeys', allSpecialQuadKeys)
+
             return {
                 ...state,
                 landPriceLoading: false,
-                ...action.res[0],
-                openCountriesLoading: false,
-                openCountries: action.res[1],
+                ...defaultLandPrice,
+                landSpecials,
+                allSpecialQuadKeys,
             };
         case t.GET_DEFAULT_FAILURE:
             return {
                 ...state,
                 landPriceLoading: false,
-                ...action.res[0],
-                openCountriesLoading: false,
-                openCountries: action.res[1],
+                ...defaultLandPrice,
+                // openCountriesLoading: false,
+                // openCountries: action.res[1],
             };
         //=====================================================================================
         case CLEAR_REMOVE_HISTORY_TRADING_LAND_STATUS_SOCKET:
@@ -371,10 +375,10 @@ export default function (state=defaultState, action={}) {
                 resultMoveLand: action.result
             };
         case t.EDIT_CATEGORY_SUCCESS:
-            if (state.categories.length < 1) {
+            if (state && state.categories && state.categories.length < 1) {
                 return {...state}
             } else {
-                let categories = state.categories.map(cate => {
+                let categories = state && state.categories && state.categories.map(cate => {
                     if (cate._id === action.modifiedCate._id) {
                         cate.category.name = action.modifiedCate.name;
                     }
@@ -387,10 +391,10 @@ export default function (state=defaultState, action={}) {
             }
 
         case t.EDIT_LAND_SUCCESS:
-            if (state.categories.length < 1) {
+            if (state.categories && state.categories.length < 1) {
                 return {...state}
             } else {
-                let categories = state.categories.map(cate => {
+                let categories =state.categories && state.categories.map(cate => {
                     if (cate._id === action.modifiedLand.categoryId) {
                         cate.category.lands = cate.category.lands.map(l => {
                             if (l.land._id === action.modifiedLand._id) {
@@ -416,13 +420,13 @@ export default function (state=defaultState, action={}) {
 
         case t.DELETE_LAND_CATEGORY_SUCCESS:
             // console.log('action.emptyCateLands',action.emptyCateLands);
-            if (state.categories.length < 1) {
+            if (state.categories && state.categories.length < 1) {
                 return {...state}
             } else {
-                let categories = state.categories;
-                categories = categories.filter(c => c._id !== action.emptyCateLands.cateId)
+                let categories = state.categories ? state.categories : [];
+                categories = categories && categories.filter(c => c._id !== action.emptyCateLands.cateId);
                 // console.log('categories',categories);
-                categories = categories.map(cate => {
+                categories =categories && categories.map(cate => {
                     if (cate._id === null)
                         cate.category.lands = action.emptyCateLands.emptyCateLands;
                     return cate;

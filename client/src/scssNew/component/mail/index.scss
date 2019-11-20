@@ -6,14 +6,13 @@
   justify-content: center;
 
   .icon-header {
-    width: 20%;
+    width: 30%;
     display: flex;
     align-items: center;
     justify-content: center;
 
     img {
-      width: 22px;
-      height: 19px;
+      width: 40px;
     }
   }
 
@@ -21,9 +20,10 @@
     width: 60%;
     display: flex;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: $menu-color;
     font-weight: bold;
+    padding-top: 10px;
   }
 
   .button-header {
@@ -211,6 +211,7 @@
     height: 1px;
     width: 90%;
     background: $grey-light-alpha;
+    margin: 0 auto;
   }
 
   .mail-list-container {
@@ -239,8 +240,13 @@
       display: flex;
       height: auto;
       align-items: center;
-      margin-bottom: 5px;
+      padding: 5px 0;
       animation: fadeIn 3s;
+      position: relative;
+      &.read-mail{
+        opacity: 0.6;
+        background: #ddd;
+      }
 
       img {
         margin-left: 0.5rem;
@@ -258,21 +264,24 @@
         color: $menu-color;
         font-size: 0.7rem;
         font-weight: bold;
+        position: absolute;
+        right: 0;
       }
 
       .user-name {
-        width: 25%;
+        width: 43%;
         margin-left: 0.5rem;
         color: $menu-color;
         font-size: 0.7rem;
       }
 
       .item-date {
-        //margin-left: 10rem;
-        width: 25%;
         margin-left: 0.5rem;
-        color: $menu-color;
+        color: #12354F;
         font-size: 0.7rem;
+        text-align: right;
+        position: absolute;
+        right: 10px;
       }
     }
   }
@@ -334,6 +343,7 @@
   height: 1px;
   width: 80%;
   background: $grey-light-alpha;
+  margin: 0 auto;
 }
 
 .searchFriend-container {
@@ -436,6 +446,28 @@
     }
   }
 
+  .success-mess {
+    height: 3rem;
+    color: $menu-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    animation: fadeIn 0.5s;
+  }
+  .success-icon {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s;
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
   .error-mess {
     height: 3rem;
     color: $menu-color;
@@ -449,6 +481,23 @@
 
 .read-mail-body {
   height: 80%;
+  .content-mail {
+    .title-mail {
+      padding: 5px 30px;
+    }
+    .description-mail {
+      padding: 5px 30px;
+      white-space: pre-wrap;
+      position: relative;
+      //overflow: hidden;
+      //text-overflow: ellipsis;
+      max-height: 400px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar-thumb { background: #ddd; }
+      &::-webkit-scrollbar { width: 5px!important; background: #ddd; }
+    }
+  }
 
   .read-mail-button-container {
     height: 10%;

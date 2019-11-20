@@ -33,7 +33,8 @@ async function getMessagesByRoomId({ roomId, pageLoadMsg }) {
 		//console.log('messages', messages);
 		if(!messages) return { status: false };
 
-		//console.log('room', { id: roomId, messages });
+		console.log('room', { id: roomId, messages });
+		
 		return { status: true, room: { id: roomId, messages } };
 	} catch (e){
 		console.log('Err', e);

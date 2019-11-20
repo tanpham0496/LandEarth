@@ -23,22 +23,23 @@ const initialState = {
     //recentlyChatUser: [{ 'name': 'all' }],
     //n: 1,
     //loading: false,
-    //messages: [],
+    // messages: {},
     //notifications: [],
     //currentRoomId: '-1'
     rooms: {},
 };
+
 export default function (state = initialState, action) {
     switch (action.type) {
         case SET_CURRENT_ROOM:
-            //console.log('action', action);
+            // console.log('SET_CURRENT_ROOM', action);
             return {
                 ...state,
                 currentRoomId: action.roomId,
                 pageLoadMsg: action.pageLoadMsg,
             }
         case GET_MESSAGES_BY_ROOM_ID_SUCCESS:
-            //console.log('GET_MESSAGES_BY_ROOM_ID_SUCCESS', action.result.room.id);
+            // console.log('GET_MESSAGES_BY_ROOM_ID_SUCCESS', action.result);
             const { room } = action.result;
             const iMsg = room.messages.length;
             room.lastMsg = iMsg ? room.messages[iMsg-1] : {};
@@ -58,6 +59,7 @@ export default function (state = initialState, action) {
                 if(!diffMiliseconds){
                     return {
                         ...state,
+                        messages :action.messages,
                         rooms: { ...state.rooms, [state.currentRoomId]: curRoom }
                     }
                 }

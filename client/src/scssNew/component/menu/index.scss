@@ -1,4 +1,81 @@
 @import "../../variables";
+.zoomBtn {
+  position: fixed;
+  bottom: 4%;
+  right: 2%;
+  background: white;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 25px;
+  font-weight: bold;
+  box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);margin-right: 2px;
+  .line-height-zoom {
+    height: 3px;
+    width: 60%;
+    border-radius: 4px;
+    background: #6EF488;
+    z-index: 99999;
+    color: #6EF488;
+    border: 1px solid #6EF488;
+  }
+  .zoomOut, .zoomIn {
+    width: 45px;
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    border-radius: 25px;
+  }
+}
+.floor-Zoom-container{
+  position: fixed;
+  bottom: 17%;
+  right: 2%;
+  display: flex;
+  z-index: 9999;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .floor-Zoom {
+    background: white;
+    z-index: 9999;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+  .content {
+    position: absolute;
+    right: 12px;
+    width: auto;
+    z-index: 9998;
+    bottom: 0%;
+    background: white;
+    padding: 15px 50px 15px 15px;
+    border-radius: 20px;
+    -webkit-box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);
+    flex-direction: row;
+    display: flex;
+    max-height: 50px;
+    span{
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: white;
+      &:nth-of-type(1){padding-right: 5px}
+      &:nth-of-type(2){padding-left: 5px}
+    }
+  }
+}
+
 .menu-button-container {
   width: 5rem;
   height: 5rem;
@@ -23,17 +100,19 @@
 .menu-wrapper {
   position: absolute;
   z-index: 1;
-  top: 2%;
-  right: 1%;
-  width: 13rem;
-  height: 25rem;
+  top: 10%;
+  right: 2%;
+  width: 10rem;
+  height: auto;
+  &--disable {
+    display: none;
+  }
 
   .menu-icon-container {
     width: 9rem;
     height: auto;
-    min-height: 23rem;
     position: absolute;
-    right: 12%;
+    right: 4%;
     top: 17%;
     display: flex;
     justify-content: center;
@@ -108,8 +187,8 @@
     position: absolute;
     border-radius: 28px;
     box-shadow: 0px 1px 13px 9px rgba(0, 0, 0, 0.1);
-    right: 58%;
-    top: 5%;
+    right: 70%;
+    bottom: 6%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,19 +203,20 @@
   position: absolute;
   width: auto;
   height: auto;
-  background: $whiter-alpha1;
-  right: 95%;
-  top: 20%;
+  right: 110%;
+  top: 10px;
   box-shadow: 0px 1px 9px 9px rgba(0, 0, 0, 0.1);
   border-radius: 28px;
   z-index: 3;
-  animation: fadeIn 0.3s;
-  transition: all 0.5s linear ;
+  animation: fadeIn 0.2s;
+  transition: all 0.3s linear;
+  background-color: #fcfbfaad;
   &.active-addFriend {
-    min-height: 14rem;;
+    min-height: 14rem;
     min-width: 18rem;
   }
-  &.active-friendList, &.active-blockFriend , &.active-receiveMail ,  &.active-readMail , &.active-sendMail{
+  &.active-friendList, &.active-blockFriend , &.active-receiveMail ,  &.active-readMail , &.active-sendMail
+  ,&.active-reserve , &.active-land-for-sale , &.active-land-registered ,&.active-searching, &.active-wareHouse{
     min-height: 45rem;
     min-width: 18rem;
   }
@@ -144,6 +224,9 @@
   &.disabled{
     min-width: 18rem;
     min-height: 21rem;
+    &.myLandClass{
+      min-height: 7rem !important;
+    }
   }
   &.hidden{
     visibility: hidden;
@@ -170,7 +253,8 @@
       .icon-tab , .icon-tab-children{
         width: 3.5rem;
         height: 3.5rem;
-        background: $whiter-alpha;
+        //background: $whiter-alpha;
+        background: rgb(255, 255, 255);
         box-shadow: 0px 1px 5px 3px rgba(0, 0, 0, 0.1);
         margin-top: 1.5rem;
         margin-right: 0.5rem;
@@ -181,8 +265,7 @@
         align-items: center;
         justify-content: center;
         img{
-          width: 1.5rem;
-          height: 1.5rem;
+          width: auto;
         }
         &:hover {
           border: 2px solid $menu-color;
@@ -198,6 +281,10 @@
       }
       .icon-tab-children {
         animation: fadeIn 0.5s;
+        img{
+          width: 1.5rem;
+          height: 1.5rem;
+        }
       }
     }
 
@@ -206,14 +293,14 @@
 
 .menu-detail-container {
   position: absolute;
-  top: 20%;
-  right: 95%;
+  right: 110%;
+  top: 10px;
   background: $whiter-alpha1;
   border-radius: 28px;
   animation-fill-mode: forwards;
   display: none;
   flex-direction: column;
-  &.active-friendList , &.active-blockFriend , &.active-receiveMail , &.active-readMail , &.active-sendMail{
+  &.active-friendList , &.active-blockFriend , &.active-receiveMail , &.active-readMail , &.active-sendMail , &.active-reserve , &.active-land-for-sale, &.active-land-registered{
     z-index: 3;
     background: white;
     animation: fadeIn 1.5s;
@@ -254,5 +341,632 @@
     opacity: 0;
   }
 }
+
+//reserve in myLand
+.container-reserve {
+  width: 100%;
+
+  .header-child-reserve {
+    display: grid;
+    grid-template-columns: 60px 171px auto;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0F2E4E;
+    padding: 15px 5px;
+    align-items: center;
+    img{
+      width: 40px;
+    }
+    .button-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .button-return {
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid $grey-light;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s linear;
+
+        .icon-button {
+          width: 10px;
+          height: 3px;
+          background: $grey-light;
+        }
+
+        &:hover {
+          background: $green-light;
+          transform: scale(1.1);
+          border: 2px solid $menu-color;
+
+          .icon-button {
+            background: $menu-color;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-action-header {
+    display: grid;
+    grid-template-columns: auto 2px auto 2px auto;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    button {
+      padding: 2px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      margin: 3px 0px;
+
+      &.btn-items{
+        margin-right: 5px;
+        margin-left: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:nth-of-type(1){
+          margin-right: 5px;
+          margin-left: 0;
+        }
+        &:nth-of-type(3){
+          margin-left: 5px;
+          margin-right: 0;
+        }
+        img{
+          width: auto;
+        }
+      }
+      &.active {
+        background-color: #6EF488;
+      }
+      &:hover{
+        background-color: #6EF488;
+      }
+    }
+    .line-height {
+      width: 2px;
+      height: 30px;
+      color: #ddd;
+      background: #ddd;
+      margin-top: 5px;
+    }
+
+  }
+  .checkAll-container {
+    height: 3rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .checkAll-button {
+      margin-left: 1rem;
+    }
+
+    .checkAll-title {
+      margin-left: 1.5rem;
+      color: $menu-color;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .friend-selected {
+      display: flex;
+      color: $green-light;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.2rem;
+    }
+  }
+  .line-container {
+    align-self: center;
+    height: 1px;
+    width: 90%;
+    background: $grey-light-alpha;
+    margin: 0 auto;
+  }
+  .body-reserve {
+    height: 500px;
+    overflow-y: auto;
+    width: 280px;
+    margin: auto auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(189, 195,199 , 0.7);
+      margin-right: 5px;
+    }
+  }
+  .reserve-container-loading{
+    width: 280px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+  }
+ .reverse-child-list{
+   max-height: 300px;
+   overflow-y: auto;
+   width: 270px;
+   margin: auto auto;
+     &::-webkit-scrollbar {
+       width: 5px;
+       height: 5px;
+       border-radius: 50%;
+
+     }
+     &::-webkit-scrollbar-thumb {
+       background: rgba(189, 195,199 , 0.7);
+       margin-right: 5px;
+     }
+   .item-check-button{
+     margin-left: 0.8rem !important;
+   }
+  }
+  .body-reserve, .reverse-child-list  {
+
+    .reverse-empty-container{
+      height: 30rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: $menu-color;
+      font-size: 1rem;
+      font-weight: bold;
+      animation: fadeIn 1s;
+      img{
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 1rem;
+      }
+    }
+    .reverse-child-item {
+      display: flex;
+      animation: none !important;
+      &.isSelling { opacity: 0.5}
+      .item-edit-name {
+        position: absolute;
+        right: 7px;
+        display: flex;
+        &.edit{
+          top: 2px;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .reserve-list-item{
+      .item-edit-name {
+        position: absolute;
+        right: 15px;
+        display: flex;
+        &.edit{
+          top: 2px;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .reserve-list-item, .reverse-child-item {
+      padding-top: 10px;
+      display: flex;
+      height: auto;
+      align-items: center;
+      margin-bottom: 5px;
+      animation: fadeIn 3s;
+      position: relative;
+
+      .item-check-button {
+        margin-left: 1rem;
+      }
+      .item-name {
+        margin-left: 0.5rem;
+        color: $menu-color;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: flex;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-height: 16px;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        max-width: 195px;
+        cursor: pointer;
+        img{
+          width: auto;
+        }
+        .name-folder{
+          margin-left: 0.5rem;
+          display: flex;
+          .name-child-folder{
+            padding-right: 5px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 110px;
+          }
+        }
+      }
+
+
+    }
+  }
+
+}
+.sc-htpNat {
+  padding-right: 5px;
+   .p-inputtext {
+    width: 120px ;
+    height: 23px;
+  }
+}
+// land for sales in myLand
+
+.container-landForSale {
+   width: 100%;
+
+   .header-child-landForSale{
+     display: grid;
+     grid-template-columns: 60px 171px auto;
+     justify-content: center;
+     font-size: 18px;
+     font-weight: bold;
+     color: #0F2E4E;
+     padding: 15px 5px;
+     align-items: center;
+     img{
+       width: 40px;
+     }
+     .button-header {
+       display: flex;
+       align-items: center;
+       justify-content: center;
+
+       .button-return {
+         width: 2rem;
+         height: 2rem;
+         border: 2px solid $grey-light;
+         border-radius: 50%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         transition: all 0.5s linear;
+
+         .icon-button {
+           width: 10px;
+           height: 3px;
+           background: $grey-light;
+         }
+
+         &:hover {
+           background: $green-light;
+           transform: scale(1.1);
+           border: 2px solid $menu-color;
+
+           .icon-button {
+             background: $menu-color;
+           }
+         }
+       }
+     }
+   }
+    .total-land-sales {
+      padding-top: 10px;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      align-items: center;
+      padding-left: 20px;
+      color: #12354F;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+   .btn-action-header {
+     display: grid;
+     grid-template-columns: 49% 2% 49%;
+     border-top: 1px solid #ddd;
+     border-bottom: 1px solid #ddd;
+     button {
+       padding: 2px;
+       border-radius: 10px;
+       background: none;
+       border: none;
+       margin: 3px 0px;
+
+       &.btn-items{
+         //margin-right: 5px;
+         //margin-left: 5px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         &:nth-of-type(1){
+           margin-right: 5px;
+         }
+         &:nth-of-type(2){
+           margin-left: 5px;
+         }
+         img{
+           width: auto;
+         }
+       }
+       &.active {
+         background-color: #6EF488;
+       }
+       &:hover {
+         background-color: #6EF488;
+       }
+     }
+     .line-height {
+       width: 2px;
+       height: 30px;
+       color: #ddd;
+       background: #ddd;
+       margin-top: 5px;
+     }
+
+   }
+   .checkAll-container {
+     height: 3rem;
+     display: -ms-flexbox;
+     display: flex;
+     -ms-flex-align: center;
+     align-items: center;
+     padding-top: 10px;
+     padding-bottom: 10px;
+
+     .checkAll-button {
+       margin-left: 1.2rem;
+     }
+
+     .checkAll-title {
+       margin-left: 0.5rem;
+       color: $menu-color;
+       font-size: 0.8rem;
+       font-weight: bold;
+     }
+   }
+   .line-container {
+     align-self: center;
+     height: 1px;
+     width: 90%;
+     background: $grey-light-alpha;
+     margin: 0 auto;
+   }
+  .body-landForSale-loading{
+    width: 280px;
+    height: 540px;
+    margin: auto auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+   .body-landForSale{
+     width: 280px;
+     height: 500px;
+     margin: auto auto;
+     overflow-y: auto;
+     &::-webkit-scrollbar {
+       width: 5px;
+       height: 5px;
+       border-radius: 50%;
+
+     }
+     &::-webkit-scrollbar-thumb {
+       background: rgba(189, 195,199 , 0.7);
+       margin-right: 5px;
+     }
+     .landForSale-empty-container{
+       height: 30rem;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       flex-direction: column;
+       color: $menu-color;
+       font-size: 1rem;
+       font-weight: bold;
+       animation: fadeIn 1s;
+       img{
+         width: 4rem;
+         height: 4rem;
+         margin-bottom: 1rem;
+       }
+     }
+
+
+     .landForSale-list-item {
+       padding-top: 10px;
+       display: flex;
+       height: auto;
+       align-items: center;
+       margin-bottom: 5px;
+       animation: fadeIn 3s;
+       position: relative;
+
+       .item-check-button {
+         margin-left: 1rem;
+       }
+       .item-name {
+         margin-left: 0.5rem;
+         color: $menu-color;
+         font-size: 0.8rem;
+         font-weight: bold;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: inline;
+         line-height: 16px;
+         -webkit-box-orient: vertical;
+         max-width: 145px;
+       }
+       .item-money-blood {
+         position: absolute;
+         right: 15px;
+       }
+     }
+
+   }
+
+ }
+
+// registered in my land
+
+.container-registered {
+  width: 100%;
+
+  .header-child-registered{
+    display: grid;
+    grid-template-columns: 40px 190px auto;
+    -ms-flex-pack: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0F2E4E;
+    padding: 10px 5px;
+    -ms-flex-align: center;
+    align-items: center;
+    img{
+      width: 40px;
+    }
+    .button-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .button-return {
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid $grey-light;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s linear;
+
+        .icon-button {
+          width: 10px;
+          height: 3px;
+          background: $grey-light;
+        }
+
+        &:hover {
+          background: $green-light;
+          transform: scale(1.1);
+          border: 2px solid $menu-color;
+
+          .icon-button {
+            background: $menu-color;
+          }
+        }
+      }
+    }
+  }
+
+  .checkAll-container {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+
+    //.checkAll-button {
+    //  margin-left: 1rem;
+    //}
+
+    .checkAll-title {
+      margin-left: 0.5rem;
+      color: $menu-color;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+  }
+  .line-container {
+    align-self: center;
+    height: 1px;
+    width: 90%;
+    background: $grey-light-alpha;
+    margin: 0 auto;
+  }
+  .body-registered{
+    width: 280px;
+    height: 600px;
+    margin: auto auto;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(189, 195,199 , 0.7);
+      margin-right: 5px;
+    }
+    .registered-empty-container{
+      height: 30rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: $menu-color;
+      font-size: 1rem;
+      font-weight: bold;
+      animation: fadeIn 1s;
+      img{
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+
+    .registered-list-item {
+      padding-top: 10px;
+      display: flex;
+      height: auto;
+      align-items: center;
+      margin-bottom: 5px;
+      animation: fadeIn 3s;
+      position: relative;
+      &:hover{
+        cursor: pointer;
+      }
+
+      .item-check-button {
+        margin-left: 1rem;
+      }
+      .item-name {
+        margin-left: 0.5rem;
+        color: $menu-color;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 175px;
+      }
+      .item-money-blood {
+        position: absolute;
+        right: 15px;
+      }
+    }
+
+  }
+
+}
+
 
 

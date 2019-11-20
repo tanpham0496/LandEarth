@@ -247,48 +247,22 @@ class TileComponent extends PureComponent {
             borderRight: '0.1px solid rgba(0, 0, 0, 0.1)',
         };
 
-        const extClass = quadKey.substring(quadKey.length - 1);
+        const extClass = Number(quadKey.substring(quadKey.length - 1));
         const generalStyle = `${'1px'} ${'solid'} ${'rgba(0, 0, 0, 0.22'}`;
-        if(Number(extClass) === 0){
+        if(extClass === 0){
             bdStyle.borderTop = generalStyle;
             bdStyle.borderLeft = generalStyle;
-        } else if(Number(extClass) === 1){
+        } else if(extClass === 1){
             bdStyle.borderTop = generalStyle;
             bdStyle.borderRight = generalStyle;
-        } else if(Number(extClass) === 2){
+        } else if(extClass === 2){
             bdStyle.borderLeft = generalStyle;
             bdStyle.borderBottom = generalStyle;
-        } else if(Number(extClass) === 3){
+        } else if(extClass === 3){
             bdStyle.borderRight = generalStyle;
             bdStyle.borderBottom = generalStyle;
         }
-
-        // const extClass2 = quadKey.substring(quadKey.length - 2, quadKey.length - 1);
-        // console.log('extClass2', extClass2)
-        // const styleLv16 = `${'1px'} ${'solid'} ${'rgba(0, 0, 0, 0.7'}`;
-        // switch (extClass2) {
-        //     case 0:
-        //         bdStyle.borderTop = styleLv16;
-        //         //bdStyle.borderLeft = styleLv16;
-        //         break;
-        //     case 1:
-        //         //bdStyle.borderTop = styleLv16;
-        //         bdStyle.borderRight = styleLv16;
-        //         // statements_1
-        //         break;
-        //     case 2:
-        //         bdStyle.borderLeft = styleLv16;
-        //         //bdStyle.borderBottom = styleLv16;
-        //         // statements_1
-        //         break;
-        //     case 3:
-        //         bdStyle.borderRight = styleLv16;
-        //         bdStyle.borderBottom = styleLv16;
-        //         // statements_1
-        //         break;
-        // }
         
-
         const { onHandleHideLandCertificate, onHandleShowCertificateImage } = this;
         return (
             // /style={bdStyle}

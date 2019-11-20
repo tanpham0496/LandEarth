@@ -1,0 +1,246 @@
+.modal{
+  .modal-dialog{
+    &.custom-modal {
+      &.modal-land-certificate {
+        width: 580px;
+        .modal-content {
+          height: auto;
+          border: 2px solid #0F2E4E !important;
+          border-radius: 20px;
+          overflow: hidden;
+          .custom-modal-header{
+            display: flex;
+            background-color: white !important;
+            padding-left: 24px;
+            height: 50px;
+            align-items: center;
+          }
+          .line-container {
+            -ms-flex-item-align: center;
+            align-self: center;
+            height: 1px;
+            width: 90%;
+            background: rgba(189, 195, 199, 0.7);
+            margin: 0 auto;
+          }
+        }
+
+        .custom-modal-body {
+          height: auto;
+          border: 2px solid #ddd;
+          margin: 11px 10px;
+          border-radius: 20px !important;
+          overflow: hidden;
+        }
+      }
+
+      &.modal--certificate {
+        width: 600px;
+        .modal-content {
+          height: 839px;
+        }
+        text-align: center;
+
+        .lnr {
+          &.lnr-custom-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 50px;
+
+            &:hover {
+              color: #0F2E4E;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.modal .modal-dialog.custom-modal .modal-content .custom-modal-footer-action-group-certificate{
+  //border-top: #ddd 1px solid !important;
+  padding: 5px;
+  position: relative;
+  bottom: 0px;
+  background: white;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  height: 46px !important;
+  button{
+    background: white;
+    border: 2px solid #0F2E4E;
+    border-radius: 15px;
+    padding: 5px 22px;
+    margin: 0px 10px 10px 10px;
+    -webkit-transition: all 0.5s linear;
+    -o-transition: all 0.5s linear;
+    transition: all 0.5s linear;
+     &:hover{
+       background-color: #ddd;
+       transform: scale(1.1);
+     }
+  }
+}
+.modal .modal-dialog.custom-modal .modal-content .custom-modal-header {
+  img {
+    filter :unset !important;
+  }
+  .button-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    .button-return {
+      width: 2rem;
+      height: 2rem;
+      border: 2px solid $grey-light;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s linear;
+
+      .icon-button {
+        width: 10px;
+        height: 3px;
+        background: $grey-light;
+      }
+
+      &:hover {
+        background: $green-light;
+        transform: scale(1.1);
+        border: 2px solid $menu-color;
+
+        .icon-button {
+          background: $menu-color;
+        }
+      }
+    }
+  }
+}
+.line-container {
+  align-self: center;
+  height: 1px;
+  width: 90%;
+  background: $grey-light-alpha;
+  margin: 0 auto;
+}
+
+
+.land--certificate-grid-container{
+  display: grid;
+  grid: auto /150px auto;
+  width: 100%;
+  .cell {
+    background-color: white;
+    color: rgb(108, 109, 109);
+    text-align: center;
+    font-size: 12px;
+    padding: 2px 5px 2px 5px;
+    border-right:#ddd 1px solid;
+    word-break: break-word;
+    &:nth-child(2n){
+      border-right:none;
+      text-align: left;
+      padding: 2px 20px 2px 20px;
+    }
+    &.bottom-border{
+      border-bottom:#ddd 1px solid;
+    }
+    &.top-border{
+      border-top:#ddd 1px solid;
+    }
+    &.top-padding{
+      padding-top: 10px;
+    }
+    &.bottom-padding{
+      padding-bottom: 10px;
+    }
+    &.hash-key{
+      padding-bottom: 10px;
+      font-size: 10px;
+      overflow: hidden;
+      padding-right: 102px;
+    }
+
+  }
+}
+
+
+.img-quadkey-lammao {
+  height: 249px;
+  padding: 20px 0px 20px 0px;
+  position: relative;
+
+  .google-map-lite {
+    height: 100%;
+    // button{
+    //   display: none;
+    // }
+    .cell-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      margin: -25px 0px 0px -25px;
+      background: rgba(113, 241, 152, 0.51);
+      cursor: pointer;
+      z-index: 400;
+      &:hover{
+        background: rgba(113, 241, 151, 0.904);
+      }
+    }
+  }
+}
+
+.certification-lammao {
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 95px;
+  right: 19px;
+  cursor: pointer;
+  z-index: 99999999;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.certificate {
+  width: 100%;
+  height: 100%;
+  background: url('/images/bloodland-ui/certificate-2.png') no-repeat center;
+  background-size: 100%;
+  font-family: Tahoma;
+  font-weight: bolder;
+  font-size: 13px;
+
+  .certificate-content {
+    position: absolute;
+    top: 436px;
+    left: 162px;
+    text-align: left;
+  }
+
+  .certificate-date {
+    position: absolute;
+    bottom: 106px;
+    left: 138px;
+  }
+
+  .certificate-signature {
+    position: absolute;
+    bottom: 105px;
+    right: 130px;
+
+    img {
+      width: 100px;
+    }
+  }
+}

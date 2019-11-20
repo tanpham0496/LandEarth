@@ -10,11 +10,13 @@ const environment = {
         devMode: true,
     },
     staging: {
-        clientHost: 'http://178.128.109.233',
+        clientHost: 'http://178.128.212.64',
         apiHost: 'http://206.189.150.145:7777',
         apiBitamin: 'http://206.189.150.145:7788',
-        loginWalletHost: 'https://wallet.blood.land/sns/login/ext?appId=dX2zg30eNH2oJe3x', // for login test 1
-        bloodAppId: 'dX2zg30eNH2oJe3x',
+        //loginWalletHost: 'https://wallet.blood.land/sns/login/ext?appId=dX2zg30eNH2oJe3x', // for login test 1
+        //bloodAppId: 'dX2zg30eNH2oJe3x',
+        loginWalletHost: 'https://wallet.blood.land/sns/login/ext?appId=eNXgx2z30e3H2oJd', // for login test 1
+        bloodAppId: 'eNXgx2z30e3H2oJd',
         connectHost: 'mongodb://localhost/land-db',
         connectDbLandLog: 'mongodb://localhost/log-db',
         connectDbGame: 'mongodb://localhost/game-db',

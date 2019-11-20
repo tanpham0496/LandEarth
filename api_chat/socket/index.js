@@ -4,7 +4,8 @@ const { middleware } = require('./middleware');
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
-        console.log("==> connection");
+        
+        console.log(" socket ==> connection");
 
         //create middleware
         middleware(socket);
@@ -27,6 +28,7 @@ module.exports = (io) => {
         // })
         //==============================================================================================================================================
 
+        console.log("socket");
         chatSocket(io, socket);
 
     });

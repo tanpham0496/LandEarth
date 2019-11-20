@@ -129,7 +129,7 @@ async function getObjectByQuadKey({userId, cateId}) {
         const lands = await db.Land23.find({
             categoryId: ObjectId(cateId),
             "user._id": ObjectId(userId)
-        }).select("quadKey sellPrice name forSaleStatus categoryId").lean();
+        }).select("quadKey sellPrice name forSaleStatus categoryId isSpecial").lean();
 
         const quadKeys = await db.Land23.distinct("quadKey", { categoryId: ObjectId(cateId), "user._id": ObjectId(userId) });
         const trees = await db.Object.find({userId: ObjectId(userId), $or: [{quadKey: {$in: quadKeys}}, {bigTreeQuadKeys: {$elemMatch: {$in: quadKeys}}}] });

@@ -29,11 +29,20 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
 let port;
-if (process.env.NODE_ENV === 'development') port = 5004;
-else if(process.env.NODE_ENV === 'staging') port = 6001;
-else  if(process.env.NODE_ENV === 'production') port = 5001;
+switch(process.env.NODE_ENV){
+    case 'development':
+        port = 5004;
+        break;
+    case 'staging':
+        port = 6001;
+        break;
+    case 'production':
+        port = 6001;
+        break;
+}
+
 server.listen(port, function () {
     console.log('Server listening on port ' + port);
 });

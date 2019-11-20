@@ -1,4 +1,12 @@
 import {
+    //=======NEW MAP=========
+    SET_SELECTED,
+    ADD_SELECTED,
+    REMOVE_SELECTED,
+    CLEAR_SELECTED,
+    SET_HINT_MODE,
+    SET_PAUSE_DRAW_TILE,
+    //================
     DISABLE_TILE_MAP,
     CLEAR_INVALID_TOKEN,
     INVALID_TOKEN,
@@ -9,11 +17,9 @@ import {
     UPDATE_MAP,
     UPDATE_MOVABLES,
     GET_CURRENT,
-    ADD_SELECTED,
     UPDATE_TILES,
     SELECT_MODE,
     //======================
-    CLEAR_SELECTED,
     CLEAR_CART,
     SAVE_CART,
     LAND_MODE
@@ -40,14 +46,48 @@ const miniLeafMap = {
 const defaultState = {
     tiles: [],
     searchLocation: {},
-    mode: "single",
+    clickMode: "single",
     miniMap: miniLeafMap,
     zoom: 22,
     landMode : true,
+    selected: [],
+    hintMode: 1,
 };
 
 export default function (state = { ...defaultState }, action) {
     switch (action.type) {
+        case SET_PAUSE_DRAW_TILE:
+            console.log("SET_PAUSE_DRAW_TILE", action.data);
+            return {
+                ...state,
+                pauseDrawTile: action.data
+            }
+        case SET_HINT_MODE:
+            // console.log("SET_HINT_MODE", action);
+            return {
+                ...state,
+                hintMode: action.hintMode
+            };
+        //======================
+        case SET_SELECTED:
+            return {
+                ...state,
+                selected: [...action.selected]
+            };
+        case ADD_SELECTED:
+            return {
+                ...state,
+                selected: [...state.selected, ...action.selected]
+            };
+        case REMOVE_SELECTED:
+            const newSelected = state.selected.filter(slQK => !action.selected.some(qk => qk === slQK))
+            return {
+                ...state,
+                selected: newSelected
+            };
+        case CLEAR_SELECTED:
+            return { ...state, selected: [] };
+        //=================================================================================================
         case DISABLE_TILE_MAP:
             return { ...state, ...action };
         case CLEAR_INVALID_TOKEN:
@@ -117,14 +157,6 @@ export default function (state = { ...defaultState }, action) {
                 ...state,
                 current: action.current
             };
-        case ADD_SELECTED:
-            //if(!action.selected) return { ...state };
-            //const hasLandLevelLower24 = action.selected.some(sl => sl.level < 24);
-            //const selectedQuadKeys = hasLandLevelLower24 ? action.selected.map(sl => sl.quadKey) : action.selected.map(sl => sl.quadKey)
-            return { ...state, selected: action.selected/*, selectedQuadKeys*/ };
-        case CLEAR_SELECTED:
-            if(state.selected) delete state.selected;
-            return { ...state };
         case CLEAR_CART:
             return {
                 ...state,
@@ -138,7 +170,7 @@ export default function (state = { ...defaultState }, action) {
         case SELECT_MODE:
             return {
                 ...state,
-                mode: action.mode
+                clickMode: action.mode
             };
         case LAND_MODE:
             return {

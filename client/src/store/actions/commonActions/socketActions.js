@@ -5,14 +5,12 @@ import { store } from "../../../helpers/store";
 import axios from 'axios';
 import alertActions from "../../actions/commonActions/alertActions";
 
-
-//=========SOCKET=========
+//==================SOCKET==================
 export const SAVE_CONNECT_SOCKET = 'SAVE_CONNECT_SOCKET';
 export const USER_NEW_CONNECT = 'USER_NEW_CONNECT';
 export const USER_DISCONNECTED = 'USER_DISCONNECTED';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
-//=======END SOCKET=======
-
+//================END SOCKET================
 
 export const TRANSFER_BLOOD_SOCKET = 'TRANSFER_BLOOD_SOCKET';
 export const REMOVE_HISTORY_TRADING_LAND_SOCKET = 'REMOVE_HISTORY_TRADING_LAND_SOCKET';
@@ -41,11 +39,9 @@ export const TRANSFER_BLOOD_TRADING_LAND = 'TRANSFER_BLOOD_TRADING_LAND';
 
 //============================================CHAT SOCKET==========================================
 
-
-
 export const socketActions = {
     //=======CHAT SOCKET========
-    userSendMessage,
+    sendMessage,
     //=====END CHAT SOCKET======
 
     transferBloodTradingLand,
@@ -63,9 +59,9 @@ export const socketActions = {
 
 //============================================CHAT SOCKET==========================================
 
-function userSendMessage (data) {
+function sendMessage (data) {
     //console.log('data', data);
-    //return {  type : SEND_MESSAGE , data }
+    return {  type : SEND_MESSAGE, ...data }
 }
 
 //=============================================END CHAT SOCKET=======================================
@@ -73,7 +69,7 @@ function userSendMessage (data) {
 
 
 
-function transferBloodTradingLand(data){
+export function transferBloodTradingLand(data){
     //return { type: TRANSFER_BLOOD_TRADING_LAND, data };
 }
 
@@ -90,15 +86,15 @@ function responseRemoveHistoryTradingLand(res){
 }
 
 function clearForSaleStatusSocket(){
-    //return { type : CLEAR_SELL_LAND_STATUS_SOCKET }
+    return { type : CLEAR_SELL_LAND_STATUS_SOCKET }
 };
 
 function sellLandSocket(lands){
-    //return { type : SELL_LAND_SOCKET, lands: lands };
+    return { type : SELL_LAND_SOCKET, lands: lands };
 }
 
 function responseSellLandSocket(res) {
-    //return res.success ? { type: RESPONSE_SELL_LAND_SOCKET_SUCCESS, res } : { type: RESPONSE_SELL_LAND_SOCKET_FAILURE, res }
+    return res.success ? { type: RESPONSE_SELL_LAND_SOCKET_SUCCESS, res } : { type: RESPONSE_SELL_LAND_SOCKET_FAILURE, res }
 }
 
 function responsePurchaseLand(resPurchase){

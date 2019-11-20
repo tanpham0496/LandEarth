@@ -123,6 +123,14 @@ export  const RESET_STATUS = 'RESET_STATUS';
 
 export  const HAVE_NEW_MAILS_SUCCESS = 'HAVE_NEW_MAILS_SUCCESS';
 export  const HAVE_NEW_MAILS_FAILURE = 'HAVE_NEW_MAILS_FAILURE';
+ //ADD 30.10.2019
+export  const GET_FRIEND_LIST_SUCCESS = 'GET_FRIEND_LIST_SUCCESS';
+export  const GET_FRIEND_LIST_FAILURE = 'GET_FRIEND_LIST_FAILURE';
+
+export  const SEND_ADD_FRIEND_SUCCESS = 'SEND_ADD_FRIEND_SUCCESS';
+export  const SEND_ADD_FRIEND_FAILURE = 'SEND_ADD_FRIEND_FAILURE';
+
+
 
 export const userActions = {
     updateWalletInfo,
@@ -136,6 +144,7 @@ export const userActions = {
     getBeBlockedUser,
     getAll,
     getFriendListBlockList,
+    sendAddFriend,
     addFriend,
     findFriend,
     unFriend,
@@ -168,9 +177,11 @@ export const userActions = {
     getBalance,
     getWithdraw,
     resetStatus,
-    readManyMail
+    readManyMail,
     // getPay,
     // getRewardInterest,
+    getFriendList,
+    // getBlockFriendList
 };
 
 function getBalance(param){
@@ -524,6 +535,7 @@ function getFriendListBlockList(param) {
 }
 
 function addFriend(param) {
+    console.log('param',param);
     return dispatch => {
         userService.addFriend(param)
             .then(
@@ -977,4 +989,35 @@ function resetStatus() {
     return {
         type: 'RESET_STATUS',
     }
+}
+
+
+//add 2019.10.28
+
+function getFriendList(param) {
+    return dispatch => {
+        userService.getFriendList(param)
+            .then(
+                friendList => dispatch({ type: GET_FRIEND_LIST_SUCCESS, friendList } ),
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+
+    };
+
+    function failure(error) { return { type: GET_FRIEND_LIST_FAILURE, error } }
+}
+
+function sendAddFriend(param) {
+    return dispatch => {
+        userService.sendAddFriend(param)
+            .then(
+                addFriendList => dispatch({ type: SEND_ADD_FRIEND_SUCCESS, addFriendList }),
+                error =>  dispatch({ type: SEND_ADD_FRIEND_FAILURE, error })
+            );
+
+    };
+
 }

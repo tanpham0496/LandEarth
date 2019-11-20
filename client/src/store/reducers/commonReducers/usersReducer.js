@@ -55,7 +55,11 @@ import {
     GET_BE_BLOCK_USER_SUCCESS,
     RESET_STATUS,
     HAVE_NEW_MAILS_SUCCESS,
-    HAVE_NEW_MAILS_FAILURE
+    HAVE_NEW_MAILS_FAILURE,
+    GET_FRIEND_LIST_SUCCESS,
+    GET_FRIEND_LIST_FAILURE,
+    SEND_ADD_FRIEND_SUCCESS,
+    SEND_ADD_FRIEND_FAILURE
 } from '../../actions/commonActions/userActions';
 
 export default function (state = {beBlockUsers:[]}, action) {
@@ -185,6 +189,29 @@ export default function (state = {beBlockUsers:[]}, action) {
                 ...state,
                 error: action.error
             };
+        case GET_FRIEND_LIST_SUCCESS:
+            console.log('action',action);
+            return {
+                ...state,
+                addFriendList: action.friendList.addFriendList,
+                friendList: action.friendList.friendList,
+            };
+        case GET_FRIEND_LIST_FAILURE:
+            return {
+                ...state,
+                error: action.error
+            };
+        case SEND_ADD_FRIEND_SUCCESS:
+            return {
+                ...state,
+                status: action.addFriendList.status,
+                addFriendList: action.addFriendList,
+            };
+        case SEND_ADD_FRIEND_FAILURE:
+            return {
+                ...state,
+                error: action.error
+            };
         case FOUND_FRIENDS_SUCCESS:
             return {
                 ...state,
@@ -210,9 +237,10 @@ export default function (state = {beBlockUsers:[]}, action) {
         case UNFRIEND_SUCCESS:
             return {
                 ...state,
+                addFriendList: action.friendAndBlockList.addFriendList,
                 unFriendStatus: action.friendAndBlockList.unFriendStatus,
                 friendList:  action.friendAndBlockList.friendList,
-                blockFriendList:  action.friendAndBlockList.blockList
+                // blockFriendList:  action.friendAndBlockList.blockList
             };
         case UNFRIEND_FAILURE:
             return {
@@ -223,6 +251,7 @@ export default function (state = {beBlockUsers:[]}, action) {
         case BLOCKFRIEND_SUCCESS:
             return {
                 ...state,
+                addFriendList: action.friendAndBlockList.addFriendList,
                 blockStatus: action.friendAndBlockList.blockStatus,
                 friendList: action.friendAndBlockList.friendList,
                 blockFriendList: action.friendAndBlockList.blockList
@@ -233,6 +262,8 @@ export default function (state = {beBlockUsers:[]}, action) {
                 error: action.error
             };
         case UNBLOCKFRIEND_SUCCESS:
+            console.log('action.friendAndBlockList',action.friendAndBlockList)
+            console.log('action',action)
             return {
                 ...state,
                 unBlockStatus: action.friendAndBlockList.unBlockStatus,

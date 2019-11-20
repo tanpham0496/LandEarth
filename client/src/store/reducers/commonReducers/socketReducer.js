@@ -69,6 +69,7 @@ export default function (state = { rooms: {} }, action) {
                 action: action
             };
         case SELL_LAND_SOCKET:
+            console.log('action ', action);
             return {
                 ...state,
                 action: action

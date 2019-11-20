@@ -1,5 +1,5 @@
 import { apiChat } from '../../../helpers/config';
-import { handleResponses, handleErrorResponses } from "../../../helpers/handleResponse";
+import { handleResponses, handleResponse, handleErrorResponses } from "../../../helpers/handleResponse";
 import { authHeader } from '../../../helpers/authHeader';
 import { store } from "../../../helpers/store";
 import axios from 'axios';
@@ -33,6 +33,7 @@ export const GET_MESSAGES_BY_ROOM_ID_FAILURE = 'GET_MESSAGES_BY_ROOM_ID_FAILURE'
 
 export const chatActions = {
     getMessagesByRoomId,
+    setCurrentRoom,
     //========================
     getAll,
     create,
@@ -48,10 +49,12 @@ export const chatActions = {
     clearNotifications
 };
 
-
+function setCurrentRoom(data) {
+    return { type: 'SET_CURRENT_ROOM', ...data }
+}
 
 function getMessagesByRoomId(param) {
-    //console.log('getMessagesByRoomId', param);
+    // console.log('getMessagesByRoomId', param);
     // return dispatch => {
     //     axios({
     //         method: 'post',
@@ -74,13 +77,19 @@ function getMessagesByRoomId(param) {
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(param)
     }
+    //console.log(`${apiChat}/messages/getMessagesByRoomId`);
     return dispatch => {
         fetch(`${apiChat}/messages/getMessagesByRoomId`, requestOptions)
-            .then(handleResponses).catch(err => err.toString() === 'TypeError: Failed to fetch' && store.dispatch(alertActions.tokenExpiredPopup(err)))
+            .then(handleResponse)
             .then(
                 result => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_SUCCESS, result }),
                 error => dispatch({ type: GET_MESSAGES_BY_ROOM_ID_FAILURE, error })
-            );
+            )
+            .catch(err => {
+                console.log('Err', err)
+                err.toString() === 'TypeError: Failed to fetch' && store.dispatch(alertActions.tokenExpiredPopup(err));
+                
+            })
     };
 }
 

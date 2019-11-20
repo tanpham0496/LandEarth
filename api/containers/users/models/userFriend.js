@@ -25,8 +25,15 @@ const userFriendSchema = new mongoose.Schema({
             }
         ],
     },
+    addFriendList : [{
+        userId :{ type : mongoose.Schema.Types.ObjectId },
+        name : { type: String },
+        createdDate: { type: Date, default: Date.now },
+        _id : false,
+        // accept : Boolean,
+    }],
     id : false,
 });
 
 userFriendSchema.set('toJSON', { virtuals: true });
-module.exports =  userFriendSchema
+module.exports =  userFriendSchema;

@@ -1,0 +1,268 @@
+.modal{
+  .modal-dialog{
+    &.custom-modal {
+      &.modal-land-sell-modify {
+        width: 580px;
+        .modal-content {
+          height: auto;
+          border: 2px solid #0F2E4E;
+          border-radius: 15px 15px;
+          overflow: hidden;
+          .custom-modal-header{
+            text-align: left;
+            height: 45px;
+            padding-left: 20px;
+            background-color: white !important;
+             margin-bottom: 5px;
+            .button-header {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .button-return {
+                width: 2rem;
+                height: 2rem;
+                border: 2px solid $grey-light;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.5s linear;
+
+                .icon-button {
+                  width: 10px;
+                  height: 3px;
+                  background: $grey-light;
+                }
+
+                &:hover {
+                  background: $green-light;
+                  transform: scale(1.1);
+                  border: 2px solid $menu-color;
+
+                  .icon-button {
+                    background: $menu-color;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .line-container {
+          align-self: center;
+          height: 1px;
+          width: 93%;
+          background: $grey-light-alpha;
+          margin: 0 auto;
+        }
+        .custom-modal-body {
+          text-align: left;
+          height: auto;
+          border: 2px solid #ddd;
+          margin: 11px 10px;
+          border-radius: 20px !important;
+          overflow: hidden;
+          //border-bottom-right-radius : unset;
+          //border-bottom-left-radius : unset;
+        }
+        .custom-modal-footer-sell-land-modify {
+          border-top: #383838 1px solid !important;
+          padding: 5px;
+          position: relative;
+          bottom: 0px;
+          background: white;
+          border-bottom-right-radius: 5px;
+          border-bottom-left-radius: 5px;
+
+          button {
+            background: white;
+            border: 2px solid #0F2E4E;
+            border-radius: 15px;
+            padding: 5px 22px;
+            margin: 5px 10px 5px 10px;
+            -webkit-transition: all 0.5s linear;
+            -o-transition: all 0.5s linear;
+            transition: all 0.5s linear;
+
+            &:hover {
+              transform: scale(1.1);
+              background-color: #ddd;
+            }
+
+          }
+        }
+        .footer-grid{
+          width: 100%;
+          display: grid;
+          grid-template-columns: 234px auto;
+          grid-auto-rows: 30px;
+          margin-bottom: 10px;
+          .footer1-col {
+            padding: 2px 5px 0 19px;
+            background-color: white;
+            text-align: left;
+            word-break: break-word;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-pack: center;
+            -ms-flex-align: center;
+            align-items: center;
+            color: #0F2E4E;
+            font-size: 16px;
+            font-weight: bold;
+          }
+          .footer2-col {
+            padding: 2px 5px 0 5px;
+            background-color: white;
+            word-break: break-word;
+            display: -ms-flexbox;
+            display: grid;
+            -ms-flex-pack: center;
+            justify-content: right;
+            align-items: center;
+            text-align: right;
+            padding-right: 15px;
+            grid-template-columns: auto auto;
+            .value {
+              margin-right: 5px;
+              color: #6EF488;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.container-sell-land-modify{
+  $land_col_width : 234px;
+  $blood_col_width : auto;
+  $body_height : 356px;
+
+  input {
+    border: 1px solid #ddd;
+    background: white;
+    width: 8rem;
+    margin-left: 10px;
+    text-align: left;
+    padding-left: 10px;
+    border-radius: 20px;
+    margin-top: 3px;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .header-grid{
+    display: grid;
+    grid-template-columns: $land_col_width $blood_col_width;
+    width: 100%;
+    color: rgb(108, 109, 109);
+
+    .land-col {
+      @include header-cell-properties(center,'break',(right,bottom));
+    }
+
+    .blood-col {
+      @include header-cell-properties(center,'break',(bottom));
+    }
+
+    .land-sub-col {
+      @include header-cell-properties(left,'break',(right,bottom));
+      span{
+        cursor: pointer;
+        &:hover{
+          color:#AC0000;
+        }
+      }
+    }
+
+    .blood-sub-col {
+      @include header-cell-properties(right,'break',(bottom));
+      input{
+        width: 9rem;
+        border: 1px solid #6EF488;
+        color: #6EF488;
+        border-radius: 10px;
+        background-color: white;
+        text-align: left;
+        padding-left: 10px !important;
+      }
+    }
+  }
+
+  .body-grid{
+    display: grid;
+    grid-template-columns: 234px auto;
+    grid-template-rows: 0;
+    grid-auto-rows: 29px;
+    width: 100%;
+    -ms-flex-align: center;
+    align-items: center;
+    max-height: 374px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    @include custom-scrollbar();
+    .item-row{
+      display: contents;
+      .land-col {
+        display: flex;
+        height: 30px;
+        align-items: center;
+        @include cell-properties(left,'hide',(right,bottom,top));
+        span{
+          cursor: pointer;
+        }
+      }
+      .blood-col {
+        height: 30px;
+        align-items: center;
+        padding-top: 5px;
+        @include cell-properties(right,'hide', (bottom,top));
+      }
+
+      &:hover{
+        .land-col,.blood-col {
+          background: #E6FFE9;
+          color:#6c6d6d;
+        }
+      }
+    }
+
+  }
+
+  .footer-grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns:  $land_col_width $blood_col_width;
+    grid-auto-rows: 40px;
+    color: rgb(108, 109, 109);
+
+    .footer1-col {
+      @include cell-properties(center,'break',(right,top));
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .footer2-col {
+      @include cell-properties(center,'break',(top));
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .value {
+        border: none;
+        background: #efeded;
+        border-radius: 3px;
+        padding: 1px 3px 0px 3px;
+        text-align: right;
+        width: 3rem;
+        font-size: 12px;
+        margin: 0px 5px 0px 5px;
+      }
+    }
+  }
+}

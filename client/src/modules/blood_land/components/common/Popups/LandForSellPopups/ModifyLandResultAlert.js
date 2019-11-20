@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {screenActions, TranslateLanguage, MessageBox, landActions} from "../../../../../../helpers/importModule";
+import {screenActions, TranslateLanguage, MessageBoxNew, landActions} from "../../../../../../helpers/importModule";
 
 
 
@@ -17,7 +17,7 @@ function ModifyLandResultAlert(props) {
     const $_selected = `<span class='text-selected'>${landUpdate}</span>`;
     const $_total = `<span class='text-total'>${totalLand}</span>`;
     const body = <TranslateLanguage direct={'alert.getChangeModifiedSellLandNumberAlert.body'} $_selected={$_selected} $_total={$_total} />;
-    return <MessageBox modal={true} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body} />;
+    return <MessageBoxNew modal={true} mode={mode} sign={sign} confirmBtn={confirmBtn} header={header} body={body} />;
 }
 
 export default connect (

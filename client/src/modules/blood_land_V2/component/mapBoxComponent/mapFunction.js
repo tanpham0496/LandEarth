@@ -27,6 +27,27 @@ async function getFisrtLocation(){
   }
 }
 
+function splitMuti({ quadKeys }){
+    let rsQuadKeys = [];
+    for(const quadKey of quadKeys){
+        rsQuadKeys = [...rsQuadKeys, ...[quadKey + 0, quadKey + 1, quadKey + 2, quadKey + 3]];
+    }
+    return rsQuadKeys;
+}
+
+function splitMultiDeep({ quadKeys, maxDeep=24 }){
+    let allQK = quadKeys;
+    while(allQK[0].length < maxDeep){
+        //console.time('======>');
+        allQK = splitMuti({ quadKeys: allQK });
+        //console.log('deep', allQK[0].length, allQK.length);
+        //console.timeEnd('======>');
+    }
+    return allQK;
+}
+
 export {
 	getFisrtLocation,
+  splitMuti,
+  splitMultiDeep
 }

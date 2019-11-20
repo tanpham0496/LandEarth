@@ -14,14 +14,14 @@
     height: auto;
     background-color: #FFFFFF !important;
     border-radius: 10px 10px !important;
-    padding: 5px 15px !important;
+    padding: 5px 20px !important;
     border: 2px solid #0F2E4E !important;
     display: grid;
     flex-direction: column;
   
     .custom-header {
       display: grid;
-      grid-template-columns: 5px 140px auto;
+      grid-template-columns: 50px 260px auto;
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
       margin: 0 10px;
@@ -31,9 +31,13 @@
       .title-header {
         display: flex;
         -ms-flex-pack: center;
-        justify-content: center;
+        justify-content: left;
         -ms-flex-align: center;
         align-items: center;
+        font-size: 22px;
+        //padding-left: 50px;
+        color: #12354F;
+        font-weight: bold;
       }
       .close-popup {
         position: absolute;
@@ -52,6 +56,7 @@
          height: 200px;
        }
      }
+
     .custom-body{
       width: 510px;
       height: 320px;
@@ -63,6 +68,19 @@
       color: white;
       -webkit-box-shadow: 9px -8px 0px -4px rgba(0,0,0,0.75);
       box-shadow: 6px -6px 0px -3px #0F2E4E;
+      transition: all 0.3s linear;
+      cursor: pointer;
+      &:hover{
+        transform: scale(1.01);
+      }
+      .custom-body-loading {
+        width: 510px;
+        height: 320px;
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
 
       .title-body {
         grid-column-start: 1;
@@ -80,7 +98,7 @@
         
         .rowId,.rowEmail {
           display: grid;
-          grid-template-columns: 100px 225px auto;
+          grid-template-columns: 100px 220px auto;
           text-align: left;
           padding: 5px 0;
         }

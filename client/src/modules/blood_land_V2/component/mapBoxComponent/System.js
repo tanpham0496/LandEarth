@@ -10,7 +10,7 @@ function Clip(n, minValue, maxValue){
 }
 
 function MapSize(levelOfDetail){
-	const COUNT_BY_LEVEL_LIST = Array.from(Array(25), (v, i)=> Math.pow(2, i));
+    const COUNT_BY_LEVEL_LIST = Array.from(Array(25), (v, i)=> Math.pow(2, i));
     return TilePixelSize * COUNT_BY_LEVEL_LIST[levelOfDetail];
 }
 
@@ -114,6 +114,12 @@ function QuadKeyToLatLong(quadKey, offsetX, offsetY){
     var tileXY = QuadKeyToTileXY(quadKey);
     return TileXYToLatLong(tileXY.x + (offsetX || 0), tileXY.y + (offsetY || 0), levelOfDetail);
 }
+
+function LatLongToQuadKey({ lat, lng, level }) {
+    const {x, y} = LatLongToTileXY(lat, lng, level);
+    return TileXYToQuadKey(x, y, level);
+}
+
 function loadingImage(data) {
     return process.env.PUBLIC_URL + data
 }
@@ -125,14 +131,15 @@ function getCurrentPosition(options = {}) {
 }
 
 export {
-	LatLongToTileXY,
-	Clip,
-	MapSize,
+    LatLongToTileXY,
+    Clip,
+    MapSize,
     loadingImage,
-	PixelXYToLatLong,
+    PixelXYToLatLong,
     getCurrentPosition,
-	TileXYToLatLong,
-	TileXYToQuadKey,
-	QuadKeyToTileXY,
-	QuadKeyToLatLong
+    TileXYToLatLong,
+    TileXYToQuadKey,
+    QuadKeyToTileXY,
+    QuadKeyToLatLong,
+    LatLongToQuadKey,
 }

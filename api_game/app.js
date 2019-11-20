@@ -49,7 +49,7 @@ app.use(fileUpload());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-// if (process.env.NODE_ENV !== 'development' && (config.clientHost === 'http://178.128.109.233' || config.clientHost === 'https://blood.land')) {
+// if (process.env.NODE_ENV !== 'development' && (config.clientHost === 'http://178.128.212.64' || config.clientHost === 'https://blood.land')) {
 //     let allowedOrigins = [config.clientHost, 'https://wallet.blood.land'];
 //     app.use(cors({
 //         origin: function (origin, callback) {
@@ -175,20 +175,20 @@ app.use(function errorHandler(err, req, res, next) {
     });
 });
 
-// var redisConnect = redis.createClient();
-// redisConnect.on('connect', function () {
-//     console.log('Redis default connection open to 127.0.0.1:6379');
-// });
-// redisConnect.on('error', function (err) {
-//     console.log('Redis ' + err);
-// });
-
-
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
 let port;
-if (process.env.NODE_ENV === 'development') port = 5002;
-else if (process.env.NODE_ENV === 'production') port = 4001;
-else port = 4001;
+switch(process.env.NODE_ENV){
+    case 'development':
+        port = 5002;
+        break;
+    case 'staging':
+        port = 4001;
+        break;
+    case 'production':
+        port = 4001;
+        break;
+}
+
 server.listen(port, function () {
     console.log('Server listening on port ' + port);
 });

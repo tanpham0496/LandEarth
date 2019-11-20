@@ -22,9 +22,10 @@ const ReadMailButtonList = [
 ];
 const ReadMailComponent = () => {
     const dispatch = useDispatch();
+    const {screens} = useSelector(state => state);
+    const [mailRead, setMailRead] = useState(screens.readMail);
 
     const onClickReadMailButton = (e, item) => {
-        console.log('item', item)
         switch (item.type) {
             case 'back-button':
                 return dispatch(screenActions.addPopup({name: 'receiveMail', close: 'readMail'}))
@@ -58,6 +59,17 @@ const ReadMailComponent = () => {
                             </div>
                         )
                     })}
+                </div>
+                <div className="line-container" />
+                <div className={'content-mail'}>
+                    <div className={'title-mail'}>
+                         <h2>{mailRead.mail.mail.fromName}</h2>
+                         <p> {mailRead.mail.mail.title}</p>
+                    </div>
+                    <div className="line-container" />
+                    <div className={'description-mail'}>
+                        {mailRead.mail.mail.content}
+                    </div>
                 </div>
             </div>
         </Fragment>

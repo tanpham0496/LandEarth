@@ -114,8 +114,9 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: $background-color-1;
+  //background: $background-color-1;
   margin: -3px 0 0 -3px;
+  background: #6EF488;
 }
 .lds-roller div:nth-child(1) {
   animation-delay: -0.036s;

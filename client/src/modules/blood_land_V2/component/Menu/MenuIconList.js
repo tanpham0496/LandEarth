@@ -14,7 +14,7 @@ const MenuIconListComponent = (props) => {
                     {props.menuIconRender('left')}
                 </div>
             </div>
-            {props.isToolTipOpen && <div className='tooltip-container'>
+            {props.isToolTipOpen && props.isMenuOpen && <div className='tooltip-container'>
                 {props.toolTipValue}
             </div>}
         </Fragment>

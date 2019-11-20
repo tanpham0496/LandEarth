@@ -277,14 +277,15 @@ async function buyCharacterItemInShop(dataBuy) {
 async function getUser_DefaultLandPrice_OpenCountries(wToken) {
     try {
         //lấy thông tin giá đất ban đầu
-        const [{ defaultLandPrice }, buyer, openCountries] = await Promise.all([
+        const [{ defaultLandPrice }, buyer, openCountries, landSpecials] = await Promise.all([
             getDefaultPrice(),
             db.User.findOne({ wToken }).lean(),
             db.OpenCountry.find({ releaseDate: { $lte: new Date() } }).lean(),
+            db.LandSpecial.find().lean(),
         ]);
 
-        if (defaultLandPrice && buyer && openCountries) {
-            return { defaultLandPrice, buyer, openCountries };
+        if (defaultLandPrice && buyer && openCountries && landSpecials) {
+            return { defaultLandPrice, buyer, openCountries, landSpecials };
         } else {
             return;
         }
@@ -318,7 +319,7 @@ async function buyFail({ wToken, itemQuadKeys, error='' }) {
  * hàm này tạo mua đất  // 셀 구매
  * @param {*} quadKeys, defaultLandPrice, buyer
  */
-async function createBuyLand(quadKeys, defaultLandPrice, buyer) {
+async function createBuyLand(quadKeys, defaultLandPrice, buyer, landSpecials) {
     //console.log("quadKeys", quadKeys);
     let buyLands = [];
     try {
@@ -349,13 +350,16 @@ async function createBuyLand(quadKeys, defaultLandPrice, buyer) {
                     quadKey: sellerLand.quadKey,
                 });
             } else { //buy land from system: sellerLand = null
+                const landSpecial = landSpecials.find(landSP => landSP.quadKeys.some(landspQK => quadKey.indexOf(landspQK) === 0));
+                // console.log('landSpecial', landSpecial);
                 buyLands.push({
                     buyerId: buyer._id,
                     buyerNid: buyer.nid,
                     sellerId: null,
                     sellerNid: 0,
-                    landPrice: defaultLandPrice,
-                    quadKey: quadKey
+                    landPrice: landSpecial ? landSpecial.price : defaultLandPrice,
+                    quadKey: quadKey,
+                    isSpecial: true,
                 });
             }
         }
@@ -374,7 +378,6 @@ async function __filterAcceptQuadKeysAndNoAcceptQuadKeys(buyLands, itemQuadKeys)
     let acceptQuadKeys = [];
     let noAcceptQuadKeys = [];
     for (let eachLand of buyLands) {
-        //console.log('eachLand', eachLand);
         const { sellerNid, buyerNid, quadKey, landPrice } = eachLand;
         await landLogService.updatePendingHistory({ buyerNid, sellerNid, landPrice, quadKey }, 'create');
         try {
@@ -540,7 +543,7 @@ async function puschaseAcceptQuadKeys(acceptQuadKeys, buyer, getPayApi, category
     let buyFailureFromAcceptQuadKeys = [];
     for (let acceptQuadKey of acceptQuadKeys) {
         //console.log('acceptQuadKey', acceptQuadKey);
-        const { buyerId, buyerNid, sellerId, sellerNid, landPrice, quadKey } = acceptQuadKey;
+        const { buyerId, buyerNid, sellerId, sellerNid, landPrice, quadKey, isSpecial } = acceptQuadKey;
         const { role, _id, nid, wId, userName } = buyer;
         try {
             var objBuyLand = {
@@ -554,6 +557,7 @@ async function puschaseAcceptQuadKeys(acceptQuadKeys, buyer, getPayApi, category
                 buyMode: null,
                 txid: getPayApi.txid,
                 sellerNid: sellerNid,
+                isSpecial,
             };
             //===========================================test==================================================
             // // start buy land
@@ -653,7 +657,7 @@ async function purchaseLands({ categoryId, categoryName, wToken, itemQuadKeys, b
         return buyFail({ wToken, itemQuadKeys });
     }
 
-    let { defaultLandPrice, buyer, openCountries } = objBuy;
+    let { defaultLandPrice, buyer, openCountries, landSpecials } = objBuy;
     logData.buyer = buyer;
 
     //validate number land in category
@@ -666,7 +670,7 @@ async function purchaseLands({ categoryId, categoryName, wToken, itemQuadKeys, b
     // TODO:
     //var timems = new Date();
     //console.log(timems, 'BEFORE CREATE BUY LAND');
-    let buyLands = await createBuyLand(quadKeys, defaultLandPrice, buyer);
+    let buyLands = await createBuyLand(quadKeys, defaultLandPrice, buyer, landSpecials);
     //logger
     logData.buyLands = buyLands;
     //end logger
@@ -680,25 +684,25 @@ async function purchaseLands({ categoryId, categoryName, wToken, itemQuadKeys, b
     let { acceptQuadKeys, noAcceptQuadKeys } = splitPendingQuadkey;
 
 
-    //check acceptQK in openCountries
-    const totalQK = acceptQuadKeys.reduce((totalQK, accQK) => {
-        const { lat, lng } = QuadKeyToLatLong(accQK.quadKey);
-        const inOpenCountry = checkInCountry({ lat, lng, openCountries });
-        //console.log(inOpenCountry);
-        if (inOpenCountry) {
-            totalQK.acceptQuadKeys.push(accQK);
-        } else {
-            totalQK.noAcceptQuadKeys.push(accQK);
-        }
-        return totalQK;
-    }, { acceptQuadKeys: [], noAcceptQuadKeys: [] });
-    //console.log('totalQK', totalQK);
+    // //check acceptQK in openCountries
+    // const totalQK = acceptQuadKeys.reduce((totalQK, accQK) => {
+    //     const { lat, lng } = QuadKeyToLatLong(accQK.quadKey);
+    //     const inOpenCountry = checkInCountry({ lat, lng, openCountries });
+    //     //console.log(inOpenCountry);
+    //     if (inOpenCountry) {
+    //         totalQK.acceptQuadKeys.push(accQK);
+    //     } else {
+    //         totalQK.noAcceptQuadKeys.push(accQK);
+    //     }
+    //     return totalQK;
+    // }, { acceptQuadKeys: [], noAcceptQuadKeys: [] });
+    // //console.log('totalQK', totalQK);
 
-    if (totalQK.noAcceptQuadKeys.length > 0) {
-        //console.log('buy out country', totalQK.noAcceptQuadKeys);
-        acceptQuadKeys = totalQK.acceptQuadKeys;
-        noAcceptQuadKeys = noAcceptQuadKeys.concat(totalQK.noAcceptQuadKeys);
-    }
+    // if (totalQK.noAcceptQuadKeys.length > 0) {
+    //     //console.log('buy out country', totalQK.noAcceptQuadKeys);
+    //     acceptQuadKeys = totalQK.acceptQuadKeys;
+    //     noAcceptQuadKeys = noAcceptQuadKeys.concat(totalQK.noAcceptQuadKeys);
+    // }
 
 
     //logger

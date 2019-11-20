@@ -38,6 +38,8 @@ function connectDB(db, connectUrl) {
 
 module.exports = {
     //===========================================================Land DB=========================================================================
+    LandSpecial: bloodDB.model('LandSpecial', require('../containers/lands/models/landSpecial')),
+    //
     User: bloodDB.model('User', require('../containers/users/models/user')),
     UserTrade: bloodDB.model('UserTrade', require('../containers/users/models/userTrade')),
     UserMail: bloodDB.model('UserMail', require('../containers/users/models/userMail')),

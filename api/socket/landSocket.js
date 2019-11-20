@@ -94,7 +94,7 @@ module.exports = function (io, socket) {
     socket.on('TRANSFER_BLOOD_TRADING_LAND', async (socketData) => {
         const {socketId, buyLands, token} = socketData;
         const authToken = await usersService.getByToken({token: token});
-        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.109.233') && typeof authToken.token === 'undefined') {
+        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.212.64') && typeof authToken.token === 'undefined') {
             //else emit a invalid token
             io.to(socketId).emit('INVALID_TOKEN');
         } else {
@@ -127,7 +127,7 @@ module.exports = function (io, socket) {
     socket.on('REMOVE_HISTORY_TRADING_LAND_SOCKET', async (data) => {
         const {histories, socketId, token} = data;
         const authToken = await usersService.getByToken({token: token});
-        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.109.233') && typeof authToken.token === 'undefined') {
+        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.212.64') && typeof authToken.token === 'undefined') {
             //else emit a invalid token
             io.to(socketId).emit('INVALID_TOKEN');
         } else {
@@ -143,7 +143,7 @@ module.exports = function (io, socket) {
         const {socketId, lands, token} = data;
         const authToken = await usersService.getByToken({token: token});
         //console.log("config",config.clientHost);
-        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.109.233') && typeof authToken.token === 'undefined') {
+        if ((config.clientHost === 'https://blood.land' || config.clientHost === 'https://working.blood.land' || config.clientHost === 'http://178.128.212.64') && typeof authToken.token === 'undefined') {
             //else emit a invalid token
             io.to(socketId).emit('INVALID_TOKEN');
         } else {

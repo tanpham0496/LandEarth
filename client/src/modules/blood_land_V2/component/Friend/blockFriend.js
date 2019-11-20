@@ -7,56 +7,59 @@ import classNames from 'classnames';
 import {screenActions} from "../../../../store/actions/commonActions/screenActions";
 import {useDispatch, useSelector} from "react-redux";
 import {userActions} from "../../../../store/actions/commonActions/userActions";
-
-// getFriendListBlockList: (userId) => dispatch(userActions.getFriendListBlockList({userId: userId})),
-let list = [];
-for (let i = 0; i < 1000; i++) {
-    let temp = {"type": i, "name": "Hell"}
-    list.push(temp)
-}
+import TranslateLanguage from "../../../blood_land/components/general/TranslateComponent";
+import UnBlockFriendPopup from '../Popup/MessageBox/UnBlockFriend/UnBlockFriendPopup'
+import UnBlockFriendSuccess from "../Popup/MessageBox/UnBlockFriend/UnBlockFriendSuccess";
 
 const BlockFriendComponent = () => {
+    const {screens, authentication : {user}, users : {blockFriendList}} = useSelector(state=> state);
     const dispatch = useDispatch();
     const [isCheckAll, setIsCheckAll] = useState(false);
-    const [friendListState, setFriendListState] = useState();
+    const [blockListState, setBlockListState] = useState();
     const [friendSelected , setFriendSelected] = useState([]);
+    useEffect(()=> {
+        dispatch(userActions.getFriendListBlockList({userId : user._id}))
+    },[])
     const fetchMoreListItems = () => {
         setTimeout(() => {
-            setFriendListState(prevState => ([...prevState, ...list.slice(prevState.length, prevState.length + 30)]));
+            setBlockListState(prevState => ([...prevState, ...blockFriendList.slice(prevState.length, prevState.length + 30)]));
             setIsFetching(false);
         }, 500);
     };
     const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems, "friend-list-container");
-
     useEffect(() => {
-
-    }, [])
-
-    useEffect(() => {
-        if (list) {
-            setFriendListState(list.slice(0, 30))
+        if (blockFriendList) {
+            setBlockListState(blockFriendList.slice(0, 30))
         }
-    }, [list]);
+    }, [blockFriendList]);
 
-    const onFriendSelected = (e, item) => {
-        let friendSelectedNew = [...friendSelected];
-        const checkSelected = friendSelectedNew.some(i =>  i === item.type);
-        checkSelected ? _.remove(friendSelectedNew , (n) => n === item.type) :  friendSelectedNew.push(item.type)
-        setIsCheckAll(friendSelectedNew.length === list.length)
-        setFriendSelected(friendSelectedNew)
+    const onFriendSelected = (userId) => {
+        let blockFriendSelectNew = [...blockListState];
+        blockFriendSelectNew.map(bl => {
+            if(bl.friend.userId === userId) {
+                bl.checked = !bl.checked;
+            }
+            return bl;
+        });
+        setBlockListState(blockFriendSelectNew);
+
     };
-    const onCheckAll = (e) => {
-        setIsCheckAll(e.checked)
-        let friendSelectedNew = [];
-        list.map(i =>  friendSelectedNew.push(i.type))
-        setFriendSelected(e.checked ? friendSelectedNew : [])
+    const onCheckAll = () => {
+        const onCheckAll =  [...blockListState].filter(fl => fl.checked === true).length  ===  [...blockListState].length;
+        if(onCheckAll) {
+            let  friendListCheckAll = [...blockListState].map(fl => fl.checked = false);
+            setBlockListState([...blockListState],friendListCheckAll);
+        }
+        else{
+            let  friendListCheckAll = [...blockListState].map(fl => fl.checked = true);
+            setBlockListState([...blockListState],friendListCheckAll);
+        }
+
     };
 
     const onHandleUnBlockFriend = _.debounce((e) => {
-        // console.log('friendSelected', friendSelected)
-        if(friendListState.length > 0){
-            dispatch(screenActions.addPopup({name: 'ConfirmUnBlockScreen'}))
-        }
+        const unblockFriends =  [...blockListState].filter(fl => fl.checked === true);
+        unblockFriends.length !== 0 && dispatch(screenActions.addPopup({name: 'UnBlockFriendPopup',data : {userId : user._id , unblockFriends : unblockFriends} }));
     }, 200);
     return (
         <Fragment>
@@ -65,7 +68,7 @@ const BlockFriendComponent = () => {
                     <img  alt='friendList' src={loadingImage('/images/bloodLandNew/friend/blockFriend.png')}/>
                 </div>
                 <div className='title-header'>
-                    차단된 친구
+                    <TranslateLanguage direct={'MenuTabLeft.myAccount.BlockedFriend'}/>
                 </div>
                 <div className='button-header'>
                     <div className='button-return' onClick={() =>  dispatch(screenActions.removePopup({names: ['blockFriend'] }))}>
@@ -74,45 +77,47 @@ const BlockFriendComponent = () => {
                 </div>
             </div>
             <div className='friend-body'>
-                {list.length === 0 ? <div className='friend-empty-container'>
+                {blockFriendList && blockFriendList.length === 0 ? <div className='friend-empty-container'>
                     <img alt={'empty'} src={loadingImage('images/bloodlandNew/error-icon.png')}/>
-                    차단된 친구 없음
+                    <TranslateLanguage direct={'MenuTabLeft.myAccount.BlockedFriend.noFriendBlocked'}/>
                 </div> : <Fragment>
                     <div className='unBlock-container' onClick={(e) => onHandleUnBlockFriend(e)}>
                         <div className='unBlock-button'>
                             <img alt={'unBlock'} src={loadingImage('images/bloodlandNew/friend/unBlock-icon.png')}/>
                         </div>
                         <div className='checkAll-title'>
-                            차단 해제
+                            <TranslateLanguage direct={'MenuTabLeft.myAccount.BlockedFriend.unBlockBtn'}/>
                         </div>
                     </div>
                     <div className='checkAll-container'>
                         <div className='checkAll-button'>
-                            <StyledCheckbox2 value='checkAll' onChange={(e) => onCheckAll(e)} checked={isCheckAll}/>
+                            <StyledCheckbox2 value='checkAll' onChange={onCheckAll}
+                                             checked={blockListState && blockListState.filter(fl=> fl.checked === true).length === blockListState.length }
+                            />
                         </div>
                         <div className='checkAll-title'>
-                            전체 선택
+                            <TranslateLanguage direct={'MenuTabLeft.myAccount.BlockedFriend.selected'}/>
                         </div>
                         <div className='friend-selected'>
                             <div style={{color: '#12354F'}}>(</div>
-                            {friendSelected.length}
+                            {blockListState && blockListState.filter(fl=> fl.checked === true).length }
                             <div style={{color: '#12354F'}}>)</div>
                         </div>
 
                     </div>
                     <div className='line-container' />
                     <div className='friend-list-container expand' id='friend-list-container'>
-                        {friendListState && friendListState.map((item, index) => {
+                        {blockListState && blockListState.map(({checked,friend :  {name,userId }}, index) => {
                             const itemEffectClass = classNames({
-                                active: friendSelected.some(i => i === item.type)
+                                active: checked
                             });
                             return (
                                 <div className='friend-list-item' key={index}>
                                     <div className='item-check-button'>
-                                        <StyledCheckbox2 onChange={(e) => onFriendSelected(e , item)} checked={friendSelected.some(i => i === item.type)}/>
+                                        <StyledCheckbox2 onChange={() => onFriendSelected(userId)} checked={checked}/>
                                     </div>
                                     <div className='item-name'>
-                                        abc
+                                        {name}
                                     </div>
                                     <div className='item-effect'>
                                         <div className={itemEffectClass}/>
@@ -124,6 +129,8 @@ const BlockFriendComponent = () => {
                 </Fragment>}
 
             </div>
+            {screens['UnBlockFriendPopup'] && <UnBlockFriendPopup param={screens.UnBlockFriendPopup}/>}
+            {screens['UnBlockFriendSuccess'] && <UnBlockFriendSuccess />}
         </Fragment>
     )
 };

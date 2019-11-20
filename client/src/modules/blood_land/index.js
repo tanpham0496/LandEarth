@@ -15,18 +15,18 @@ import {shopsActions} from "../../store/actions/gameActions/shopsActions";
 // by Minh Tri - refactor code
 
 
-const SoundHowlerComponent = memo((props) => {
-    const {setting:{bgMusic}, sound } = props;
-    return (
-        <Fragment>
-            {!bgMusic ? null : bgMusic.turnOn && <ReactHowler
-                src={sound}
-                playing={true}
-                volume={bgMusic.volume / 100}
-            />}
-        </Fragment>
-    )
-});
+// const SoundHowlerComponent = memo((props) => {
+//     const {setting:{bgMusic}, sound } = props;
+//     return (
+//         <Fragment>
+//             {!bgMusic ? null : bgMusic.turnOn && <ReactHowler
+//                 src={sound}
+//                 playing={true}
+//                 volume={bgMusic.volume / 100}
+//             />}
+//         </Fragment>
+//     )
+// });
 
 class BloodLand extends Component {
     constructor(props) {
@@ -99,11 +99,11 @@ class BloodLand extends Component {
         return (
             <Fragment>
                 {<MultipleMap checkDisplay={checkDisplay}/>}
-                {settingReducer && <SoundHowlerComponent
+                {/*settingReducer && <SoundHowlerComponent
                     setting={this.props.settingReducer}
                     sound={`${process.env.PUBLIC_URL}/sounds/bg3.mp3`}
                     playing={true}
-                />}
+                />*/}
                 {this.handleShowPopup()}
             </Fragment>
         )

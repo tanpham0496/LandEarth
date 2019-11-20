@@ -1,4 +1,121 @@
 {
+    "MenuTabLeft" : {
+        "myWallet" : {
+            "en": { "title": "My Wallet", "tip" : "" },
+            "kr": { "title": "나의 지갑", "tip" : "" },
+            "vi": { "title": "Ví của tôi", "tip" : "" }
+        },
+        "shop" : {
+            "en": { "title": "Shop", "tip" : "" },
+            "kr": { "title": "상점", "tip" : "" },
+            "vi": { "title": "Cửa hàng", "tip" : "" }
+        },
+        "wareHouse" : {
+            "en": {"title" : "wareHouse", "tip" : ""},
+            "kr": {"title" : "인벤토리 ", "tip" : ""},
+            "vi": {"title" : "Kho hàng", "tip" : ""}
+        },
+        "game" : {
+            "en": {"title" : "Game", "tip" : ""},
+            "kr": {"title" : "게임", "tip" : ""},
+            "vi": {"title" : "Game", "tip" : ""}
+        },
+        "setting" : {
+            "en": { "title": "Setting", "tip" : "" },
+            "kr": { "title": "설정", "tip" : "" },
+            "vi": { "title": "Cài đặt", "tip" : "" }
+        },
+        "myAccount" : {
+            "en": {"title" : "My Info", "tip" : ""},
+            "kr": {"title" : "나의 정보", "tip" : ""},
+            "vi": {"title" : "Thông tin của tôi", "tip" : ""},
+            "friendList" : {
+                "en": {"title" : "Friend List", "tip" : ""},
+                "kr": {"title" : "친구 목록", "tip" : ""},
+                "vi": {"title" : "Danh sách bạn bè", "tip" : ""},
+                "chatting": {
+                    "en": {"title" : "Chatting", "tip" : ""},
+                    "kr": {"title" : "채팅", "tip" : ""},
+                    "vi": {"title" : "Trò Chuyện", "tip" : ""}
+                },
+                "letter" : {
+                    "en": {"title" : "Letter", "tip" : ""},
+                    "kr": {"title" : "편지", "tip" : ""},
+                    "vi": {"title" : "Gửi thư", "tip" : ""}
+                },
+                "blockFriend" : {
+                    "en": {"title" : "Block", "tip" : ""},
+                    "kr": {"title" : "차단", "tip" : ""},
+                    "vi": {"title" : "Chặn", "tip" : ""}
+                },
+                "deleteFriend" : {
+                    "en": {"title" : "Delete", "tip" : ""},
+                    "kr": {"title" : "삭제", "tip" : ""},
+                    "vi": {"title" : "Xóa", "tip" : ""}
+                },
+                "selected" : {
+                    "en": {"title" : "Select All", "tip" : ""},
+                    "kr": {"title" : "전체 선택", "tip" : ""},
+                    "vi": {"title" : "Chọn tất cả", "tip" : ""}
+                },
+                "noFriends" : {
+                    "en": {"title" : "0 Friends", "tip" : ""},
+                    "kr": {"title" : "정보 없음", "tip" : ""},
+                    "vi": {"title" : "Không có bạn", "tip" : ""}
+                }
+            },
+            "addFriend" : {
+                "en": {"title" : "Add Friend", "tip" : ""},
+                "kr": {"title" : "친구 추가", "tip" : ""},
+                "vi": {"title" : "Thêm bạn", "tip" : ""}
+            },
+            "BlockedFriend" : {
+                "en": {"title" : "Blocked List", "tip" : ""},
+                "kr": {"title" : "차단된 친구", "tip" : ""},
+                "vi": {"title" : "Bạn đã chặn", "tip" : ""},
+                "noFriendBlocked" : {
+                    "en": {"title" : "0 Friends", "tip" : ""},
+                    "kr": {"title" : "정보 없음", "tip" : ""},
+                    "vi": {"title" : "Không có chặn bạn", "tip" : ""}
+                },
+                "unBlockBtn": {
+                    "en": {"title" : "Unblock", "tip" : ""},
+                    "kr": {"title" : "해제", "tip" : ""},
+                    "vi": {"title" : "Bỏ chặn", "tip" : ""}
+                },
+                "selected" : {
+                    "en": {"title" : "Select All", "tip" : ""},
+                    "kr": {"title" : "전체 선택", "tip" : ""},
+                    "vi": {"title" : "Chọn tất cả", "tip" : ""}
+                }
+            },
+            "receivedMailbox" : {
+                "en": {"title" : "My Info", "tip" : ""},
+                "kr": {"title" : "나의 정보", "tip" : ""},
+                "vi": {"title" : "Thông tin của tôi", "tip" : ""}
+            }
+        },
+        "myLand" : {
+            "en": { "title": "My Land", "tip" : "" },
+            "kr": { "title": "나의 랜드", "tip" : "" },
+            "vi": { "title": "Đất của tôi", "tip" : "" }
+        },
+        "advertisement" : {
+            "en": {"title" : "Advertisement", "tip" : ""},
+            "kr": {"title" : "광고", "tip" : ""},
+            "vi": {"title" : "Quảng cáo", "tip" : ""}
+        },
+        "historyLand" : {
+            "en": {"title" : "Trade History", "tip" : ""},
+            "kr": {"title" : "거래 내역", "tip" : ""},
+            "vi": {"title" : "Lịch sử giao dịch", "tip" : ""}
+        },
+        "searching" : {
+            "en": {"title" : "searching", "tip" : ""},
+            "kr": {"title" : "네버게이터", "tip" : ""},
+            "vi": {"title" : "Tìm đất", "tip" : ""}
+        }
+    },
     "characterBad" : {
         "one" : {
             "en": {"title" : "fuck", "tip" : ""},
@@ -876,6 +993,21 @@
                             "in": {"title" : "ID yang dimasukan sudah berada di daftar pertemanan.", "tip" : ""},                            
                             "th": {"title" : "เป็นเพื่อนกันแล้ว", "tip" : ""},                                                        
                             "cn": {"title" : "该好友已添加。", "tip" : ""}
+                        },
+                        "waiting": {
+                            "en": {"title" : "Please! Waiting response from Friend.", "tip" : ""},
+                            "kr": {"title" : "친구요청 동의 대기해 주세요", "tip" : ""},
+                            "vi": {"title" : "Vui Lòng đợi phản hồi.", "tip" : ""}
+                        },
+                        "received" : {
+                            "en": {"title" : "You have received the friend request", "tip" : ""},
+                            "kr": {"title" : "에게서 친구요청을 받았습니다 ", "tip" : ""},
+                            "vi": {"title" : "Bạn đã nhận được lời yêu cầu kết bạn từ ID này", "tip" : ""}
+                        },
+                        "success" : {
+                            "en": {"title" : "Request Add Friend Success", "tip" : ""},
+                            "kr": {"title" : "친구요청이 성공되었어요", "tip" : ""},
+                            "vi": {"title" : "Yêu cầu kết bạn thành công", "tip" : ""}
                         }
                     },
                     "alert":{
@@ -1951,6 +2083,16 @@
                         "th": {"title" : "รวมจำนวนขายแลนด์", "tip" : ""},                                                
                         "cn": {"title" : "销售Land总数", "tip" : ""}
                     },
+                    "totalBloodSell": {
+                        "en": {"title" : "Total Blood Q'ty of Land Sale", "tip" : ""},
+                        "kr": {"title" : "총 판매 랜드 금액", "tip" : ""},
+                        "vi": {"title" : "Tổng Blood", "tip" : ""}
+                    },
+                    "Blood": {
+                        "en": {"title" : "Blood", "tip" : ""},
+                        "kr": {"title" : "Blood", "tip" : ""},
+                        "vi": {"title" : "Blood", "tip" : ""}
+                    },
                     "land": {
                         "en": {"title" : "Land", "tip" : ""},
                         "kr": {"title" : "랜드", "tip" : ""},
@@ -1962,7 +2104,7 @@
                     "cancel": {
                         "en": {"title" : "Cancel", "tip" : ""},
                         "kr": {"title" : "취소", "tip" : ""},
-                        "vi": {"title" : "Xóa", "tip" : ""},
+                        "vi": {"title" : "Hủy", "tip" : ""},
                         "in": {"title" : "Batal", "tip" : ""},                        
                         "th": {"title" : "ยกเลิก", "tip" : ""},                                                
                         "cn": {"title" : "取消", "tip" : ""}
@@ -1974,6 +2116,11 @@
                         "in": {"title" : "", "tip" : ""},                        
                         "th": {"title" : "", "tip" : ""},                                                
                         "cn": {"title" : "", "tip" : ""}
+                    },
+                    "allSelectedIsSelling": {
+                        "en": {"title" : "Selected land is sold", "tip" : ""},
+                        "kr": {"title" : "선택하신 래드가 팔게 되었습니다.", "tip" : ""},
+                        "vi": {"title" : "Đất được chọn đã bán", "tip" : ""}
                     },
                     "noLandCanSale": {
                         "en": {"title" : "The selected land is on sale.", "tip" : ""},
@@ -2833,6 +2980,11 @@
                         "th": {"title" : "กลับ", "tip" : ""},                                                
                         "cn": {"title" : "后退", "tip" : ""}
                     }
+                },
+                "total":{
+                    "en": {"title" : "Q'ty of Certified Copy of the Register", "tip" : ""},
+                    "kr": {"title" : "등기부 등본", "tip" : ""},
+                    "vi": {"title" : "Bản sao công chứng", "tip" : ""}
                 },
                 "backBtn": {
                     "en": {"title" : "Back", "tip" : ""},
@@ -4458,6 +4610,7 @@
                         "cn": { "title" : "确认", "tip" : "" }
                     }
                 }
+
             }
         },
         "logOut": {
@@ -4654,6 +4807,23 @@
         }
     },
     "alert":{
+        "createNewFolderSuccess":{
+            "header": {
+                "en": { "title": "Notice", "tip" : "" },
+                "kr": { "title": "알림", "tip" : "" },
+                "vi": { "title": "Thông báo", "tip" : "" }
+            },
+            "body": {
+                "en": { "title" : "You have just created new folder success", "tip": "newAdding" },
+                "kr": { "title": "새 폴더를 설정되었습니다", "tip" : "newAdding" },
+                "vi": { "title": "Bạn vừa tạo folder thành công.", "tip" : "" }
+            },
+            "confirmBtn": {
+                "en": { "title": "Confirm", "tip" : "" },
+                "kr": { "title": "확인", "tip" : "" },
+                "vi": { "title": "Xác nhận", "tip" : "" }
+            }
+        },
         "categoryNoLandAlert":{
             "header": {
                 "en": { "title": "Notice", "tip" : "" },

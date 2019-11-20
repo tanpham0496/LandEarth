@@ -11,11 +11,10 @@ function middleware(socket){
 
     socket.use(async (packet, next) => {
         if(packet){
-            // /console.log('packet', packet);
+            console.log('packet', packet);
+
             const [event, socketData] = packet;
-            //console.log('[event, socketData]',  socketData)
             if(!socketData){
-                //console.log('ERRRRRRRRRRRRRRRRRRRRRRR =>', 'noSocketData');
                 socket.emit('ERROR', { err: "noSocketData" });
                 return;
             }
@@ -26,7 +25,6 @@ function middleware(socket){
 
             const { status, user } = await getByToken({ token });
             if(!status){
-                //console.log('ERRRRRRRRRRRRRRRRRRRRRRR =>', 'noPassMiddleware');
                 socket.emit('ERROR', { err: "noPassMiddleware" });
                 return;
             }

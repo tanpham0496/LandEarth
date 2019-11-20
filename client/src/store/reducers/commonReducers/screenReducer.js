@@ -19,26 +19,30 @@ export default function (state = {}, action) {
                 ...state,
             }
         case ADD_POPUP:
-            // console.log('ADD_POPUP', name);
-            if(name){
+            // console.log('ADD_POPUP', action.screen);
+            if(name || names){
                 if(closes && _.isArray(closes)){
                     if(closes && _.isArray(closes)){
-                        for(const screenName of names){
+                        for(const screenName of closes){
                             delete state[screenName];
                         }
                     }
                 }
                 if(close && state[close]) delete state[close];
+                if(names && _.isArray(names)){
+                    let temp = {...state};
+                    for(const screenName of names){
+                        temp[screenName] = {}
+                    }
+                    return {
+                        ...temp,
+                    }
+                }
                 if(state[name]) return { ...state };
                 return {
                     ...state,
                     [name]: { ...data }
                 }
-            }
-            if(onlyName) {
-               return{
-                 [onlyName] :{...data}
-               }
             }
             return { ...state };
         default:

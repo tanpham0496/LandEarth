@@ -11,7 +11,9 @@ export const friendService = {
     unFriend,
     blockFriend,
     unBlockFriend,
-    checkStatusByUserName
+    checkStatusByUserName,
+    getFriendList,
+    sendAddFriend,
 };
 
 export function getFriendListBlockList(param)
@@ -24,6 +26,27 @@ export function getFriendListBlockList(param)
 
     return fetch(`${apiLand}/users/friends/getFriendListBlockList`, requestOptions).then(handleResponses).catch(handleErrorResponses);
 }
+export function sendAddFriend(param)
+{
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: _.body(param)
+    };
+
+    return fetch(`${apiLand}/users/friends/sendAddFriend`, requestOptions).then(handleResponses).catch(handleErrorResponses);
+}
+export function getFriendList(param)
+{
+    console.log('param',param);
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: _.body(param)
+    };
+
+    return fetch(`${apiLand}/users/friends/getFriendList`, requestOptions).then(handleResponses).catch(handleErrorResponses);
+}
 export function checkStatusByUserName(param){
     const requestOptions = {
         method: 'POST',
@@ -35,6 +58,7 @@ export function checkStatusByUserName(param){
 
 export function addFriend(param)
 {
+    console.log('paramadddddddd---',param)
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },

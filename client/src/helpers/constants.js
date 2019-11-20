@@ -26,3 +26,7 @@ export const MIN_ZOOM_SELECTED_TILE = 18;
 export const PARENT_1_RANGE = 4;
 export const PARENT_2_RANGE = 5;
 export const dBug = false;
+export const DEFAULT_LEVEL_MAPBOX_OFFSET = 3;
+
+export const MAX_ZOOM_MAPBOX = 21;
+export const MIN_ZOOM_MAPBOX = 2;

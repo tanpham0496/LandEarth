@@ -5,8 +5,8 @@ import { Modal } from 'reactstrap';
 
 const bloodWarningSign = loadingImage(`/images/game-ui/blood-wallet-icon.svg`);
 const successSign = loadingImage(`/images/game-ui/alert-success.svg`);
-const errorSign  = loadingImage(`/images/game-ui/alert-danger.svg`);
-const deleteSign = loadingImage(`/images/game-ui/alert-delete.svg`);
+const errorSign  = loadingImage(`/images/bloodlandNew/error-icon.png`);
+const deleteSign = loadingImage(`/images/bloodlandNew/error-icon.png`);
 const loadingSign = <div className="lds-roller"><div/><div/><div/><div/><div/><div/><div/><div/></div>
 
 class MessageBox extends PureComponent {

@@ -1,8 +1,14 @@
-
 @import "./component/menu/index";
 @import "./component/friend/index";
 @import "./component/mail/index";
 @import './component/menu/MenuLeftMap';
 @import './component/popup/index';
 @import "./component/loadingSymbol";
+@import "./component/setting/index";
+@import "./component/modal";
+@import "./component/myland/land-certificate-popup";
+@import "./component/myland/landSellPopup";
+@import "./component/myland/land-sell-modify";
 
+//responsive
+@import "./component/responsive/mobile";

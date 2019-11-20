@@ -988,6 +988,51 @@ async function setLandmarkIntoNormalLowerZoom22(){
 
 }
 
+async function addLandSpecial() {
+    const landSpecial = await db.LandSpecial.insertMany([
+        {
+            name: "one",
+            quadKeys: ["0202313113", "0203202002", "0203202020", "0203202022", "0203202200", "0203202202", "0202313313", "0203202203"],
+            center: { lat: 46.316584181822186, lng: -157.5 },
+            price: 55
+        },
+        {
+            name: "plus",
+            quadKeys: ["0203202033", "0203202120", "0203202123", "0203202300", "0203202122"],
+            center: { lat: 46.316584181822186, lng: -156.09375 },
+            price: 55,
+        },
+        {
+            name: "three",
+            quadKeys: ["0203202113","0203203002","0203203003","0203203021","0203203023","0203203022","0203202133","0203203201","0203203203","0203203202","0203202313"],
+            center: { lat: 46.316584181822186, lng: -154.6875 },
+            price: 55,
+        },
+        {
+            name: "equal",
+            quadKeys: ["0203203031", "0203203120", "0203203121", "0203203211", "0203203300", "0203203301",
+                "020320312201",
+                "020320312210",
+                "020320312203",
+                "020320312212",
+                "020320312221",
+                "020320312230",
+                "020320312223",
+                "020320312232"],
+            center: { lat: 46.55886030311717, lng: -153.28125 },
+            price: 55,
+        },
+        {
+            name: "B",
+            quadKeys: ["0203203113", "0203212002", "0203212003", "0203212012", "0203212030", "0203212032", "0203212210", "0203212212", "0203212203", "0203212202", "0203203313", "0203212020", "0203212022", "0203212200", "0203212023"],
+            center: { lat: 46.316584181822186, lng: -151.5234375 },
+            price: 55,
+        }
+    ]);
+    return !!landSpecial
+    //console.log('landSpecial', landSpecial);
+}
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function createObjectUser(i){
@@ -1044,7 +1089,7 @@ async function createUsers(numberUSer, landConfig, land22){
                     }
                 });
                 buyLandsVituals({ vitualDatas: LandInCate, user: newUser, landConfig });
-
+                
 
 
                 // const quadKeys22 = land22[i];
@@ -1087,7 +1132,7 @@ const { land22 } = require('./land22');
 
 (async () => {
 
-
+    
     ////==========================================================================================MAIN=====================================================================================================
     console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
     if(process.env.NODE_ENV === 'development'){
@@ -1119,6 +1164,10 @@ const { land22 } = require('./land22');
         console.log('create test done!!!');
 
 
+        console.log('create test data!');
+        addLandSpecial();
+        console.log('==============================================================================');
+
 
         console.log('-----------------------------------------');
         await createUsers(262144, landConfig, land22);
@@ -1133,7 +1182,7 @@ const { land22 } = require('./land22');
         process.exit(0);
     } else if(process.env.NODE_ENV === 'staging'){
         console.log('remove DB');
-        bloodDB.dropDatabase();
+        //bloodDB.dropDatabase();
         landLogDB.dropDatabase();
 
         console.log('create User aa bb cc dd ee');
@@ -1143,7 +1192,22 @@ const { land22 } = require('./land22');
         await setOpenCountry();
 
         console.log('set landPrice');
-        await db.LandConfig.create({ landPrice: 20000, landFee: 0 });
+        const landConfig = await db.LandConfig.create({ landPrice: 20000, landFee: 0 });
+
+
+
+        const userRoman = await db.User.findOne({ email: 'romanticprince1603@gmail.com' });
+
+        console.log('create test data: 15000 lands and 235 categories for user aa... Please wait 30s!');
+        const rsCre = await buyLandsVituals({ vitualDatas, user: userRoman, landConfig });
+        console.log('rsCre', rsCre)
+        console.log('splitCategory', splitCategory);
+        const LandInCate = splitCategory.map(quadKey => quadKey && ({ categoryName: quadKey.substring(8, quadKey.length), quadKeys: [quadKey] }));
+        // /console.log('LandInCate',LandInCate)
+        const rsCre2 = await buyLandsVituals({ vitualDatas: LandInCate, user: userRoman, landConfig });
+        //console.log('rsCre2', rsCre2);
+        console.log('create test done!!!');
+
 
         list.length = 15000;
         console.log('addUserManagerAndAddLandMark',  list.length);

@@ -1,3 +1,10 @@
+export const SET_SELECTED = 'SET_SELECTED';
+export const ADD_SELECTED = 'ADD_SELECTED';
+export const REMOVE_SELECTED = 'REMOVE_SELECTED';
+export const CLEAR_SELECTED = 'CLEAR_SELECTED';
+export const SET_HINT_MODE = 'SET_HINT_MODE';
+export const SET_PAUSE_DRAW_TILE = 'SET_PAUSE_DRAW_TILE';
+//======================================================
 export const ADD_CENTER_MAP_GEO = 'ADD_CENTER_MAP_GEO';
 export const INVALID_TOKEN = 'INVALID_TOKEN';
 export const CLEAR_INVALID_TOKEN = 'CLEAR_INVALID_TOKEN';
@@ -9,19 +16,25 @@ export const SYNC_CENTER_MAP = 'SYNC_CENTER_MAP';
 export const UPDATE_MAP = 'UPDATE_MAP';
 export const UPDATE_MOVABLES = 'UPDATE_MOVABLES';
 export const GET_CURRENT = 'GET_CURRENT';
-export const ADD_SELECTED = 'ADD_SELECTED';
-export const CLEAR_SELECTED = 'CLEAR_SELECTED';
 //====================================================================
 export const UPDATE_TILES = 'UPDATE_TILES';
 export const CLEAR_CART = 'CLEAR_CART';
 export const SAVE_CART = 'SAVE_CART';
 export const DISABLE_TILE_MAP = 'DISABLE_TILE_MAP';
 //-------------------------------------------------------------------
-export const LAND_MODE = "LAND_MODE"
+export const LAND_MODE = "LAND_MODE";
+
 
 export const mapActions = {
     //=================
     syncMap,
+    setSelected,
+    addSelected,
+    removeSelected,
+    clearSelected,
+    setLandMode,
+    setHintMode,
+    setPauseDrawTile,
     //=================
     disableTileMap,
     clearInvalidToken,
@@ -34,13 +47,36 @@ export const mapActions = {
     updateMap,
     //select
     selectMode,
-    addSelected,
-    clearSelected,
     addCenterMapGeo,
     //clearCart,
     //saveCart,
-    toggleAdMode
 };
+
+function setPauseDrawTile(data) {
+    return { type: SET_PAUSE_DRAW_TILE, data }
+}
+
+//==============================================================================================
+function setHintMode(data){
+    return { type: SET_HINT_MODE, ...data };
+}
+
+function setSelected(selected){
+    return { type: SET_SELECTED, selected };
+}
+
+function addSelected(selected){
+    return { type: ADD_SELECTED, selected };
+}
+
+function removeSelected(selected){
+    return { type: REMOVE_SELECTED, selected };
+}
+
+function clearSelected(clearQuadKeys=[]){
+    return { type: CLEAR_SELECTED, clearQuadKeys }
+}
+//==============================================================================================
 
 function addCenterMapGeo(centerMapGeo){
     return { type: ADD_CENTER_MAP_GEO, centerMapGeo: centerMapGeo };
@@ -78,11 +114,8 @@ function updateMap(map){
     return { type: UPDATE_MAP, map }
 }
 
-function clearSelected(clearQuadKeys=[]){
-    return { type: CLEAR_SELECTED, clearQuadKeys }
-}
-function toggleAdMode(mode){
-    return { type: LAND_MODE, LAND_MODE }
+function setLandMode(mode){
+    return { type: LAND_MODE, mode }
 }
 
 function syncCenterMap(center=null, zoom=null, centerQuadKey=null, centerChange=false, leafMap=null){
@@ -110,8 +143,4 @@ function syncMap({center=null, zoom=null, centerQuadKey=null, centerChange=false
         type: SYNC_CENTER_MAP,
         ...mapChange
     }
-}
-
-function addSelected(selected){
-    return { type: ADD_SELECTED, selected };
 }

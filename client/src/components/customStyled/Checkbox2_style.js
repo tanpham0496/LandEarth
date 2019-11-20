@@ -4,7 +4,7 @@ import {Checkbox} from 'primereact/checkbox';
 
 export const StyledCheckbox2 = styled(StyledComponent(Checkbox))`
    .p-checkbox .p-checkbox-box{
-         border: 3px solid #12354F;
+         border: 2px solid #12354F;
          width: 17px;
          height: 17px;
          margin-top: 1px;

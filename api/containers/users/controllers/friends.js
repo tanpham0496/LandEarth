@@ -10,6 +10,10 @@ router.post('/unBlock', unBlock);
 router.post('/checkStatusByUserName', checkStatusByUserName);
 router.post('/getFriendListBlockList', getFriendListBlockList);
 router.post('/getBeBlockedUser', getBeBlockedUser);
+//add 2019.10.28
+router.post('/getFriendList', getFriendList);
+router.post('/getBlockFriendList', getBlockFriendList);
+router.post('/sendAddFriend', sendAddFriend);
 
 const response = require('../../../helpers/response');
 const crypto = require('../../../helpers/crypto');
@@ -60,6 +64,22 @@ function checkStatusByUserName(req, res, next) {
 
 function getFriendListBlockList(req, res, next) {
     services.getFriendListBlockList(crypto.parsedObj(req.body))
+        .then(result => response.handleResponseWithLogs(req, res, true, result))
+        .catch(err => response.handleErrorResponse(res, err));
+}
+// 2019.10.28
+function getFriendList(req, res, next) {
+    services.getFriendList(crypto.parsedObj(req.body))
+        .then(result => response.handleResponseWithLogs(req, res, true, result))
+        .catch(err => response.handleErrorResponse(res, err));
+}
+function getBlockFriendList(req, res, next) {
+    services.getBlockFriendList(crypto.parsedObj(req.body))
+        .then(result => response.handleResponseWithLogs(req, res, true, result))
+        .catch(err => response.handleErrorResponse(res, err));
+}
+function sendAddFriend(req, res, next) {
+    services.sendAddFriend(crypto.parsedObj(req.body))
         .then(result => response.handleResponseWithLogs(req, res, true, result))
         .catch(err => response.handleErrorResponse(res, err));
 }

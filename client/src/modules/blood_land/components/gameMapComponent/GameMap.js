@@ -221,9 +221,6 @@ class GameMap extends PureComponent {
 
     };
 
-
-
-
     componentWillUnmount = () => {
         clearInterval(this.state.checkTreeInterval);
     };

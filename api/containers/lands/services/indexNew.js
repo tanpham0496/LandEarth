@@ -67,6 +67,7 @@ const {
 } = require("../../../helpers/custom/quadKeyConvert");
 
 module.exports = {
+    getSpecialLand,
     getListForSaleLands,
     getSellLandInfos,
     getLandInfo,
@@ -102,6 +103,33 @@ module.exports = {
 };
 
 const MAX_SELECTED_LAND = 300;
+
+// (async () => {
+//     const newSpecialLand = await db.LandSpecial.create({
+//         name: 'one',
+//         quadKeys: [02210013013, 02210013102, 02210013120, 02210013122, 02210013300, 02210013302, 02210013213, 02210013303],
+//         zoom: 9,
+//         center: { lat: 39.504040705584146, lng: -152.578125 },
+//         saleOff: 50/100,
+//     });
+//     console.log('newSpecialLand', newSpecialLand);
+// })()
+
+
+
+// (async () => {
+//     const k = await getSpecialLand();
+//     console.log(';;;', k);
+// })()
+
+
+async function getSpecialLand(){
+    try {
+        return db.LandSpecial.find();
+    } catch (e){
+        return null;
+    }
+}
 
 async function getListForSaleLands({ wToken }){
     try {
@@ -164,11 +192,22 @@ async function getLandByQuadKeys({ userId, quadKeys }){
     //arrLandExist: include land buy from other user sale and land cannot buy (other user don't sell or my land)
     const arrLandExist = await db.Land23.find({ quadKey: { $in: quadKeys24 } }).select('quadKey sellPrice initialPrice forSaleStatus forbidStatus user -_id');
     //const arrLandCanBuy = await db.Land23
-    const [arrLandCanBuy, arrLandCannotBuy] = _.partition(arrLandExist, land => !_.isEqual(ObjectId(land.user._id), ObjectId(userId)) && land.forSaleStatus === true && land.forbidStatus === false);
+    const [arrLandCanBuy, arrLandCannotBuy] = _.partition(arrLandExist, land => !_.isEqual(ObjectId(land.user._id), ObjectId(userId)) && land.forSaleStatus === true && land.forbidStatus === false);
     //console.log('[arrLandCanBuy, arrLandCannotBuy]', [arrLandCanBuy, arrLandCannotBuy]);
 
+
+    const landSpecials = await  db.LandSpecial.find().lean();
+
     const arrQuadKeyByFromSanta = quadKeys24.filter(qk => !arrLandExist.some(existLand => existLand.quadKey === qk));
-    const arrLandBuyFromSanta = arrQuadKeyByFromSanta.map(qk => ({ quadKey: qk, sellPrice: landConfig.landPrice, initialPrice: landConfig.landPrice }));
+    const arrLandBuyFromSanta = arrQuadKeyByFromSanta.map(qk => {
+        const landSpecial = landSpecials.find(landSP => landSP.quadKeys.some(landspQK => qk.indexOf(landspQK) === 0));
+        const price = landSpecial ? landSpecial.price : landConfig.landPrice;
+        return { quadKey: qk, sellPrice: price, initialPrice: price };
+    });
+
+
+
+
     const totalCanBuyLand = [...arrLandBuyFromSanta, ...arrLandCanBuy];
     //console.log('totalCanBuyLand', totalCanBuyLand);
 
@@ -528,8 +567,7 @@ async function buyFromWho(quadKeys, buyMode, userId) {
 }
 
 //param = { categoryName userRole, userId, nid, quadKeys: [{ quadKey,  }]}
-async function purchaseLand23(param) {
-    const { userId, nid, name, wId, categoryName, userRole, quadKeys, buyMode, txid, sellerNid } = param;
+async function purchaseLand23({ userId, nid, name, wId, categoryName, userRole, quadKeys, buyMode, txid, sellerNid, isSpecial }) {
     const landConfig = await LandConfig.findOne({});
     if (buyMode === "forbid") {
         let updateMany = await puschaseNewLandFromSystem_New({
@@ -539,7 +577,8 @@ async function purchaseLand23(param) {
             // categoryId: category ? category._id : null,
             categoryId: null,
             buyMode,
-            txid
+            txid,
+            isSpecial
         });
         let pmBuyFromSystem = await Promise.all(updateMany.map(update => Land23.findOne({ quadKey: update.quadKey }).lean()));
         return { updates: pmBuyFromSystem, success: quadKeys.length === updateMany.length };
@@ -554,7 +593,8 @@ async function purchaseLand23(param) {
         initialPrice: buyMode && buyMode === "forbid" ? landConfig.landPrice : 0,
         categoryId: null,
         buyMode,
-        txid
+        txid,
+        isSpecial
     });
 
     let pmBuyFromSystem = [];
@@ -710,11 +750,10 @@ async function getAllLandCategory({ userId }) {
     return _result;
 }
 
-async function puschaseNewLandFromSystem_New(param) {
-    const { user, quadKeys, initialPrice, categoryId, buyMode, txid } = param;
+async function puschaseNewLandFromSystem_New({ user, quadKeys, initialPrice, categoryId, buyMode, txid, isSpecial }) {
     let newLandInsert = quadKeys.map(land => {
         const { landPrice, quadKey } = land;
-        return {
+        let objLand = {
             user,
             categoryId: null,
             quadKey,
@@ -727,6 +766,9 @@ async function puschaseNewLandFromSystem_New(param) {
             quadKeyParent2: quadKey.substr(0, 24 - PARENT_2_RANGE),
             txid
         }
+        if(isSpecial) objLand.isSpecial = isSpecial;
+
+        return objLand;
     });
 
     const landUpdate = await Land23.insertMany(newLandInsert);

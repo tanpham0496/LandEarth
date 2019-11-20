@@ -32,7 +32,24 @@ const MAIL_STATUS = {
 //     let k = await readManyMail({ userId, mailIds });
 //     console.log('k', k);
 // })()
-
+//2019/11/07
+async function deleteSentMail({emailIdArr ,userId}) {
+    try{
+        const userMail = await UserMail.findOne({ "userId": userId }).select("sentList -_id").lean();
+        let {sentList} = userMail;
+        sentList = sentList.map(m => {
+            if (emailIdArr.includes(m._id.toString()))  m.status = MAIL_STATUS.deleted;   //deleted = 2
+            return m;
+        });
+        const updating = await UserMail.findOneAndUpdate({ userId: ObjectId(userId) }, { $set: { sentList: sentList } }, { new: true }).lean();
+        if(!updating) return {deleteMailStatus : false, message: 'Delete arrayEmailID fail'};
+        const data = getMails(updating);
+        return { deleteMailStatus: true,...data};
+    }catch(err){
+        const data = await getAll(param);
+        return { deleteMailStatus: false,...data};
+    }
+}
 
 /**
  * 2019.3.29 Xuân Giao
@@ -149,37 +166,37 @@ async function readManyMail({ userId, mailIds }) {
  * hàm này xóa mail đã gửi  // 보낸 이메일 삭제
  * @param { userId }
  */
-async function deleteSentMail(param) {
-    try{
-        let emailIdArr = param.emailIdArr;
-        let userId = new ObjectId(param.userId);
-    
-        const userMail = await UserMail.findOne({ "userId": userId })
-            .select("sentList -_id");
-    
-        let {sentList} = userMail;
-    
-        sentList = sentList.map(m => {
-            if (emailIdArr.includes(m._id.toString())) {
-                m.status = MAIL_STATUS.deleted;
-            }
-            return m;
-        });
-
-        let success = true;
-        const updating = await UserMail.findOneAndUpdate({ "userId": userId }, { $set: { sentList: sentList } }, { new: true },(err, doc) => {
-            if (err) {
-                success = false;
-                console.log("Something wrong when updating data!");
-            }
-        }).lean();
-        const data = getMails(updating);
-        return { deleteMailStatus: success,...data};
-    }catch(err){
-        const data = await getAll(param);
-        return { deleteMailStatus: false,...data};
-    }
-}
+// async function deleteSentMail(param) {
+//     try{
+//         let emailIdArr = param.emailIdArr;
+//         let userId = new ObjectId(param.userId);
+//
+//         const userMail = await UserMail.findOne({ "userId": userId })
+//             .select("sentList -_id");
+//
+//         let {sentList} = userMail;
+//
+//         sentList = sentList.map(m => {
+//             if (emailIdArr.includes(m._id.toString())) {
+//                 m.status = MAIL_STATUS.deleted;
+//             }
+//             return m;
+//         });
+//
+//         let success = true;
+//         const updating = await UserMail.findOneAndUpdate({ "userId": userId }, { $set: { sentList: sentList } }, { new: true },(err, doc) => {
+//             if (err) {
+//                 success = false;
+//                 console.log("Something wrong when updating data!");
+//             }
+//         }).lean();
+//         const data = getMails(updating);
+//         return { deleteMailStatus: success,...data};
+//     }catch(err){
+//         const data = await getAll(param);
+//         return { deleteMailStatus: false,...data};
+//     }
+// }
 
 /**
  * 2019.3.29 Xuân Giao

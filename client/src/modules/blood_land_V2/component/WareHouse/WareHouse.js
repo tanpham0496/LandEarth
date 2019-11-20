@@ -18,7 +18,7 @@ const WareHouse = () => {
 
     const fetchMoreListItems = () => {
         setTimeout(() => {
-            setListState(prevState => ([...prevState, ...list.slice(prevState.length, prevState.length + 30)]));
+            setListState(prevState => ([...prevState, ...list.slice(prevState.length, prevState.length + 60)]));
             setIsFetching(false);
         }, 500);
     };
@@ -26,7 +26,7 @@ const WareHouse = () => {
 
     useEffect(() => {
         if (list) {
-            setListState(list.slice(0, 30))
+            setListState(list.slice(0, 60))
         }
     }, [list]);
 

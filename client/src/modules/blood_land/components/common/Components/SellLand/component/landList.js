@@ -1,6 +1,6 @@
 import React , {PureComponent} from 'react'
 import {TranslateLanguage} from "../../../../../../../helpers/importModule";
-import {StyledCheckbox} from "../../../../../../../components/customStyled/Checkbox_style";
+import {StyledCheckbox2} from "../../../../../../../components/customStyled/Checkbox2_style";
 const maxPrice = 999999999;
 class LandList extends PureComponent{
     state = {
@@ -29,7 +29,7 @@ class LandList extends PureComponent{
                             <div className='item-row' key={index}>
                                 <div className='land-col'>
                                     {/*<div className={checkBoxClass} onClick={() => onHandleCheckLand(landItem) }/>*/}
-                                    <StyledCheckbox
+                                    <StyledCheckbox2
                                         checked={landItem.checked}
                                         value={landItem} onChange={() => onHandleCheckLand(landItem)}/>
                                     <span>{landItem.name ? landItem.name : landItem.quadKey}</span>
@@ -53,14 +53,14 @@ class LandList extends PureComponent{
         const {priceAll} = this.state;
         const selectedLandLength = selectedLands && selectedLands.filter(landItem => landItem.checked).length;
         return (
-            <div className='sell-land-container'>
+            <div className='sell--land-container'>
                 <div className='header-grid'>
                     <div className='land-col'><TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.selectLand'}/></div>
                     <div className='blood-col'><TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.salePrice'}/></div>
                     <div className='land-sub-col'>
-                        <StyledCheckbox checked={checkAll}
+                        <StyledCheckbox2 checked={checkAll}
                                         onChange={(e) => onHandleCheckAll(e)}/>
-                        <span><TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.selectAll'}/></span>
+                        <span style={{paddingLeft : '5px'}}><TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.selectAll'}/></span>
                         {/*<div > &nbsp;{`(${ (Array.isArray(sellLand) && sellLand.length) || 0 })`} </div>*/}
                     </div>
                     <div className='blood-sub-col'>
@@ -70,12 +70,7 @@ class LandList extends PureComponent{
                     </div>
                 </div>
                 {this.landListRender()}
-                <div className='footer-grid'>
-                    <div className='footer1-col'><TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.totalSell'}/></div>
-                    <div className='footer2-col'>
-                        <div className='value'>{selectedLandLength}</div> <TranslateLanguage direct={'menuTab.myLand.landOwned.sellLand.land'}/>
-                    </div>
-                </div>
+
             </div>
         );
     }

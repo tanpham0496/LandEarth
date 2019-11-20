@@ -9,16 +9,6 @@ function jwt() {
 
     const filter = function(req) {return true;};
     return expressJwt({secret,isRevoked}).unless(filter)
-
-    // return expressJwt({ secret, isRevoked }).unless({
-    //     path: [
-    //         '/users/authenticate',
-    //         '/users/register',
-    //         '/users/loginWallet',
-    //         '/users/getByToken',
-    //         '/users/socialLogin',
-    //     ]
-    // });
 }
 
 async function isRevoked(req, payload, done) {

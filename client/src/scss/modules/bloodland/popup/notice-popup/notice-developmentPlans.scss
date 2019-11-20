@@ -19,8 +19,9 @@
 .modal--notice {
   .modal-content {
     border: 2px solid #0F2E4E;
-    color : #0F2E4E;
-    border-radius: 10px 10px !important;
+    color: #0F2E4E;
+    border-radius: 15px 15px !important;
+    overflow: hidden;
     .modal-header--notice{
       height: 43px;
       background-color: white;
@@ -38,6 +39,10 @@
         right: 10px;
         top: 2px;
         cursor: pointer;
+        transition: all 0.6s linear;
+        &:hover{
+          transform: scale(1.1);
+        }
       }
     }
     .tab-notice-container {

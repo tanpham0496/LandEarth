@@ -123,7 +123,8 @@ function addCenterCategory(req, res, next) {
 function getDefault(req, res, next) {
     Promise.all([
         getDefaultPrice(),
-        services.getOpenCountry()
+        services.getSpecialLand(),
+        // services.getOpenCountry()
     ]).then(result => {
         if (result) response.handleResponseWithLogs(req, res, false, result);
         else {

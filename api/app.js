@@ -52,7 +52,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 
-// if (process.env.NODE_ENV !== 'development' && (config.clientHost === 'http://178.128.109.233' || config.clientHost === 'https://blood.land')) {
+// if (process.env.NODE_ENV !== 'development' && (config.clientHost === 'http://178.128.212.64' || config.clientHost === 'https://blood.land')) {
 // let allowedOrigins = [config.clientHost, 'https://wallet.blood.land'];
 // app.use(cors({
 //     origin: function (origin, callback) {
@@ -145,12 +145,15 @@ app.use(function errorHandler(err, req, res, next) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 	
-	if (req.originalUrl === '/users/loginWallet') {	
+    if (req.originalUrl === '/users/loginWallet') { 
         try {
+            console.log('redirect to ==> ', config.loginWalletHost);
             res.redirect(302, config.loginWalletHost);
-        } catch(e) {}
-		return; // Cannot set headers after they are sent to the client
-	}
+        } catch(e) {
+            console.log('Err', e)
+        }
+        return; // Cannot set headers after they are sent to the client
+    }
 
     // render the error page
     // res.status(err.status || 500);
@@ -191,19 +194,19 @@ app.use(function errorHandler(err, req, res, next) {
     });
 });
 
-// var redisConnect = redis.createClient();
-// redisConnect.on('connect', function () {
-//     console.log('Redis default connection open to 127.0.0.1:6379');
-// });
-// redisConnect.on('error', function (err) {
-//     console.log('Redis ' + err);
-// });
-
 console.log('process.env.NODE_ENV=', process.env.NODE_ENV);
 let port;
-if (process.env.NODE_ENV === 'development') port = 5001;
-else if (process.env.NODE_ENV === 'production') port = 3001;
-else port = 3001;
+switch(process.env.NODE_ENV){
+    case 'development':
+        port = 5001;
+        break;
+    case 'staging':
+        port = 3001;
+        break;
+    case 'production':
+        port = 3001;
+        break;
+}
 
 server.listen(port, function () {
     console.log('Server listening on port ' + port);
